@@ -2,7 +2,7 @@
 
 ## Capítulo 1: Introdução
 
-O projeto visa não apenas modernizar a experiência de usuário através de um design consistente e responsivo, mas também expandir o papel do LMS, transformando-o de um repositório de conteúdo em um ecossistema integrado que promove o desenvolvimento do aluno. 
+O projeto visa não apenas modernizar a experiência de usuário através de um design consistente e responsivo, mas também expandir o papel do LMS, transformando-o de um repositório de conteúdo em um ecossistema integrado que promove o desenvolvimento do aluno.
 
 Para isso, propõe-se a implementação de funcionalidades de melhoria, como uma ferramenta de busca inteligente, e inovações como um sistema de recomendação de oportunidades acadêmicas e extracurriculares.
 
@@ -10,11 +10,11 @@ Para isso, propõe-se a implementação de funcionalidades de melhoria, como uma
 
 ### 2.1. Motivação
 
-A motivação central deste projeto nasce da experiência diária como estudante universitário e da observação das dificuldades operacionais causadas pelas ferramentas de gestão de aprendizagem atualmente em uso. 
+A motivação central deste projeto nasce da experiência diária como estudante universitário e da observação das dificuldades operacionais causadas pelas ferramentas de gestão de aprendizagem atualmente em uso.
 
-A dificuldade em localizar materiais de estudo, a inconsistência na organização de conteúdo entre diferentes disciplinas e a instabilidade da plataforma resultam em interrupções no acesso ao conteúdo de aprendizagem. 
+A dificuldade em localizar materiais de estudo, a inconsistência na organização de conteúdo entre diferentes disciplinas e a instabilidade da plataforma resultam em interrupções no acesso ao conteúdo de aprendizagem.
 
-Adicionalmente, identifica-se uma lacuna na centralização de informações relevantes para a jornada do aluno, como oportunidades de estágio, projetos de pesquisa e atividades de extensão, que hoje são divulgadas de forma descentralizada e assimétrica. 
+Adicionalmente, identifica-se uma lacuna na centralização de informações relevantes para a jornada do aluno, como oportunidades de estágio, projetos de pesquisa e atividades de extensão, que hoje são divulgadas de forma descentralizada e assimétrica.
 
 O objetivo é, portanto, criar uma solução que resolva esses pontos práticos e organize a experiência acadêmica, tornando-a mais fluida, integrada e personalizada.
 
@@ -45,11 +45,13 @@ As observações pessoais são validadas por análises mais amplas do setor de E
 Com base na análise, a demanda para o novo sistema é estruturada em três esferas de atuação:
 
 1. **Problemas (Fundamentais):** Questões centrais que afetam a usabilidade e a funcionalidade do sistema e que devem ser solucionadas na fundação do novo produto.
+
    - **Design Defasado e Inconsistente**: A necessidade de uma interface de usuário (UI) moderna, intuitiva e padronizada.
    - **Responsividade Deficiente:** O requisito de que a plataforma seja totalmente funcional em dispositivos móveis (mobile-first).
    - **Indisponibilidade e Instabilidade:** Embora seja um desafio de arquitetura complexo, o projeto deve ser concebido sobre uma arquitetura que priorize a escalabilidade e a confiabilidade.
 
 2. **Melhorias (Incrementais):** Funcionalidades que aprimoram processos existentes, gerando ganhos de eficiência para o usuário.
+
    - **Ferramenta de Busca Difusa (Fuzzy Search):** Implementação de um sistema de busca avançado que permita encontrar termos dentro do conteúdo de documentos (PDFs, slides), mesmo com pequenas variações ou erros de digitação.
    - **Integração com Ecossistema de Ferramentas:** Capacidade de integrar-se com ferramentas externas populares entre estudantes, como Google Calendar (para sincronizar prazos) e Notion.
 
@@ -69,23 +71,75 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 
 ## Capítulo 3: Modelagem
 
-### 3.1. Casos de Uso
+### 3.1. Requisitos Funcionais
+
+#### Módulo: Gestão de Usuários
+
+| ID      | Requisito Funcional                                                              | Prioridade |
+| ------- | -------------------------------------------------------------------------------- | ---------- |
+| USU-RF1 | O sistema deve permitir criar, editar e remover usuários                         | Alta       |
+| USU-RF2 | O sistema deve permitir listar usuários com paginação e filtros básicos          | Média      |
+| USU-RF3 | O sistema deve permitir vincular usuários a disciplinas (roles: aluno/professor) | Média      |
+
+#### Módulo: Autenticação e Autorização
+
+| ID       | Requisito Funcional                                                            | Prioridade |
+| -------- | ------------------------------------------------------------------------------ | ---------- |
+| AUTH-RF1 | O sistema deve autenticar usuários via e-mail mackenzista e senha              | Alta       |
+| AUTH-RF2 | O sistema deve permitir logout                                                 | Alta       |
+| AUTH-RF3 | O sistema deve aplicar controle de acesso baseado em roles (middleware na API) | Alta       |
+
+#### Módulo: Gestão de Disciplinas
+
+| ID       | Requisito Funcional                                                                     | Prioridade |
+| -------- | --------------------------------------------------------------------------------------- | ---------- |
+| DISC-RF1 | O sistema deve permitir criar, editar e remover disciplinas                             | Alta       |
+| DISC-RF2 | O sistema deve permitir listar disciplinas com paginação e filtros básicos              | Alta       |
+| DISC-RF3 | O sistema deve permitir upload de documentos (PDF, slides, vídeo) com limites definidos | Média      |
+| DISC-RF4 | O sistema deve permitir listar documentos vinculados a uma disciplina                   | Média      |
+| DISC-RF5 | O sistema deve permitir download de documentos                                          | Baixa      |
+
+#### Módulo: Oportunidades
+
+| ID      | Requisito Funcional                                                               | Prioridade |
+| ------- | --------------------------------------------------------------------------------- | ---------- |
+| OPP-RF1 | O sistema deve permitir cadastrar oportunidades (estágio, complementar, extensão) | Alta       |
+| OPP-RF2 | O sistema deve permitir listar e filtrar oportunidades                            | Alta       |
+| OPP-RF4 | O sistema deve suportar um motor de recomendações (content-based filtering)       | Baixa      |
+
+### 3.1. Requisitos Não Funcionais (MVP)
+
+| ID       | Categoria                    | Requisito Não Funcional                 | Critério / Métrica                                                                | Prioridade |
+| -------- | ---------------------------- | --------------------------------------- | --------------------------------------------------------------------------------- | ---------- |
+| SEC-NF2  | Segurança                    | Armazenamento seguro de dados sensíveis | Senhas com hashing seguro e salting (bcrypt ou Argon2)                            | Alta       |
+| SEC-NF3  | Segurança                    | Controle de acesso                      | RBAC (Controle de Acesso Baseado em Função) aplicado nas APIs e aplicação web     | Média      |
+| PERF-NF1 | Desempenho                   | Latência de API                         | 95% das respostas < 200 ms sob cenário de carga                                   | Alta       |
+| PERF-NF2 | Desempenho                   | Upload de arquivos                      | Suportar uploads até 10 MB no MVP                                                 | Média      |
+| MON-NF1  | Monitoramento                | Logs                                    | Logs de autenticação/erros com retenção de 30 dias                                | Baixa      |
+| USAB-NF1 | Usabilidade e Acessibilidade | Responsividade e compatibilidade        | Mobile-first; suportar navegadores modernos                                       | Alta       |
+| USAB-NF2 | Usabilidade e Acessibilidade | Acessibilidade                          | Avaliação heurística e correções críticas; meta: WCAG 2.1 AA em iterações futuras | Baixa      |
+
+### 3.2. Casos de Uso
 
 Aluno:
-- Fazer login e logout (e-mail mackenzista e senha)
+
+- Fazer sign-in e sign-up (e-mail mackenzista e senha)
 - Acessar disciplinas
 - Cadastrar oportunidade (estágio, complementar e extensão)
 - Feed de recomendações de oportunidades
 
 (Opcional)
+
 - Busca difusa (fuzzy search) em documentos
 - Baixar documentos
 
 Professor:
+
 - Fazer upload de documentos (PDFs, slides, vídeos), com metadados (título, descrição, tags)
 - Cadastrar oportunidade (estágio, complementar e extensão)
 
 Administrador:
+
 - Gerenciar usuários (criar, editar, remover)
 - Gerenciar disciplinas (criar, editar, remover)
 - Vincular professores e alunos às disciplinas
