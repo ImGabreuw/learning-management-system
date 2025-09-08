@@ -66,3 +66,26 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 - **Ferramenta de Busca Difusa (Fuzzy Search):** Sistema de busca avançado para encontrar termos dentro do conteúdo dos documentos.
 
 - **Integração** com APIs de ferramentas externas (Google Calendar, Notion).
+
+## Capítulo 3: Modelagem
+
+### 3.1. Casos de Uso
+
+Aluno:
+- Fazer login e logout (e-mail mackenzista e senha)
+- Acessar disciplinas
+- Cadastrar oportunidade (estágio, complementar e extensão)
+- Feed de recomendações de oportunidades
+
+(Opcional)
+- Busca difusa (fuzzy search) em documentos
+- Baixar documentos
+
+Professor:
+- Fazer upload de documentos (PDFs, slides, vídeos), com metadados (título, descrição, tags)
+- Cadastrar oportunidade (estágio, complementar e extensão)
+
+Administrador:
+- Gerenciar usuários (criar, editar, remover)
+- Gerenciar disciplinas (criar, editar, remover)
+- Vincular professores e alunos às disciplinas
