@@ -87,17 +87,24 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 | -------- | ------------------------------------------------------------------------------ | ---------- |
 | AUTH-RF1 | O sistema deve autenticar usuários via e-mail mackenzista e senha              | Alta       |
 | AUTH-RF2 | O sistema deve permitir logout                                                 | Alta       |
-| AUTH-RF3 | O sistema deve aplicar controle de acesso baseado em roles (middleware na API) | Alta       |
+| AUTH-RF3 | O sistema deve aplicar controle de acesso baseado em roles (middleware na API) | Baixo      |
 
 #### Módulo: Gestão de Disciplinas
 
-| ID       | Requisito Funcional                                                                     | Prioridade |
-| -------- | --------------------------------------------------------------------------------------- | ---------- |
-| DISC-RF1 | O sistema deve permitir criar, editar e remover disciplinas                             | Alta       |
-| DISC-RF2 | O sistema deve permitir listar disciplinas com paginação e filtros básicos              | Alta       |
-| DISC-RF3 | O sistema deve permitir upload de documentos (PDF, slides, vídeo) com limites definidos | Média      |
-| DISC-RF4 | O sistema deve permitir listar documentos vinculados a uma disciplina                   | Média      |
-| DISC-RF5 | O sistema deve permitir download de documentos                                          | Baixa      |
+| ID       | Requisito Funcional                                           | Prioridade |
+| -------- | ------------------------------------------------------------- | ---------- |
+| DISC-RF1 | O sistema deve permitir criar, editar e remover disciplinas   | Alta       |
+| DISC-RF2 | O sistema deve permitir listar disciplinas com paginação      | Alta       |
+| DISC-RF3 | O sistema deve permitir upload/download de documentos         | Média      |
+| DISC-RF4 | O sistema deve permitir acessar os detalhes de uma disciplina | Baixo      |
+
+#### Módulo: Armazenamento de Arquivos
+
+| ID       | Requisito Funcional                                             | Prioridade |
+| -------- | --------------------------------------------------------------- | ---------- |
+| FILE-RF1 | O sistema deve permitir upload de arquivos (PDF, slides, vídeo) | Alta       |
+| FILE-RF2 | O sistema deve permitir download de arquivos                    | Média      |
+| FILE-RF3 | O sistema deve permitir listar arquivos com metadados           | Baixo      |
 
 #### Módulo: Oportunidades
 
@@ -105,7 +112,7 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 | ------- | --------------------------------------------------------------------------------- | ---------- |
 | OPP-RF1 | O sistema deve permitir cadastrar oportunidades (estágio, complementar, extensão) | Alta       |
 | OPP-RF2 | O sistema deve permitir listar e filtrar oportunidades                            | Alta       |
-| OPP-RF4 | O sistema deve suportar um motor de recomendações (content-based filtering)       | Baixa      |
+| OPP-RF4 | O sistema deve suportar um motor de recomendações (content-based filtering)       | Média      |
 
 ### 3.1. Requisitos Não Funcionais (MVP)
 
