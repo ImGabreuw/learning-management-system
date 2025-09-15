@@ -144,21 +144,21 @@ Professor:
 
 - Fazer upload de documentos (PDFs, slides, vídeos), com metadados (título, descrição, tags)
 - Cadastrar oportunidade (estágio, complementar e extensão)
-  
+
 Administrador:
 
 - Gerenciar usuários (criar, editar, remover)
 - Gerenciar disciplinas (criar, editar, remover)
 - Vincular professores e alunos às disciplinas
 
-### 3.3. Diagramas 
+### 3.3. Diagramas
 
 #### 3.3.1 Sequência
 
 ##### Módulo: Gestão de Disciplinas
 
-
 ###### DISC-RF1.1 : Criar disciplina
+
 ```mermaid
 sequenceDiagram
     actor Admin
@@ -177,6 +177,7 @@ sequenceDiagram
 ```
 
 ###### DISC-RF1.2: Editar disciplina
+
 ```mermaid
 sequenceDiagram
     actor Admin
@@ -195,6 +196,7 @@ sequenceDiagram
 ```
 
 ###### DISC-RF1.3: Apagar disciplina
+
 ```mermaid
 sequenceDiagram
     actor Admin
@@ -213,7 +215,8 @@ sequenceDiagram
 
 ```
 
-###### DISC-RF2
+###### DISC-RF2: Listagem de disciplinas
+
 ```mermaid
 sequenceDiagram
     actor Professor/Aluno
@@ -233,6 +236,7 @@ sequenceDiagram
 ```
 
 ###### DISC-RF3.1: Upload
+
 ```mermaid
 sequenceDiagram
     actor Professor
@@ -250,7 +254,9 @@ sequenceDiagram
     controller-->>boundary: exibirMensagemUpload()
 
 ```
+
 ###### DISC-RF3.2: Download
+
 ```mermaid
 sequenceDiagram
     actor Professor/Aluno
@@ -269,7 +275,8 @@ sequenceDiagram
 
 ```
 
-###### DISC-RF4
+###### DISC-RF4: Listar documentos de uma disciplina
+
 ```mermaid
 sequenceDiagram
     actor Professor/Aluno
@@ -392,35 +399,36 @@ flowchart TD
     ReceiveRequest --> ValidateInput{Validate Input}
     ValidateInput -->|Invalid| ReturnError[Return 400 Bad Request]
     ValidateInput -->|Valid| Authenticate[Authenticate User]
-    
+
     Authenticate --> CheckCredentials{Check Credentials}
     CheckCredentials -->|Invalid| ReturnUnauthorized[Return 401 Unauthorized]
     CheckCredentials -->|Valid| GenerateTokens[Generate JWT Tokens]
-    
+
     GenerateTokens --> UpdateUser[Update User Last Login]
     UpdateUser --> ReturnTokens[Return Tokens Response]
     ReturnTokens --> End([End])
-    
+
     ReturnError --> End
     ReturnUnauthorized --> End
 ```
 
 ###### AUTH-RF2 - Logout
+
 ```mermaid
 sequenceDiagram
     participant Client
     participant AuthController
     participant TokenBlacklistService
-    
+
     Client->>+AuthController: POST /api/auth/logout <br> Header: "Authorization: Bearer [token]"
-    
+
     note over AuthController: Extrai o token do Header da requisição.
-    
+
     AuthController->>+TokenBlacklistService: invalidateToken(token)
     note over TokenBlacklistService: Adiciona o token em uma<br>lista de negação (ex: Cache).
     TokenBlacklistService-->>-AuthController: Confirmação
-    
+
     AuthController-->>-Client: 200 OK (body: { "message": "Logout bem-sucedido" })
-    
+
     note right of Client: Cliente deve apagar o<br>token armazenado localmente.
 ```
