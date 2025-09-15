@@ -336,6 +336,27 @@ sequenceDiagram
       boundary-->>Professor/Aluno: listaOportunidades()
 ```
 
+##### OPP-RF3: Recomendar oportunidade
+
+```mermaid
+sequenceDiagram
+   actor Aluno
+
+   participant boundary as RecomendadorBoundary
+   participant controller as RecomendadorController
+   participant service as RecomendadorService
+   participant library as RecomendadorLibrary
+
+   Aluno-->boundary: solicitarFeedOportunidadesRecomendadas(alunoId)
+   boundary-->>controller: recomendarOportunidade(alunoId)
+   controller-->>service: recomendarOportunidade(alunoId)
+   service-->library: buscarOportunidadesRecomendadas(alunoId)
+   library-->>service: oportunidadesRecomendadas
+   service-->>controller: oportunidadesRecomendadas
+   controller-->>boundary: exibirFeedOportunidadesRecomendadas(oportunidadesRecomendadas)
+   boundary-->>Aluno: feedOportunidadesRecomendadas()
+```
+
 ## Autorização e Autenticação(login)
 
 ###### Sequência login
