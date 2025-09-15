@@ -239,6 +239,32 @@ sequenceDiagram
 
 ```
 
+##### USU-RF2 : Listagem de usuários, com páginação e filtros básicos
+```mermaid
+sequenceDiagram
+    Actor User as Usuario
+    participant Boundary as usuarioBoundary
+    participant Controller as usuarioController
+    participant Service as usuarioService
+    participant Repository as usuarioRepository
+
+    User->>Boundary: requisicaoListagemUsuarios(filtros, pagina, tamanhoPagina)
+    activate Boundary
+    Boundary->>Controller: solicitarListagemUsuarios(filtros, pagina, tamanhoPagina)
+    activate Controller
+    Controller->>Service: listarUsuarios(filtros, pagina, tamanhoPagina)
+    activate Service
+    Service->>Repository: buscarUsuariosComFiltros(filtros, pagina, tamanhoPagina)
+    activate Repository
+    Repository-->>Service: listaDeUsuariosPaginada()
+    deactivate Repository
+    Service-->>Controller: listaDeUsuariosPaginada()
+    deactivate Service
+    Controller-->>Boundary: listaDeUsuariosPaginada()
+    deactivate Controller
+    Boundary-->>User: exibirUsuariosPaginados()
+    deactivate Boundary
+```
 ##### Módulo: Gestão de Disciplinas
 
 ###### DISC-RF1.1 : Criar disciplina
