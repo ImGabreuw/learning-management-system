@@ -287,4 +287,120 @@ sequenceDiagram
     controller-->>boundary: exibirMensagemSucesso()
 ```
 
+## Autorização e Autenticação(login)
 
+###### Sequência login
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant AuthController
+    participant AuthService
+    participant AuthManager
+    participant UserDetailsService
+    participant JwtService
+    participant UserRepository
+
+    Client->>AuthController: POST /auth/login (credentials)
+    AuthController->>AuthService: authenticate(credentials)
+    AuthService->>AuthManager: authenticate(credentials)
+    AuthManager->>UserDetailsService: loadUserByUsername(email)
+    UserDetailsService->>UserRepository: findByEmail(email)
+    UserRepository-->>UserDetailsService: User entity
+    UserDetailsService-->>AuthManager: UserDetails
+    AuthManager-->>AuthService: Authentication object
+    AuthService->>JwtService: generateToken(userDetails)
+    JwtService-->>AuthService: JWT token
+    AuthService->>JwtService: generateRefreshToken(userDetails)
+    JwtService-->>AuthService: Refresh token
+    AuthService->>UserRepository: updateLastLogin(userId)
+    AuthService-->>AuthController: AuthenticationResponse
+    AuthController-->>Client: JWT tokens + user data
+```
+
+###### Sequência de validação - Token
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant JwtAuthFilter
+    participant JwtService
+    participant UserDetailsService
+    participant SecurityContext
+
+    Client->>JwtAuthFilter: Request with JWT token
+    JwtAuthFilter->>JwtService: extractUsername(token)
+    JwtService-->>JwtAuthFilter: username
+    JwtAuthFilter->>UserDetailsService: loadUserByUsername(username)
+    UserDetailsService-->>JwtAuthFilter: UserDetails
+    JwtAuthFilter->>JwtService: isTokenValid(token, userDetails)
+    JwtService-->>JwtAuthFilter: validation result
+    JwtAuthFilter->>SecurityContext: setAuthentication()
+    JwtAuthFilter-->>Client: Continue request processing
+```
+
+###### Entidade do MongoDB
+
+```mermaid
+erDiagram
+    USER ||--o{ TOKEN : generates
+    USER ||--o{ ROLE : has
+    ROLE ||--o{ PERMISSION : contains
+
+    USER {
+        string id
+        string email
+        string passwordHash
+        array roles
+        boolean enabled
+        boolean accountNonExpired
+        boolean credentialsNonExpired
+        boolean accountNonLocked
+        timestamp createdAt
+        timestamp lastLogin
+    }
+
+    TOKEN {
+        string id
+        string token
+        string refreshToken
+        timestamp expiration
+        timestamp refreshExpiration
+        string userId
+        boolean revoked
+    }
+
+    ROLE {
+        string id
+        string name
+        string description
+        array permissions
+    }
+
+    PERMISSION {
+        string id
+        string name
+        string description
+    }
+```
+
+###### Fluxo de Autenticação.
+
+```mermaid
+flowchart TD
+    Start([Start]) --> ReceiveRequest[Receive Auth Request]
+    ReceiveRequest --> ValidateInput{Validate Input}
+    ValidateInput -->|Invalid| ReturnError[Return 400 Bad Request]
+    ValidateInput -->|Valid| Authenticate[Authenticate User]
+    
+    Authenticate --> CheckCredentials{Check Credentials}
+    CheckCredentials -->|Invalid| ReturnUnauthorized[Return 401 Unauthorized]
+    CheckCredentials -->|Valid| GenerateTokens[Generate JWT Tokens]
+    
+    GenerateTokens --> UpdateUser[Update User Last Login]
+    UpdateUser --> ReturnTokens[Return Tokens Response]
+    ReturnTokens --> End([End])
+    
+    ReturnError --> End
+    ReturnUnauthorized --> End
+```
