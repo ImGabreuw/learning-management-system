@@ -434,6 +434,7 @@ sequenceDiagram
 ```
 
 ## Módulo: Armazenamento de Arquivos
+### Diagrama de Sequencia
 
 ###### FILE-RF1
 
@@ -499,4 +500,112 @@ sequenceDiagram
     repo-->>service: listaArquivos
     service-->>controller: listaArquivos
     controller-->>boundary: exibirListaArquivos(listaArquivos)
+```
+### Diagrama de classes
+
+```mermaid
+classDiagram
+    class ArquivoBoundary {
+        +uploadArquivo(arquivo, metadados) void
+        +downloadArquivo(arquivoId) void
+        +solicitarListaArquivos(pagina, tamanho) void
+        +exibirMensagemUpload() void
+        +exibirErroTipoArquivo() void
+        +iniciarDownload(arquivo) void
+        +exibirListaArquivos(lista) void
+    }
+    
+    class ArquivoController {
+        +uploadArquivo(arquivo, metadados) ResponseEntity
+        +downloadArquivo(arquivoId) ResponseEntity
+        +listarArquivos(pagina, tamanho) ResponseEntity
+        -validarTipoArquivo(arquivo) boolean
+    }
+    
+    class ArquivoService {
+        +armazenarArquivo(arquivo, metadados) Arquivo
+        +obterArquivo(arquivoId) Arquivo
+        +listarArquivosPaginados(pagina, tamanho) Page~Arquivo~
+        -extrairMetadados(arquivo) Map
+        -gerarNomeUnico(nomeOriginal) String
+    }
+    
+    class ArquivoRepository {
+        +buscarPaginado(pagina, tamanho) Page~Arquivo~
+        +buscarPorId(id) Optional~Arquivo~
+        +salvar(arquivo) Arquivo
+        +deletar(id) void
+        +buscarPorTipo(tipo) List~Arquivo~
+    }
+    
+    class ArquivoStorage {
+        +salvarArquivo(arquivo) String
+        +recuperarArquivo(arquivoId) byte[]
+        +deletarArquivo(arquivoId) boolean
+        +existeArquivo(arquivoId) boolean
+    }
+    
+    class Arquivo {
+        -id: String
+        -nomeOriginal: String
+        -nomeArmazenado: String
+        -caminho: String
+        -tamanho: Long
+        -tipo: TipoArquivo
+        -dataUpload: LocalDateTime
+        -checksum: String
+        -metadados: Map~String, Object~
+        +getId() String
+        +getNomeOriginal() String
+        +getTamanho() Long
+        +getTipo() TipoArquivo
+        +getDataUpload() LocalDateTime
+        +getMetadados() Map
+    }
+    
+    class TipoArquivo {
+        <<enumeration>>
+        PDF
+        XLSX
+        TXT
+'       WORD
+        +getExtensoes() List~String~
+        +isValido(extensao) boolean
+        +getMimeTypes() List~String~
+    }
+
+    ArquivoBoundary --> ArquivoController : chama
+    ArquivoController --> ArquivoService : usa
+    ArquivoService --> ArquivoRepository : usa
+    ArquivoService --> ArquivoStorage : usa
+    ArquivoRepository --> Arquivo : gerencia
+    Arquivo --> TipoArquivo : tem
+    ArquivoService "1" --> "*" Arquivo : processa
+```
+
+### Entidade MongoDb
+
+```mermaid
+erDiagram
+    ARQUIVO ||--o{ METADADO : contains
+
+    ARQUIVO {
+        string id
+        string nomeOriginal
+        string nomeArmazenado
+        string caminho
+        long tamanho
+        string tipo
+        timestamp dataUpload
+        string checksum
+        string usuarioId
+        boolean ativo
+    }
+
+    METADADO {
+        string arquivoId
+        string chave
+        string valor
+        string tipoDado
+    }
 ```
