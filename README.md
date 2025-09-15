@@ -404,3 +404,23 @@ flowchart TD
     ReturnError --> End
     ReturnUnauthorized --> End
 ```
+
+###### AUTH-RF2 - Logout
+```mermaid
+sequenceDiagram
+    participant Client
+    participant AuthController
+    participant TokenBlacklistService
+    
+    Client->>+AuthController: POST /api/auth/logout <br> Header: "Authorization: Bearer [token]"
+    
+    note over AuthController: Extrai o token do Header da requisição.
+    
+    AuthController->>+TokenBlacklistService: invalidateToken(token)
+    note over TokenBlacklistService: Adiciona o token em uma<br>lista de negação (ex: Cache).
+    TokenBlacklistService-->>-AuthController: Confirmação
+    
+    AuthController-->>-Client: 200 OK (body: { "message": "Logout bem-sucedido" })
+    
+    note right of Client: Cliente deve apagar o<br>token armazenado localmente.
+```
