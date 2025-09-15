@@ -432,3 +432,71 @@ sequenceDiagram
 
     note right of Client: Cliente deve apagar o<br>token armazenado localmente.
 ```
+
+## Módulo: Armazenamento de Arquivos
+
+###### FILE-RF1
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant boundary as ArquivoBoundary
+    participant controller as ArquivoController
+    participant service as ArquivoService
+    participant storage as ArquivoStorage
+
+    Usuario->>boundary: uploadArquivo(arquivo, metadados)
+    boundary->>controller: uploadArquivo(arquivo, metadados)
+    controller->>controller: validarTipoArquivo(arquivo)
+    alt arquivo válido
+        controller->>service: armazenarArquivo(arquivo, metadados)
+        service->>storage: salvarArquivo(arquivo)
+        storage-->>service: confirmacaoUpload
+        service-->>controller: respostaSucesso()
+        controller-->>boundary: exibirMensagemUpload()
+    else arquivo inválido
+        controller-->>boundary: exibirErroTipoArquivo()
+    end
+```
+###### FILE-RF2
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant boundary as ArquivoBoundary
+    participant controller as ArquivoController
+    participant service as ArquivoService
+    participant storage as ArquivoStorage
+
+    Usuario->>boundary: downloadArquivo(arquivoId)
+    boundary->>controller: downloadArquivo(arquivoId)
+    controller->>service: obterArquivo(arquivoId)
+    service->>storage: recuperarArquivo(arquivoId)
+    alt arquivo existe
+        storage-->>service: arquivo
+        service-->>controller: arquivo
+        controller-->>boundary: iniciarDownload(arquivo)
+    else arquivo não encontrado
+        storage-->>service: arquivoNaoEncontrado
+        service-->>controller: erroArquivoNaoEncontrado()
+        controller-->>boundary: exibirErroArquivoNaoEncontrado()
+    end
+```
+###### FILE-RF3
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant boundary as ArquivoBoundary
+    participant controller as ArquivoController
+    participant service as ArquivoService
+    participant repo as ArquivoRepository
+
+    Usuario->>boundary: solicitarListaArquivos(pagina, tamanho)
+    boundary->>controller: listarArquivos(pagina, tamanho)
+    controller->>service: listarArquivosPaginados(pagina, tamanho)
+    service->>repo: buscarPaginado(pagina, tamanho)
+    repo-->>service: listaArquivos
+    service-->>controller: listaArquivos
+    controller-->>boundary: exibirListaArquivos(listaArquivos)
+```
