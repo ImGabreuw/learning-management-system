@@ -294,6 +294,48 @@ sequenceDiagram
     controller-->>boundary: exibirMensagemSucesso()
 ```
 
+#### Módulo: Sistema de Recomendação de Oportunidades
+
+##### OPP-RF1: Cadastrar oportunidade
+
+```mermaid
+sequenceDiagram
+      actor Professor/Aluno
+      participant boundary as OportunidadeBoundary
+      participant controller as OportunidadeController
+      participant service as OportunidadeService
+      participant repo as OportunidadeRepository
+
+      Professor/Aluno->>boundary: solicitarCadastroOportunidade(dadosOportunidade)
+      boundary->>controller: cadastrarOportunidade(dadosOportunidade)
+      controller->>service: cadastrarOportunidade(dadosOportunidade)
+      service->>repo: salvar(oportunidade)
+      repo-->>service: oportunidadeSalva
+      service-->>controller: respostaSucesso()
+      controller-->>boundary: exibirMensagemSucesso()
+      boundary-->>Professor/Aluno: oportunidadeCadastrada()
+```
+
+##### OPP-RF2: Listagem de oportunidades
+
+```mermaid
+sequenceDiagram
+      actor Professor/Aluno
+      participant boundary as OportunidadeBoundary
+      participant controller as OportunidadeController
+      participant service as OportunidadeService
+      participant repo as OportunidadeRepository
+
+      Professor/Aluno->>boundary: solicitarListagemOportunidades(filtros)
+      boundary->>controller: listarOportunidades(filtros)
+      controller->>service: listarOportunidades(filtros)
+      service->>repo: buscarOportunidades(filtros)
+      repo-->>service: oportunidades
+      service-->>controller: oportunidades
+      controller-->>boundary: exibirListaOportunidades(oportunidades)
+      boundary-->>Professor/Aluno: listaOportunidades()
+```
+
 ## Autorização e Autenticação(login)
 
 ###### Sequência login
