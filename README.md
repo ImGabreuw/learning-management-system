@@ -265,6 +265,35 @@ sequenceDiagram
     Boundary-->>User: exibirUsuariosPaginados()
     deactivate Boundary
 ```
+
+##### USU-RF3 : Vinculação aluno/professor - Disciplina
+```mermaid
+sequenceDiagram
+    Actor Admin
+    participant Boundary as usuarioBoundary
+    participant Controller as usuarioController
+    participant Service as usuarioService
+    participant Repository as usuarioRepository
+
+    Admin->>Boundary: requisicaoVincularUsuarioDisciplina(idUsuario, idDisciplina, cargo)
+    activate Boundary
+    Boundary->>Controller: solicitarVinculoUsuarioDisciplina(idUsuario, idDisciplina, cargo)
+    activate Controller
+    Controller->>Service: vincularUsuarioDisciplina(idUsuario, idDisciplina, cargo)
+    activate Service
+    Note right of Service: Valida se o cargo é 'aluno' ou 'professor'
+    Service->>Repository: salvarVinculo(idUsuario, idDisciplina, cargo)
+    activate Repository
+    Repository-->>Service: vinculoCriado()
+    deactivate Repository
+    Service-->>Controller: vinculoCriado()
+    deactivate Service
+    Controller-->>Boundary: vinculoCriado()
+    deactivate Controller
+    Boundary-->>Admin: confirmacaoVinculo()
+    deactivate Boundary
+```
+
 ##### Módulo: Gestão de Disciplinas
 
 ###### DISC-RF1.1 : Criar disciplina
