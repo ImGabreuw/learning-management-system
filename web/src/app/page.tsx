@@ -1,103 +1,325 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState } from "react"
+import { Search, Calendar, BookOpen, Target, Settings, Bell, User, ChevronDown, ExternalLink } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Progress } from "@/components/ui/progress"
+import { FuzzySearch } from "@/components/fuzzy-search"
+import { RecommendationEngine } from "@/components/recommendation-engine"
+import { ExternalToolsHub } from "@/components/external-tools-hub"
+import { ProfileManagement } from "@/components/profile-management"
+
+export default function LMSDashboard() {
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+
+  // Mock data
+  const assignments = [
+    {
+      id: 1,
+      title: "Atividade de Laboratório 01",
+      discipline: "Computação Distribuída",
+      topics: ["Tópico 1", "Tópico 2"],
+      status: "Em Progresso",
+      dueDate: "Quarta-feira, 13 de Setembro",
+      time: "23:59",
+      progress: 65,
+    },
+    {
+      id: 2,
+      title: "Lista de Exercícios 01",
+      discipline: "Teoria dos Grafos",
+      topics: ["Tópico 3", "Tópico 4"],
+      status: "A Fazer",
+      dueDate: "Segunda-feira, 30 de Setembro",
+      time: "23:59",
+      progress: 0,
+    },
+  ]
+
+  const courses = [
+    { id: 1, name: "Compiladores", progress: 78, nextClass: "Análise Léxica", color: "bg-blue-500" },
+    { id: 2, name: "Computação Distribuída", progress: 45, nextClass: "Sistemas P2P", color: "bg-green-500" },
+    { id: 3, name: "Interação Humano Computador", progress: 92, nextClass: "Usabilidade", color: "bg-purple-500" },
+    { id: 4, name: "Teoria dos Grafos", progress: 34, nextClass: "Algoritmos de Busca", color: "bg-orange-500" },
+    {
+      id: 5,
+      name: "Laboratório de Engenharia de Software",
+      progress: 67,
+      nextClass: "Testes Unitários",
+      color: "bg-red-500",
+    },
+    { id: 6, name: "Projetos Empreendedores", progress: 89, nextClass: "Pitch Final", color: "bg-teal-500" },
+  ]
+
+  const integrations = [
+    { name: "Google Calendar", status: "connected", icon: Calendar },
+    { name: "Notion", status: "connected", icon: BookOpen },
+    { name: "GitHub", status: "disconnected", icon: ExternalLink },
+    { name: "Slack", status: "disconnected", icon: ExternalLink },
+  ]
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Header */}
+      <header className="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">M</span>
+                </div>
+                <span className="text-xl font-bold text-slate-900">Mackenzie</span>
+              </div>
+            </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="sm">
+                <Bell className="h-4 w-4" />
+              </Button>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="flex items-center space-x-2">
+                    <Avatar className="h-8 w-8">
+                      <AvatarImage src="/placeholder.svg?height=32&width=32" />
+                      <AvatarFallback>UN</AvatarFallback>
+                    </Avatar>
+                    <span className="text-sm font-medium">@username</span>
+                    <ChevronDown className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem>
+                    <User className="h-4 w-4 mr-2" />
+                    Perfil
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Settings className="h-4 w-4 mr-2" />
+                    Configurações
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Welcome Section */}
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Olá, username</h1>
+          <p className="text-slate-600">Você tem uma Prova Integrada marcada para o dia 30 de Setembro.</p>
+        </div>
+
+        {/* Advanced Search */}
+        <Card className="mb-8 border-0 shadow-lg bg-white/70 backdrop-blur-sm">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Search className="h-5 w-5 text-blue-600" />
+              <span>Busca Avançada</span>
+            </CardTitle>
+            <CardDescription>
+              Encontre conteúdo dentro de documentos, aulas e materiais usando busca inteligente
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FuzzySearch
+              onSearch={(query, results) => {
+                console.log(`[v0] Search performed: "${query}" returned ${results.length} results`)
+              }}
+            />
+          </CardContent>
+        </Card>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card className="border-0 shadow-lg bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-blue-100 text-sm font-medium">Esta Semana</p>
+                  <p className="text-3xl font-bold">6</p>
+                </div>
+                <Calendar className="h-8 w-8 text-blue-200" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-lg bg-gradient-to-r from-green-500 to-green-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-green-100 text-sm font-medium">Projetos</p>
+                  <p className="text-3xl font-bold">4</p>
+                </div>
+                <Target className="h-8 w-8 text-green-200" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-0 shadow-lg bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-purple-100 text-sm font-medium">Tarefas</p>
+                  <p className="text-3xl font-bold">8</p>
+                </div>
+                <BookOpen className="h-8 w-8 text-purple-200" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Main Content Tabs */}
+        <Tabs defaultValue="dashboard" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="opportunities">Oportunidades</TabsTrigger>
+            <TabsTrigger value="integrations">Integrações</TabsTrigger>
+            <TabsTrigger value="profile">Perfil</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="dashboard" className="space-y-6">
+            {/* Assignments & Projects */}
+            <Card className="border-0 shadow-lg bg-white/70 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle>Minhas Tarefas & Projetos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {assignments.map((assignment) => (
+                    <div key={assignment.id} className="p-4 border border-slate-200 rounded-lg bg-white">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-semibold text-slate-900">{assignment.title}</h3>
+                        <Badge variant={assignment.status === "Em Progresso" ? "default" : "secondary"}>
+                          {assignment.status}
+                        </Badge>
+                      </div>
+                      <p className="text-sm text-slate-600 mb-2">{assignment.discipline}</p>
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex space-x-1">
+                          {assignment.topics.map((topic) => (
+                            <Badge key={topic} variant="outline" className="text-xs">
+                              {topic}
+                            </Badge>
+                          ))}
+                        </div>
+                        <span className="text-sm text-slate-500">
+                          {assignment.dueDate} - {assignment.time}
+                        </span>
+                      </div>
+                      {assignment.progress > 0 && (
+                        <div className="mt-2">
+                          <div className="flex items-center justify-between mb-1">
+                            <span className="text-xs text-slate-600">Progresso</span>
+                            <span className="text-xs text-slate-600">{assignment.progress}%</span>
+                          </div>
+                          <Progress value={assignment.progress} className="h-2" />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Courses */}
+            <Card className="border-0 shadow-lg bg-white/70 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle>Meus Cursos</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {courses.map((course) => (
+                    <Card key={course.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
+                      <CardContent className="p-4">
+                        <div className={`w-full h-32 ${course.color} rounded-lg mb-4 flex items-center justify-center`}>
+                          <BookOpen className="h-8 w-8 text-white" />
+                        </div>
+                        <h3 className="font-semibold text-slate-900 mb-2">{course.name}</h3>
+                        <p className="text-sm text-slate-600 mb-3">Próxima aula: {course.nextClass}</p>
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs text-slate-600">Progresso</span>
+                            <span className="text-xs text-slate-600">{course.progress}%</span>
+                          </div>
+                          <Progress value={course.progress} className="h-2" />
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="opportunities" className="space-y-6">
+            <Card className="border-0 shadow-lg bg-white/70 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <Target className="h-5 w-5 text-blue-600" />
+                  <span>Oportunidades Recomendadas</span>
+                </CardTitle>
+                <CardDescription>
+                  Sistema inteligente que cruza seu perfil acadêmico com oportunidades disponíveis
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <RecommendationEngine
+                  onApply={(id) => {
+                    console.log(`[v0] User applied to opportunity: ${id}`)
+                    // Here you would handle the application process
+                  }}
+                  onSave={(id) => {
+                    console.log(`[v0] User saved opportunity: ${id}`)
+                    // Here you would handle saving the opportunity
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="integrations" className="space-y-6">
+            <Card className="border-0 shadow-lg bg-white/70 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center space-x-2">
+                  <ExternalLink className="h-5 w-5 text-blue-600" />
+                  <span>Hub de Integrações</span>
+                </CardTitle>
+                <CardDescription>Conecte e gerencie suas ferramentas favoritas em um só lugar</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ExternalToolsHub
+                  onConnect={(id) => {
+                    console.log(`[v0] Connected integration: ${id}`)
+                  }}
+                  onDisconnect={(id) => {
+                    console.log(`[v0] Disconnected integration: ${id}`)
+                  }}
+                  onSync={(id) => {
+                    console.log(`[v0] Synced integration: ${id}`)
+                  }}
+                />
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="profile" className="space-y-6">
+            <ProfileManagement
+              onSave={(profile) => {
+                console.log(`[v0] Profile updated:`, profile)
+                // Here you would save the profile to your backend
+              }}
+            />
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
-  );
+  )
 }
