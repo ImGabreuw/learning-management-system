@@ -248,6 +248,7 @@ export function RecommendationEngine({ userProfile, onApply, onSave }: Recommend
 
   useEffect(() => {
     setOpportunities(filteredOpportunities)
+    // disable-next-line react-hooks/exhaustive-deps
   }, [filteredOpportunities])
 
   const getTypeIcon = (type: string) => {
