@@ -294,144 +294,7 @@ sequenceDiagram
     deactivate Boundary
 ```
 
-##### Módulo: Gestão de Disciplinas
-
-###### DISC-RF1.1 : Criar disciplina
-
-```mermaid
-sequenceDiagram
-    actor Admin
-    participant boundary as DisciplinaBoundary
-    participant controller as DisciplinaController
-    participant service as DisciplinaService
-    participant repo as DisciplinaRepository
-
-    Admin->>boundary: solicitarCriacaoDisciplina(dadosDisciplina)
-    boundary->>controller: criarDisciplina(dadosDisciplina)
-    controller->>service: criarDisciplina(dadosDisciplina)
-    service->>repo: salvar(disciplina)
-    repo-->>service: disciplinaSalva
-    service-->>controller: respostaSucesso()
-    controller-->>boundary: exibirMensagemSucesso()
-```
-
-###### DISC-RF1.2: Editar disciplina
-
-```mermaid
-sequenceDiagram
-    actor Admin
-    participant boundary as DisciplinaBoundary
-    participant controller as DisciplinaController
-    participant service as DisciplinaService
-    participant repo as DisciplinaRepository
-
-    Admin->>boundary: solicitarEdicaoDisciplina(id, novosDados)
-    boundary->>controller: editarDisciplina(id, novosDados)
-    controller->>service: editarDisciplina(id, novosDados)
-    service->>repo: atualizar(id, novosDados)
-    repo-->>service: disciplinaAtualizada
-    service-->>controller: respostaSucesso()
-    controller-->>boundary: exibirMensagemSucesso()
-```
-
-###### DISC-RF1.3: Apagar disciplina
-
-```mermaid
-sequenceDiagram
-    actor Admin
-    participant boundary as DisciplinaBoundary
-    participant controller as DisciplinaController
-    participant service as DisciplinaService
-    participant repo as DisciplinaRepository
-
-    Admin->>boundary: solicitarRemocaoDisciplina(id)
-    boundary->>controller: removerDisciplina(id)
-    controller->>service: removerDisciplina(id)
-    service->>repo: deletar(id)
-    repo-->>service: confirmacaoRemocao
-    service-->>controller: respostaSucesso()
-    controller-->>boundary: exibirMensagemSucesso()
-
-```
-
-###### DISC-RF2: Listagem de disciplinas
-
-```mermaid
-sequenceDiagram
-    actor Professor/Aluno
-    participant boundary as DisciplinaBoundary
-    participant controller as DisciplinaController
-    participant service as DisciplinaService
-    participant repo as DisciplinaRepository
-
-    Professor/Aluno->>boundary: solicitarListaDisciplinas(pagina, tamanho)
-    boundary->>controller: listarDisciplinas(pagina, tamanho)
-    controller->>service: listarDisciplinasPaginadas(pagina, tamanho)
-    service->>repo: buscarPaginado(pagina, tamanho)
-    repo-->>service: listaDisciplinas
-    service-->>controller: listaDisciplinas
-    controller-->>boundary: exibirListaDisciplinas(listaDisciplinas)
-
-```
-
-###### DISC-RF3.1: Upload
-
-```mermaid
-sequenceDiagram
-    actor Professor
-    participant boundary as DocumentoBoundary
-    participant controller as DocumentoController
-    participant service as DocumentoService
-    participant storage as DocumentoStorage
-
-    Professor->>boundary: uploadDocumento(arquivo, disciplinaId)
-    boundary->>controller: uploadDocumento(arquivo, disciplinaId)
-    controller->>service: armazenarDocumento(arquivo, disciplinaId)
-    service->>storage: salvarArquivo(arquivo, disciplinaId)
-    storage-->>service: confirmacaoUpload
-    service-->>controller: respostaSucesso()
-    controller-->>boundary: exibirMensagemUpload()
-
-```
-
-###### DISC-RF3.2: Download
-
-```mermaid
-sequenceDiagram
-    actor Professor/Aluno
-    participant boundary as DocumentoBoundary
-    participant controller as DocumentoController
-    participant service as DocumentoService
-    participant storage as DocumentoStorage
-
-    Aluno->>boundary: downloadDocumento(documentoId)
-    boundary->>controller: downloadDocumento(documentoId)
-    controller->>service: obterDocumento(documentoId)
-    service->>storage: recuperarArquivo(documentoId)
-    storage-->>service: arquivo
-    service-->>controller: arquivo
-    controller-->>boundary: iniciarDownload(arquivo)
-
-```
-
-###### DISC-RF4: Listar documentos de uma disciplina
-
-```mermaid
-sequenceDiagram
-    actor Professor/Aluno
-    participant boundary as DisciplinaBoundary
-    participant controller as DisciplinaController
-    participant service as DisciplinaService
-    participant repo as DisciplinaRepository
-
-    Professor/Aluno->>boundary: solicitarCriacaoDisciplina(dadosDisciplina)
-    boundary->>controller: criarDisciplina(dadosDisciplina)
-    controller->>service: criarDisciplina(dadosDisciplina)
-    service->>repo: salvar(disciplina)
-    repo-->>service: disciplinaSalva
-    service-->>controller: respostaSucesso()
-    controller-->>boundary: exibirMensagemSucesso()
-```
+`
 
 #### Módulo: Sistema de Recomendação de Oportunidades
 
@@ -451,7 +314,7 @@ sequenceDiagram
       service->>repo: salvar(oportunidade)
       repo-->>service: oportunidadeSalva
       service-->>controller: respostaSucesso()
-      controller-->>boundary: exibirMensagemSucesso()
+      controller-->>boundary: exibe mensagem de sucesso
       boundary-->>Professor/Aluno: oportunidadeCadastrada()
 ```
 
@@ -810,4 +673,202 @@ erDiagram
         string valor
         string tipoDado
     }
+```
+
+## Capítulo 5: Modelagem leve do sistema
+
+### Módulo: Gestão de Disciplinas
+
+#### Casos de uso:
+![Casos de Uso Disciplina](docs/casos%20de%20uso/disciplinas.png)
+
+
+#### Diagramas de sequência:
+
+##### DISC-RF1.1 : Criar disciplina
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant boundary as DisciplinaBoundary
+    participant controller as DisciplinaController
+    participant service as DisciplinaService
+    participant disciplina as Disciplina
+
+    Admin->>boundary: solicitarCriacaoDisciplina(dadosDisciplina)
+    boundary->>controller: criarDisciplina(dadosDisciplina)
+    controller->>service: criarDisciplina(dadosDisciplina)
+    service->>disciplina: salvar(disciplina)
+    disciplina-->>service: disciplinaSalva
+    service-->>controller: resposta de sucesso
+    controller-->>boundary: exibe mensagem de sucesso
+```
+
+##### DISC-RF1.2: Editar disciplina
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant boundary as DisciplinaBoundary
+    participant controller as DisciplinaController
+    participant service as DisciplinaService
+    participant disciplina as Disciplina
+
+    Admin->>boundary: solicitarEdicaoDisciplina(id, novosDados)
+    boundary->>controller: editarDisciplina(id, novosDados)
+    controller->>service: editarDisciplina(id, novosDados)
+    service->>disciplina: atualizar(id, novosDados)
+    disciplina-->>service: disciplina atualizada
+    service-->>controller: resposta de sucesso
+    controller-->>boundary: exibe mensagem de sucesso
+```
+
+##### DISC-RF1.3: Remover disciplina
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant boundary as DisciplinaBoundary
+    participant controller as DisciplinaController
+    participant service as DisciplinaService
+    participant disciplina as Disciplina
+
+    Admin->>boundary: solicitarRemocaoDisciplina(id)
+    boundary->>controller: removerDisciplina(id)
+    controller->>service: removerDisciplina(id)
+    service->>disciplina: deletar(id)
+    disciplina-->>service: confirma remocao
+    service-->>controller: resposta de sucesso
+    controller-->>boundary: exibe mensagem de sucesso
+
+```
+
+##### DISC-RF2: Listagem de disciplinas
+
+```mermaid
+sequenceDiagram
+    actor Professor/Aluno
+    participant boundary as DisciplinaBoundary
+    participant controller as DisciplinaController
+    participant service as DisciplinaService
+    participant disciplina as Disciplina
+
+    Professor/Aluno->>boundary: solicitarListaDisciplinas(idAluno)
+    boundary->>controller: listarDisciplinas(idAluno)
+    controller->>service: buscarPorAluno(idAluno)
+    service->>disciplina: buscarPorAluno(idAluno)
+    disciplina-->>service: listaDisciplinas
+    service-->>controller: listaDisciplinas
+    controller-->>boundary:listaDisciplinasPaginada
+
+```
+
+##### DISC-RF3.1: Upload
+
+```mermaid
+sequenceDiagram
+    actor Professor
+    participant boundary as DocumentoBoundary
+    participant controller as DocumentoController
+    participant service as DocumentoService
+    participant documento as Documento
+
+    Professor->>boundary: uploadDocumento(arquivo, disciplinaId)
+    boundary->>controller: uploadDocumento(arquivo, disciplinaId)
+    controller->>service: armazenarDocumento(arquivo, disciplinaId)
+    service->>documento: salvarArquivo(arquivo, disciplinaId)
+    documento-->>service: confirmacao de upload
+    service-->>controller: resposta de sucesso
+    controller-->>boundary: exibe mensagem de sucesso
+
+```
+
+##### DISC-RF3.2: Download
+
+```mermaid
+sequenceDiagram
+    actor Professor/Aluno
+    participant boundary as DocumentoBoundary
+    participant controller as DocumentoController
+    participant service as DocumentoService
+    participant documento as Documento
+
+    Aluno->>boundary: downloadDocumento(documentoId)
+    boundary->>controller: downloadDocumento(documentoId)
+    controller->>service: obterDocumento(documentoId)
+    service->>documento: recuperarArquivo(documentoId)
+    documento-->>service: bytes do arquivo
+    service-->>controller: bytes do arquivo
+    controller-->>boundary: baixa o arquivo localmente
+
+```
+
+##### DISC-RF4: Listar documentos de uma disciplina
+
+```mermaid
+sequenceDiagram
+    actor Professor/Aluno
+    participant boundary as DisciplinaBoundary
+    participant controller as DisciplinaController
+    participant service as DisciplinaService
+    participant disciplina as Disciplina
+
+    Professor/Aluno->>boundary: solicitarCriacaoDisciplina(dadosDisciplina)
+    boundary->>controller: criarDisciplina(dadosDisciplina)
+    controller->>service: criarDisciplina(dadosDisciplina)
+    service->>disciplina: salvar(disciplina)
+    disciplina-->>service: disciplinaSalva
+    service-->>controller: resposta de sucesso
+    controller-->>boundary: exibe mensagem de sucesso
+```
+#### Diagrama de classes
+```mermaid
+classDiagram
+    class Pessoa {
+        +id: int
+        +nome: string
+        +email: string
+        +fazerLogin(): bool
+    }
+
+    class Aluno {
+        +listarDisciplinas(): List<Disciplina>
+        +downloadDocumento(doc: Documento)
+        +acessarConteudos(d: Disciplina)
+    }
+
+    class Professor {
+        +listarDisciplinas(): List<Disciplina>
+        +downloadDocumento(doc: Documento)
+        +uploadDocumento(doc: Documento, d: Disciplina)
+        +acessarConteudos(d: Disciplina)
+    }
+
+    class Admin {
+        +criarDisciplina(d: Disciplina)
+        +editarDisciplina(d: Disciplina)
+        +removerDisciplina(d: Disciplina)
+    }
+
+    class Disciplina {
+        +id: int
+        +nome: string
+        +descricao: string
+    }
+
+    class Documento {
+        +id: int
+        +titulo: string
+        +tipo: string
+        +arquivo: blob
+    }
+
+    Pessoa <|-- Aluno
+    Pessoa <|-- Professor
+    Pessoa <|-- Admin
+
+    Aluno "*" --> "*" Disciplina : "matriculado em"
+    Professor "*" --> "*" Disciplina : "leciona"
+    Disciplina "1" --> "*" Documento : "contém"
+
 ```
