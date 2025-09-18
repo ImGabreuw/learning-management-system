@@ -6,20 +6,20 @@
 
 ```mermaid
 sequenceDiagram
-      actor Professor/Aluno
+      actor Professor
       participant boundary as OportunidadeBoundary
       participant controller as OportunidadeController
       participant service as OportunidadeService
       participant repo as OportunidadeRepository
 
-      Professor/Aluno->>boundary: solicitarCadastroOportunidade(dadosOportunidade)
+      Professor->>boundary: solicitarCadastroOportunidade(dadosOportunidade)
       boundary->>controller: cadastrarOportunidade(dadosOportunidade)
       controller->>service: cadastrarOportunidade(dadosOportunidade)
       service->>repo: salvar(oportunidade)
       repo-->>service: oportunidadeSalva
       service-->>controller: respostaSucesso()
       controller-->>boundary: exibe mensagem de sucesso
-      boundary-->>Professor/Aluno: oportunidadeCadastrada()
+      boundary-->>Professor: oportunidadeCadastrada()
 ```
 
 ### OPP-RF2: Listagem de oportunidades

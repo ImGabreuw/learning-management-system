@@ -114,7 +114,7 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 | OPP-RF2 | O sistema deve permitir listar e filtrar oportunidades                            | Alta       |
 | OPP-RF4 | O sistema deve suportar um motor de recomendações (content-based filtering)       | Média      |
 
-### 3.1. Requisitos Não Funcionais (MVP)
+### 3.2. Requisitos Não Funcionais
 
 | ID       | Categoria                    | Requisito Não Funcional                 | Critério / Métrica                                                                | Prioridade |
 | -------- | ---------------------------- | --------------------------------------- | --------------------------------------------------------------------------------- | ---------- |
