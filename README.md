@@ -69,7 +69,7 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 
 - **Integração** com APIs de ferramentas externas (Google Calendar, Notion).
 
-## Capítulo 3: Modelagem
+## Capítulo 3: Requisitos do Sistema
 
 ### 3.1. Requisitos Funcionais
 
@@ -126,97 +126,9 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 | USAB-NF1 | Usabilidade e Acessibilidade | Responsividade e compatibilidade        | Mobile-first; suportar navegadores modernos                                       | Alta       |
 | USAB-NF2 | Usabilidade e Acessibilidade | Acessibilidade                          | Avaliação heurística e correções críticas; meta: WCAG 2.1 AA em iterações futuras | Baixa      |
 
-### 3.2. Casos de Uso
-
-Aluno:
-
-- Fazer sign-in e sign-up (e-mail mackenzista e senha)
-- Acessar disciplinas
-- Cadastrar oportunidade (estágio, complementar e extensão)
-- Feed de recomendações de oportunidades
-
-(Opcional)
-
-- Busca difusa (fuzzy search) em documentos
-- Baixar documentos
-
-Professor:
-
-- Fazer upload de documentos (PDFs, slides, vídeos), com metadados (título, descrição, tags)
-- Cadastrar oportunidade (estágio, complementar e extensão)
-
-Administrador:
-
-- Gerenciar usuários (criar, editar, remover)
-- Gerenciar disciplinas (criar, editar, remover)
-- Vincular professores e alunos às disciplinas
-
 ### 3.3. Diagramas
 
 #### 3.3.1 Sequência
-
-#### Módulo: Sistema de Recomendação de Oportunidades
-
-##### OPP-RF1: Cadastrar oportunidade
-
-```mermaid
-sequenceDiagram
-      actor Professor/Aluno
-      participant boundary as OportunidadeBoundary
-      participant controller as OportunidadeController
-      participant service as OportunidadeService
-      participant repo as OportunidadeRepository
-
-      Professor/Aluno->>boundary: solicitarCadastroOportunidade(dadosOportunidade)
-      boundary->>controller: cadastrarOportunidade(dadosOportunidade)
-      controller->>service: cadastrarOportunidade(dadosOportunidade)
-      service->>repo: salvar(oportunidade)
-      repo-->>service: oportunidadeSalva
-      service-->>controller: respostaSucesso()
-      controller-->>boundary: exibe mensagem de sucesso
-      boundary-->>Professor/Aluno: oportunidadeCadastrada()
-```
-
-##### OPP-RF2: Listagem de oportunidades
-
-```mermaid
-sequenceDiagram
-      actor Professor/Aluno
-      participant boundary as OportunidadeBoundary
-      participant controller as OportunidadeController
-      participant service as OportunidadeService
-      participant repo as OportunidadeRepository
-
-      Professor/Aluno->>boundary: solicitarListagemOportunidades(filtros)
-      boundary->>controller: listarOportunidades(filtros)
-      controller->>service: listarOportunidades(filtros)
-      service->>repo: buscarOportunidades(filtros)
-      repo-->>service: oportunidades
-      service-->>controller: oportunidades
-      controller-->>boundary: exibirListaOportunidades(oportunidades)
-      boundary-->>Professor/Aluno: listaOportunidades()
-```
-
-##### OPP-RF3: Recomendar oportunidade
-
-```mermaid
-sequenceDiagram
-   actor Aluno
-
-   participant boundary as RecomendadorBoundary
-   participant controller as RecomendadorController
-   participant service as RecomendadorService
-   participant library as RecomendadorLibrary
-
-   Aluno-->boundary: solicitarFeedOportunidadesRecomendadas(alunoId)
-   boundary-->>controller: recomendarOportunidade(alunoId)
-   controller-->>service: recomendarOportunidade(alunoId)
-   service-->library: buscarOportunidadesRecomendadas(alunoId)
-   library-->>service: oportunidadesRecomendadas
-   service-->>controller: oportunidadesRecomendadas
-   controller-->>boundary: exibirFeedOportunidadesRecomendadas(oportunidadesRecomendadas)
-   boundary-->>Aluno: feedOportunidadesRecomendadas()
-```
 
 ## Autorização e Autenticação(login)
 
@@ -534,7 +446,36 @@ erDiagram
     }
 ```
 
-## Capítulo 5: Modelagem leve do sistema
+## Capítulo 5: Modelagem do Sistema
+
+### Casos de Uso: Visão Geral
+
+Aluno:
+
+- Fazer sign-in e sign-up (e-mail mackenzista e senha)
+- Acessar disciplinas
+- Cadastrar oportunidade (estágio, complementar e extensão)
+- Feed de recomendações de oportunidades
+
+(Opcional)
+
+- Busca difusa (fuzzy search) em documentos
+- Baixar documentos
+
+Professor:
+
+- Fazer upload de documentos (PDFs, slides, vídeos), com metadados (título, descrição, tags)
+- Cadastrar oportunidade (estágio, complementar e extensão)
+
+Administrador:
+
+- Gerenciar usuários (criar, editar, remover)
+- Gerenciar disciplinas (criar, editar, remover)
+- Vincular professores e alunos às disciplinas
+
+### Módulos
+
+- [Sistema de Recomendação de Oportunidades](./docs/modeling/oportunity-recommendation-system.md)
 
 ### Módulo: Gestão de Usuários
 
@@ -868,6 +809,7 @@ sequenceDiagram
     service-->>controller: resposta de sucesso
     controller-->>boundary: exibe mensagem de sucesso
 ```
+
 #### Diagrama de classes
 ```mermaid
 classDiagram
