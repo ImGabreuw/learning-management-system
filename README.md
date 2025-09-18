@@ -126,9 +126,13 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 | USAB-NF1 | Usabilidade e Acessibilidade | Responsividade e compatibilidade        | Mobile-first; suportar navegadores modernos                                       | Alta       |
 | USAB-NF2 | Usabilidade e Acessibilidade | Acessibilidade                          | Avaliação heurística e correções críticas; meta: WCAG 2.1 AA em iterações futuras | Baixa      |
 
-### 3.3. Diagramas
+## Capítulo 4: Protótipo da Interface
 
-#### 3.3.1 Sequência
+![](docs/preview/dashboard_preview.png)
+
+> Para acessar o protótipo [clique aqui](https://learning-management-system-flame-xi.vercel.app/).
+
+[JUSTIFICATIVA AQUI]
 
 ## Autorização e Autenticação(login)
 
