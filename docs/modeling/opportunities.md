@@ -138,3 +138,72 @@ sequenceDiagram
        boundary-->>Aluno: erro: Redirecionar para página de acesso negado
    end
 ```
+
+## Diagrama de Classes
+
+```mermaid
+classDiagram
+    direction TB
+
+    class Opportunity {
+        +String title
+        +String description
+        +String companyName
+        +List~String~ recommendationReasons
+        +LocalDate deadline
+        +BigDecimal minSalary
+        +BigDecimal maxSalary
+        +Integer durationInMonths
+        +Integer matchPercentage
+        +OpportunityType type
+        +DifficultyLevel difficulty
+        +WorkModality workModality
+    }
+
+    class Skill {
+        +String name
+    }
+
+    class Theme {
+        +String name
+    }
+
+    class Location {
+        +String city
+        +String state
+    }
+
+    class OpportunityType {
+        <<enumeration>>
+        INTERNSHIP
+        JOB
+        HACKATHON
+        COURSE
+        SCHOLARSHIP
+        COMPETITION
+    }
+
+    class DifficultyLevel {
+        <<enumeration>>
+        BEGINNER
+        INTERMEDIATE
+        ADVANCED
+    }
+
+    class WorkModality {
+        <<enumeration>>
+        ON_SITE
+        REMOTE
+    }
+
+    Opportunity "*" -- "0..1" Location : is located at
+    Opportunity "*" -- "*" Skill : requires
+    Opportunity "*" -- "*" Theme : has theme
+    Opportunity ..> OpportunityType : uses
+    Opportunity ..> DifficultyLevel : uses
+    Opportunity ..> WorkModality : uses
+```
+
+Se a oportunidade for do tipo "INTERNSHIP" ou "JOB", os atributos `minSalary`, `maxSalary`, `durationInMonths` e `workModality` devem ser obrigatoriamente preenchidos. Se a oportunidade for do tipo "COURSE", "HACKATHON", "SCHOLARSHIP" ou "COMPETITION", esses atributos podem ser nulos.
+
+Se a modalidade de trabalho for "ON_SITE", o atributo `location` deve ser obrigatoriamente preenchido. Se a modalidade for "REMOTE", o atributo `location` pode ser nulo.
