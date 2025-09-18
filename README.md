@@ -539,6 +539,7 @@ erDiagram
 ### Módulo: Gestão de Usuários
 
 #### Casos de Uso:
+![Casos de Uso Gestão de Usuários](docs/casos%20de%20uso/usuarios.png)
 
 #### Diagramas de sequência:
 
