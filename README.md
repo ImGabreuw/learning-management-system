@@ -868,7 +868,7 @@ classDiagram
     Pessoa <|-- Admin
 
     Aluno "*" --> "*" Disciplina : "matriculado em"
-    Professor "*" --> "*" Disciplina : "leciona"
+    Professor "1" --> "*" Disciplina : "leciona"
     Disciplina "1" --> "*" Documento : "contém"
 
 ```
