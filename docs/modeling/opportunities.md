@@ -1,4 +1,8 @@
-# Modelagem do módulo de "Sistema de Recomendação de Oportunidades"
+# Modelagem do módulo de "Oportunidades"
+
+## Diagrama de Casos de Uso
+
+![](../casos%20de%20uso/oportunities.png)
 
 ## Diagrama de Sequência
 

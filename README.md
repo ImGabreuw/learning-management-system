@@ -342,7 +342,7 @@ Administrador:
 
 ### Módulos
 
-- [Sistema de Recomendação de Oportunidades](./docs/modeling/oportunity-recommendation-system.md)
+- [Oportunidades](./docs/modeling/opportunities.md)
 
 ### Módulo: Gestão de Usuários
 
