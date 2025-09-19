@@ -239,46 +239,114 @@ sequenceDiagram
     end
 ```
 
-## Diagrama de Classes
+## Diagrama de Classes UML
 
 ```mermaid
 classDiagram
-    class Admin {
-        -int id
-        -string nome
-        -string email
-        +listarUsuarios()
-        +filtrarUsuarios()
-        +verDetalhesUsuario(int userId)
+    class User {
+        <<Entity>>
+        -String id
+        -String name
+        -String email
+        -String hashedPassword
+        -DateTime createdAt
+        -DateTime updatedAt
+        -Boolean active
+        +boolean isActive()
+        +void updateProfile(UserProfile profile)
+        +void changePassword(String newPassword)
     }
 
-    class Usuario {
-        -int id
-        -string nome
-        -string email
-        -string roles
+    class Role {
+        <<Entity>>
+        -String id
+        -String name
+        -String description
+        -List~Permission~ permissions
+        +boolean hasPermission(Permission permission)
     }
 
-    class Pagina {
-        -int numeroPagina
-        -int tamanhoPagina
-        -int totalPaginas
-        -int totalItens
-        -List<Usuario> usuarios
-        +List<Usuario> getProximaPagina()
-        +List<Usuario> getPaginaAnterior()
+    class Permission {
+        <<Entity>>
+        -String id
+        -String name
+        -String resource
+        -String action
     }
 
-    class Filtro {
-        -string termoBusca
-        -string tipoFiltro
-        -string valorFiltro
-        +List<Usuario> aplicar(List<Usuario> usuarios)
+    class UserRole {
+        <<Entity>>
+        -String id
+        -String userId
+        -String roleId
+        -DateTime assignedAt
+        -String assignedBy
     }
 
-    Admin --> Usuario : gerencia
-    Admin --> Pagina : interage com
-    Admin --> Filtro : usa
-    Pagina "1" -- "0..*" Usuario : contém
-    Filtro ..> Usuario : filtra
+    class UserProfile {
+        <<Entity>>
+        -String id
+        -String userId
+        -String biography
+        -List~String~ skills
+        -List~String~ interests
+        -List~String~ academicAreas
+        -DateTime updatedAt
+        +void addSkill(String skill)
+        +void addInterest(String interest)
+        +Double calculateCompatibility(List~String~ opportunityTags)
+    }
+
+    class Subject {
+        <<Entity>>
+        -String id
+    }
+
+    class UserSubject {
+        <<Entity>>
+        -String id
+        -String userId
+        -String subjectId
+        -String enrollmentType
+        -DateTime enrolledAt
+    }
+
+    
+    User "1" -- "1" UserProfile : owns
+    User "1" -- "0..*" UserRole : has
+    Role "1" -- "0..*" UserRole : assigned to
+    Role "1" -- "0..*" Permission : contains
+    User "1" -- "0..*" UserSubject : enrolled in
+    Subject "1" -- "0..*" UserSubject : has students
+
+    User <|-- Student
+    User <|-- Professor  
+    User <|-- Administrator
+
+    class Student {
+        <<Entity>>
+        -String studentId
+        -String course
+        -Integer semester
+        +String getStudentId()
+        +String getCourse()
+    }
+
+    class Professor {
+        <<Entity>>
+        -String employeeId
+        -String department
+        -List~String~ specializations
+        +String getEmployeeId()
+        +String getDepartment()
+    }
+
+    class Administrator {
+        <<Entity>>
+        -String employeeId
+        -String department
+        -String accessLevel
+        +String getAccessLevel()
+        +Boolean canManageUsers()
+    }
 ```
