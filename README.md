@@ -132,7 +132,7 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 
 > Para acessar o protótipo [clique aqui](https://learning-management-system-flame-xi.vercel.app/).
 
-[JUSTIFICATIVA AQUI]
+Para essa aplicação, decidimos utilizar uma interface interativa invés do wireframe para demonstrar como os componentes e outros elementos podem ser utilizados pelo usuário e, acima de tudo, como essa nova proposta contrasta com os outros sistemas de aprendizado disponibilizados no mercado. Com isso, pretendemos demonstrar logo no início os nossos objetivos com esse projeto e quais funções farão a diferença no dia a dia dos usuários.
 
 ## Capítulo 5: Modelagem do Sistema
 
