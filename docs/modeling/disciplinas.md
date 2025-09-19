@@ -2,7 +2,7 @@
 
 #### Casos de uso:
 
-![Casos de Uso Disciplina](assets/disciplinas.png)
+![Casos de Uso Disciplina](../assets/disciplinas.png)
 
 #### Diagramas de sequência:
 
