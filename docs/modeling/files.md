@@ -70,7 +70,7 @@ sequenceDiagram
     controller-->>boundary: exibirListaArquivos(listaArquivos)
 ```
 
-## Diagrama de Classe
+## Diagrama de Classes
 
 ```mermaid
 classDiagram

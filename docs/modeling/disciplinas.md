@@ -1,12 +1,12 @@
-### Módulo: Gestão de Disciplinas
+# Modelagem de "Gestão de Disciplinas"
 
-#### Casos de uso:
+## Casos de uso
 
-![Casos de Uso Disciplina](../assets/disciplinas.png)
+![](../assets/disciplinas.png)
 
-#### Diagramas de sequência:
+## Diagramas de Sequência
 
-##### DISC-RF1.1 : Criar disciplina
+### DISC-RF1.1 : Criar disciplina
 
 ```mermaid
 sequenceDiagram
@@ -25,7 +25,7 @@ sequenceDiagram
     controller-->>boundary: exibe mensagem de sucesso
 ```
 
-##### DISC-RF1.2: Editar disciplina
+### DISC-RF1.2: Editar disciplina
 
 ```mermaid
 sequenceDiagram
@@ -44,7 +44,7 @@ sequenceDiagram
     controller-->>boundary: exibe mensagem de sucesso
 ```
 
-##### DISC-RF1.3: Remover disciplina
+### DISC-RF1.3: Remover disciplina
 
 ```mermaid
 sequenceDiagram
@@ -64,7 +64,7 @@ sequenceDiagram
 
 ```
 
-##### DISC-RF2: Listagem de disciplinas
+### DISC-RF2: Listagem de disciplinas
 
 ```mermaid
 sequenceDiagram
@@ -84,7 +84,7 @@ sequenceDiagram
 
 ```
 
-##### DISC-RF3.1: Upload
+### DISC-RF3.1: Upload
 
 ```mermaid
 sequenceDiagram
@@ -104,7 +104,7 @@ sequenceDiagram
 
 ```
 
-##### DISC-RF3.2: Download
+### DISC-RF3.2: Download
 
 ```mermaid
 sequenceDiagram
@@ -124,7 +124,7 @@ sequenceDiagram
 
 ```
 
-##### DISC-RF4: Listar documentos de uma disciplina
+### DISC-RF4: Listar documentos de uma disciplina
 
 ```mermaid
 sequenceDiagram
@@ -143,7 +143,7 @@ sequenceDiagram
     controller-->>boundary: exibe mensagem de sucesso
 ```
 
-#### Diagrama de classes
+## Diagrama de Classes
 
 ```mermaid
 classDiagram
