@@ -1,0 +1,34 @@
+services:
+  mongo:
+    image: mongo:8.0.13-noble
+    container_name: metis-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - .docker/mongodb:/data/db
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: metis-backend
+    depends_on:
+      - mongo
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: metis-web
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+

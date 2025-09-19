@@ -1,0 +1,4 @@
+spring:
+    data:
+      mongodb:
+        uri: mongodb://mongo:27017/metis
