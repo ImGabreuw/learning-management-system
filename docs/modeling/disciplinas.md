@@ -1,3 +1,5 @@
+### Módulo: Gestão de Disciplinas
+
 #### Casos de uso:
 
 ![Casos de Uso Disciplina](assets/disciplinas.png)
