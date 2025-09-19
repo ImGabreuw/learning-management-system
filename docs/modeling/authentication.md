@@ -1,5 +1,12 @@
 # Modelagem do módulo de "Autenticação e Autorização"
 
+## Diagrama de Caso de Uso
+
+
+<img width="1272" height="832" alt="image" src="https://github.com/user-attachments/assets/d2454037-ad54-43d7-bc59-56a1d86ec85c" />
+
+
+
 ## Fluxo de Autenticação
 
 ```mermaid
