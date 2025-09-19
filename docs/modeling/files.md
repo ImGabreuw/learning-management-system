@@ -1,5 +1,11 @@
 # Modelagem do módulo "Arquivos"
 
+## Diagrama de Casos de Uso
+
+![](../assets/files.png)
+
+Adicionalmente, todos os casos de uso **incluem** o caso de uso "Controle de Acesso por Role" para garantir que apenas usuários autorizados possam realizar operações de upload, download, listagem e exclusão de arquivos.
+
 ## Diagrama de Sequência
 
 ### FILE-RF1: Upload de arquivo
@@ -21,7 +27,6 @@ sequenceDiagram
         service->>service: Extrair metadados e criar DBObject
         service->>+gridFsTemplate: store(inputStream, filename, contentType, metaData)
         gridFsTemplate-->>-service: ObjectId
-        service->>service: Registrar log de upload
         service-->>-controller: Resposta com ObjectId
         controller-->>-boundary: Exibir mensagem de sucesso
         boundary-->>-Usuario: (Toast) Arquivo enviado com sucesso!
@@ -109,6 +114,54 @@ sequenceDiagram
         service-->>controller: Erro de validação
         controller-->>boundary: Exibir erro
         boundary-->>Usuario: (Toast) Filtros inválidos. Verifique os parâmetros.
+    else usuário não autorizado
+        service->>service: Verificação de acesso falha
+        service-->>controller: Erro de autorização
+        controller-->>boundary: Exibir erro de acesso
+        boundary-->>Usuario: Redirecionar para página de acesso negado
+    end
+```
+
+### FILE-RF4: Excluir arquivo
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant boundary as ArquivoBoundary
+    participant controller as ArquivoController
+    participant service as ArquivoService
+    participant gridFsTemplate as GridFsTemplate
+
+    Usuario->>+boundary: Solicitar Exclusão de Arquivo
+    boundary->>+controller: excluirArquivo(objectId, usuarioId)
+    controller->>+service: excluirArquivo(objectId, usuarioId)
+    
+    alt usuário autenticado e arquivo existe
+        service->>service: Validar autenticação e permissões
+        service->>+gridFsTemplate: findOne(Query com ObjectId)
+        gridFsTemplate-->>-service: GridFSFile
+        service->>service: Verificar se uploadedBy == usuarioId
+        
+        alt usuário é dono do arquivo
+            service->>service: Validar propriedade do arquivo
+            service->>+gridFsTemplate: delete(Query com ObjectId)
+            gridFsTemplate-->>-service: Confirmação de exclusão
+            service-->>-controller: Resposta de sucesso
+            controller-->>-boundary: Exibir mensagem de sucesso
+            boundary-->>-Usuario: (Toast) Arquivo excluído com sucesso!
+        else usuário não é dono
+            service->>service: Verificação de propriedade falha
+            service-->>controller: Erro de autorização
+            controller-->>boundary: Exibir erro de acesso
+            boundary-->>Usuario: (Toast) Você não tem permissão para excluir este arquivo
+        end
+        
+    else arquivo não encontrado
+        service->>service: Validação de acesso
+        service->>gridFsTemplate: Buscar arquivo por ObjectId
+        service-->>controller: Erro arquivo não encontrado
+        controller-->>boundary: Exibir erro
+        boundary-->>Usuario: (Toast) Arquivo não encontrado
     else usuário não autorizado
         service->>service: Verificação de acesso falha
         service-->>controller: Erro de autorização

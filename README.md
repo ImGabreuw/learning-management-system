@@ -105,6 +105,7 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 | FILE-RF1 | O sistema deve permitir upload de arquivos (PDF, slides, vídeo) | Alta       |
 | FILE-RF2 | O sistema deve permitir download de arquivos                    | Média      |
 | FILE-RF3 | O sistema deve permitir listar arquivos com metadados           | Baixo      |
+| FILE-RF4 | O sistema deve permitir excluir arquivos                        | Baixo      |
 
 #### Módulo: Oportunidades
 
