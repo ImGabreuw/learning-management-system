@@ -128,15 +128,14 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 
 ## Capítulo 4: Protótipo da Interface
 
-![](docs/preview/dashboard_preview.png)
+![](docs/assets/dashboard_preview.png)
 
 > Para acessar o protótipo [clique aqui](https://learning-management-system-flame-xi.vercel.app/).
 
 [JUSTIFICATIVA AQUI]
 
-
-
 ## Módulo: Armazenamento de Arquivos
+
 ### Diagrama de Sequencia
 
 ###### FILE-RF1
@@ -162,6 +161,7 @@ sequenceDiagram
         controller-->>boundary: exibirErroTipoArquivo()
     end
 ```
+
 ###### FILE-RF2
 
 ```mermaid
@@ -186,6 +186,7 @@ sequenceDiagram
         controller-->>boundary: exibirErroArquivoNaoEncontrado()
     end
 ```
+
 ###### FILE-RF3
 
 ```mermaid
@@ -204,6 +205,7 @@ sequenceDiagram
     service-->>controller: listaArquivos
     controller-->>boundary: exibirListaArquivos(listaArquivos)
 ```
+
 ### Diagrama de classes
 
 ```mermaid
@@ -217,14 +219,14 @@ classDiagram
         +iniciarDownload(arquivo) void
         +exibirListaArquivos(lista) void
     }
-    
+
     class ArquivoController {
         +uploadArquivo(arquivo, metadados) ResponseEntity
         +downloadArquivo(arquivoId) ResponseEntity
         +listarArquivos(pagina, tamanho) ResponseEntity
         -validarTipoArquivo(arquivo) boolean
     }
-    
+
     class ArquivoService {
         +armazenarArquivo(arquivo, metadados) Arquivo
         +obterArquivo(arquivoId) Arquivo
@@ -232,7 +234,7 @@ classDiagram
         -extrairMetadados(arquivo) Map
         -gerarNomeUnico(nomeOriginal) String
     }
-    
+
     class ArquivoRepository {
         +buscarPaginado(pagina, tamanho) Page~Arquivo~
         +buscarPorId(id) Optional~Arquivo~
@@ -240,14 +242,14 @@ classDiagram
         +deletar(id) void
         +buscarPorTipo(tipo) List~Arquivo~
     }
-    
+
     class ArquivoStorage {
         +salvarArquivo(arquivo) String
         +recuperarArquivo(arquivoId) byte[]
         +deletarArquivo(arquivoId) boolean
         +existeArquivo(arquivoId) boolean
     }
-    
+
     class Arquivo {
         -id: String
         -nomeOriginal: String
@@ -265,7 +267,7 @@ classDiagram
         +getDataUpload() LocalDateTime
         +getMetadados() Map
     }
-    
+
     class TipoArquivo {
         <<enumeration>>
         PDF
@@ -346,12 +348,14 @@ Administrador:
 
 ### Módulo: Gestão de Usuários
 
-#### Casos de Uso:
-![Casos de Uso Gestão de Usuários](docs/casos%20de%20uso/usuarios.png)
+#### Casos de Uso
+
+![Casos de Uso Gestão de Usuários](docs/assets/usuarios.png)
 
 #### Diagramas de sequência:
 
 ###### USU-RF1.1 : Criar usuário
+
 ```mermaid
 sequenceDiagram
     actor Admin
@@ -379,6 +383,7 @@ sequenceDiagram
 ```
 
 ###### USU-RF1.2 : Editar usuário
+
 ```mermaid
 sequenceDiagram
     actor Admin
@@ -406,6 +411,7 @@ sequenceDiagram
 ```
 
 ###### USU-RF1.3: Remover usuário
+
 ```mermaid
 sequenceDiagram
     actor Admin
@@ -434,6 +440,7 @@ sequenceDiagram
 ```
 
 ##### USU-RF2 : Listagem de usuários, com paginação e filtros básicos
+
 ```mermaid
 sequenceDiagram
     Actor User as Usuario
@@ -461,6 +468,7 @@ sequenceDiagram
 ```
 
 ##### USU-RF3 : Vinculação aluno/professor - Disciplina
+
 ```mermaid
 sequenceDiagram
     Actor Admin
@@ -489,6 +497,7 @@ sequenceDiagram
 ```
 
 #### Diagrama de Classes:
+
 ```mermaid
 classDiagram
     class Admin {
@@ -499,14 +508,14 @@ classDiagram
         +filtrarUsuarios()
         +verDetalhesUsuario(int userId)
     }
-	
+
     class Usuario {
         -int id
         -string nome
         -string email
         -string roles
     }
-	
+
     class Pagina {
         -int numeroPagina
         -int tamanhoPagina
@@ -516,14 +525,14 @@ classDiagram
         +List<Usuario> getProximaPagina()
         +List<Usuario> getPaginaAnterior()
     }
-	
+
     class Filtro {
         -string termoBusca
         -string tipoFiltro
         -string valorFiltro
         +List<Usuario> aplicar(List<Usuario> usuarios)
     }
-	
+
     Admin --> Usuario : gerencia
     Admin --> Pagina : interage com
     Admin --> Filtro : usa
@@ -547,23 +556,23 @@ sequenceDiagram
     participant DB as MongoDB
 
     Note over U,DB: AUTH-RF1: Autenticação via e-mail mackenzista e senha
-    
+
     U->>F: Acessa página de login
     F->>U: Formulário de login
     U->>F: Preenche email (@mackenzie.br) e senha
     F->>F: Validação client-side do formato do email
-    
+
     alt Email não termina com @mackenzie.br
         F-->>U: "Email deve ser do domínio @mackenzie.br"
     else Email válido
         F->>AC: POST /api/auth/login {email, password}
-        
+
         Note over AC: Processo de autenticação
         AC->>AS: authenticate(email, password)
         AS->>UR: findByEmail(email)
         UR->>DB: SELECT * FROM users WHERE email = ?
         DB-->>UR: Documento do usuário
-        
+
         alt Usuário não encontrado
             UR-->>AS: null
             AS-->>AC: AuthenticationException
@@ -572,7 +581,7 @@ sequenceDiagram
         else Usuário encontrado
             UR-->>AS: Entidade User
             AS->>PE: matches(password, user.hashedPassword)
-            
+
             alt Senha incorreta
                 PE-->>AS: false
                 AS-->>AC: AuthenticationException
@@ -605,22 +614,22 @@ sequenceDiagram
     participant DB as MongoDB
 
     Note over U,DB: AUTH-RF2: Sistema deve permitir logout
-    
+
     U->>F: Clica no botão "Sair"
     F->>F: Confirma ação de logout
     U->>F: Confirma logout
-    
+
     F->>AC: POST /api/auth/logout + Bearer {tokenAtual}
-    
+
     Note over AC: Extração e validação do token
     AC->>AC: extrairTokenDoHeader()
-    
+
     alt Token ausente no header
         AC-->>F: 400 Bad Request "Token obrigatório"
         F-->>U: "Erro no logout"
     else Token presente
         AC->>JWT: isTokenValid(token)
-        
+
         alt Token inválido/expirado
             JWT-->>AC: false
             Note over AC: Logout mesmo com token inválido (boa prática)
@@ -632,19 +641,19 @@ sequenceDiagram
         else Token válido
             JWT-->>AC: true
             AC->>AS: performLogout(token)
-            
+
             Note over AS: Invalidação do token no servidor
             AS->>JWT: getTokenExpiration(token)
             JWT-->>AS: dataExpiracao
-            
+
             AS->>BL: adicionarTokenNaBlacklist(token, dataExpiracao)
             BL->>DB: INSERT INTO token_blacklist
             DB-->>BL: Token adicionado à blacklist com sucesso
             BL-->>AS: Token invalidado
-            
+
             AS-->>AC: Logout concluído
             AC-->>F: 200 OK "Logout realizado com sucesso"
-            
+
             Note over F: Limpeza completa do cliente
             F->>F: sessionStorage.removeItem('token')
             F->>F: Reseta estado da aplicação
@@ -668,28 +677,28 @@ sequenceDiagram
     participant DB as MongoDB
 
     Note over U,DB: AUTH-RF3: Controle de acesso baseado em roles (middleware)
-    
+
     U->>F: Requisição para endpoint protegido (/api/admin/users)
     F->>JF: HTTP GET /api/admin/users + Authorization: Bearer {token}
-    
+
     Note over JF: Interceptação pelo filtro de segurança
     JF->>JF: doFilterInternal() - Intercepta requisição
     JF->>JWT: extrairTokenDaRequisicao(request)
     JWT-->>JF: Token JWT
-    
+
     alt Token ausente
         JF-->>F: 401 Unauthorized "Token de acesso obrigatório"
         F-->>U: "Faça login para continuar"
     else Token presente
         JF->>JWT: validarEstruturaToken(token)
-        
+
         alt Token mal formado
             JWT-->>JF: false
             JF-->>F: 401 Unauthorized "Formato de token inválido"
             F-->>U: "Token inválido, faça login novamente"
         else Token bem formado
             JF->>BL: isTokenBlacklisted(token)
-            
+
             alt Token na blacklist
                 BL-->>JF: true
                 JF-->>F: 401 Unauthorized "Token revogado"
@@ -698,19 +707,19 @@ sequenceDiagram
                 BL-->>JF: false
                 JF->>JWT: obterNomeUsuarioDoToken(token)
                 JWT-->>JF: nomeUsuario (email)
-                
+
                 Note over JF: Carregamento de authorities
                 JF->>UDS: loadUserByUsername(nomeUsuario)
                 UDS->>DB: SELECT usuario, roles FROM users WHERE email = ?
                 DB-->>UDS: Dados do usuário + roles
                 UDS-->>JF: UserPrincipal com GrantedAuthorities
-                
+
                 JF->>JF: SecurityContextHolder.setAuthentication()
                 JF->>C: Prossegue para o método do controller
-                
+
                 Note over C: Verificação de autorização por annotation
                 C->>C: @PreAuthorize("hasRole('ADMIN')") verificação
-                
+
                 alt Usuário não tem role ADMIN
                     C-->>F: 403 Forbidden "Privilégios insuficientes"
                     F-->>U: "Você não tem permissão para acessar este recurso"
@@ -855,7 +864,7 @@ classDiagram
 
     %% Relacionamentos AUTH-RF2
     AuthController --> TokenBlacklistService : usa
-    
+
     %% Relacionamentos AUTH-RF3
     JwtAuthenticationFilter --> JwtTokenProvider : usa
     JwtAuthenticationFilter --> UserDetailsServiceImpl : usa
@@ -911,13 +920,11 @@ erDiagram
     }
 ```
 
-
-
 ### Módulo: Gestão de Disciplinas
 
 #### Casos de uso:
-![Casos de Uso Disciplina](docs/casos%20de%20uso/disciplinas.png)
 
+![Casos de Uso Disciplina](docs/assets/disciplinas.png)
 
 #### Diagramas de sequência:
 
@@ -1059,6 +1066,7 @@ sequenceDiagram
 ```
 
 #### Diagrama de classes
+
 ```mermaid
 classDiagram
     class Pessoa {

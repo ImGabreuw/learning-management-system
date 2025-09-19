@@ -2,7 +2,7 @@
 
 ## Diagrama de Casos de Uso
 
-![](../casos%20de%20uso/oportunities.png)
+![](../assets/oportunities.png)
 
 A relação entre "Recomendar Oportunidades" e "Gerenciar Perfil" é do tipo "extend", indicando que a recomendação de oportunidades pode depender do gerenciamento do perfil do usuário. De forma mais detalhada, conforme o diagrama de sequência do caso de uso "Recomendar Oportunidades", o sistema verifica o perfil do aluno é válido antes de gerar as recomendações. Se o perfil estiver incompleto ou inválido, o sistema pode solicitar ao aluno que atualize seu perfil para melhorar a precisão das recomendações.
 
