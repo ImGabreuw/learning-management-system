@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pesquisa de Segmento - Mercado LMS Universitário</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .chart-container {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        height: 320px;
+        max-height: 400px;
+      }
+      @media (min-width: 768px) {
+        .chart-container {
+          height: 400px;
+        }
+      }
+      .gradient-text {
+        background: linear-gradient(to right, #4d6e8b, #003f5c);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    </style>
+  </head>
+  <body class="bg-[#f0f4f9]">
+    <header class="bg-[#003f5c] text-white p-6 shadow-lg">
+      <div class="container mx-auto text-center">
+        <h1 class="text-4xl font-bold">Pesquisa de Segmento de Mercado</h1>
+        <p class="text-xl mt-2">Metis - Learning Management System (LMS)</p>
+      </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+      <section id="problema" class="mb-12">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-3xl font-bold text-[#003f5c] mb-4 text-center">
+            Segmento, Problema e Oportunidade
+          </h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+            <div class="md:col-span-2">
+              <h3 class="text-xl font-semibold text-[#4d6e8b] mb-2">
+                Descrição do Problema
+              </h3>
+              <p class="text-gray-700 leading-relaxed">
+                O segmento de Sistemas de Gestão de Aprendizagem (LMS) no ensino
+                superior brasileiro apresenta uma oportunidade significativa,
+                impulsionada por um mercado em rápida expansão e uma
+                insatisfação generalizada com as plataformas existentes. As
+                soluções atuais, embora amplamente adotadas, sofrem de graves
+                problemas de usabilidade, interfaces complexas e falta de
+                funcionalidades que promovam um senso de comunidade e bem-estar
+                digital. Isso cria uma lacuna para uma nova plataforma focada em
+                uma experiência de usuário radicalmente simples, que não apenas
+                gerencie o conteúdo acadêmico, mas também centralize a vida
+                universitária e promova um ambiente de aprendizagem seguro e
+                engajador.
+              </p>
+              <h3 class="text-xl font-semibold text-[#4d6e8b] mt-6 mb-2">
+                Motivação do Projeto
+              </h3>
+              <p class="text-gray-700 leading-relaxed">
+                A motivação central deste projeto nasce da experiência diária
+                como estudante universitário e da observação das dificuldades
+                operacionais causadas pelas ferramentas de gestão de
+                aprendizagem atualmente em uso. A dificuldade em localizar
+                materiais de estudo, a inconsistência na organização de conteúdo
+                entre diferentes disciplinas e a instabilidade da plataforma
+                resultam em interrupções no acesso ao conteúdo de aprendizagem.
+                Adicionalmente, identifica-se uma lacuna na centralização de
+                informações relevantes para a jornada do aluno, como
+                oportunidades de estágio, projetos de pesquisa e atividades de
+                extensão, que hoje são divulgadas de forma descentralizada e
+                assimétrica. O objetivo é, portanto, criar uma solução que
+                resolva esses pontos práticos e organize a experiência
+                acadêmica, tornando-a mais fluida, integrada e personalizada.
+              </p>
+            </div>
+            <div class="text-center">
+              <h3 class="text-xl font-semibold text-[#4d6e8b] mb-4">
+                Relevância em Dados
+              </h3>
+              <div class="bg-[#c1d1e8] text-[#003f5c] rounded-lg p-4 mb-4">
+                <div class="text-4xl font-bold">US$ 625M</div>
+                <p class="font-semibold">
+                  Projeção do mercado de LMS educacional no Brasil para 2029 [1]
+                </p>
+              </div>
+              <div class="bg-[#8cb2d9] text-white rounded-lg p-4">
+                <div class="text-4xl font-bold">9.9 Milhões</div>
+                <p class="font-semibold">
+                  De estudantes universitários no Brasil, o maior número em 9
+                  anos [2]
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="concorrentes" class="mb-12">
+        <h2 class="text-3xl font-bold text-[#003f5c] mb-6 text-center">
+          Análise de Concorrentes
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+            <h3 class="text-2xl font-bold text-[#003f5c] mb-3">Moodle</h3>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Proposta:</strong> Plataforma
+              open-source, gratuita e altamente personalizável.
+            </p>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Operação:</strong> Software
+              auto-hospedado (site/app), requer equipe técnica.
+            </p>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Números:</strong> Líder na América
+              Latina (73% de share), +396M de usuários globais.
+            </p>
+            <div class="mt-auto">
+              <p class="font-semibold text-green-600">
+                ✓ Fortes: Custo zero de licença, flexibilidade total, controle
+                sobre os dados, comunidade ativa. [6]
+              </p>
+              <p class="font-semibold text-red-600">
+                ✗ Fracos: Curva de aprendizado íngreme, interface datada, custos
+                ocultos de manutenção, usabilidade fraca.
+              </p>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+            <h3 class="text-2xl font-bold text-[#003f5c] mb-3">
+              Blackboard Learn
+            </h3>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Proposta:</strong> Suíte
+              corporativa completa com ecossistema robusto de ferramentas, IA e
+              analytics.
+            </p>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Operação:</strong> SaaS por
+              assinatura (site/app).
+            </p>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Números:</strong> Um dos maiores
+              players globais, forte presença em grandes instituições.
+            </p>
+            <div class="mt-auto">
+              <p class="font-semibold text-green-600">
+                ✓ Fortes: Conjunto abrangente de recursos, forte em
+                acessibilidade, suporte corporativo.
+              </p>
+              <p class="font-semibold text-red-600">
+                ✗ Fracos: Custo elevado, complexidade e "graves problemas de
+                usabilidade" reportados no Brasil.
+              </p>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+            <h3 class="text-2xl font-bold text-[#003f5c] mb-3">Canvas LMS</h3>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Proposta:</strong> Alternativa
+              moderna com foco em interface limpa e facilidade de comunicação.
+              [9]
+            </p>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Operação:</strong> SaaS por
+              assinatura (site/app).
+            </p>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Números:</strong> Receita de US$
+              530M (2023), +30M de usuários globais.
+            </p>
+            <div class="mt-auto">
+              <p class="font-semibold text-green-600">
+                ✓ Fortes: Interface mais intuitiva, app móvel robusto, boas
+                ferramentas de avaliação. [6, 10]
+              </p>
+              <p class="font-semibold text-red-600">
+                ✗ Fracos: Custo elevado, menos customizável que o Moodle, também
+                apresenta problemas de usabilidade. [7, 10]
+              </p>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+            <h3 class="text-2xl font-bold text-[#003f5c] mb-3">
+              D2L Brightspace
+            </h3>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Proposta:</strong> Plataforma
+              inteligente focada em aprendizagem personalizada para melhorar
+              resultados. [11, 12]
+            </p>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Operação:</strong> SaaS por
+              assinatura (site/app).
+            </p>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Números:</strong> ARR de US$ 212.6M
+              (Jul/2025), +18M de usuários. [13, 14]
+            </p>
+            <div class="mt-auto">
+              <p class="font-semibold text-green-600">
+                ✓ Fortes: Foco na experiência do usuário, analytics para
+                retenção, ferramentas modernas. [15, 16]
+              </p>
+              <p class="font-semibold text-red-600">
+                ✗ Fracos: Lentidão em picos de uso, ferramentas de colaboração
+                podem ser menos eficientes. [17, 18]
+              </p>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6 flex flex-col">
+            <h3 class="text-2xl font-bold text-[#003f5c] mb-3">
+              Google Classroom
+            </h3>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Proposta:</strong> Ferramenta
+              gratuita e simplificada para apoiar o ensino e gerenciar tarefas.
+              [19, 20]
+            </p>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Operação:</strong> Gratuito,
+              integrado ao Google Workspace (site/app).
+            </p>
+            <p class="text-gray-600 mb-4">
+              <strong class="text-[#4d6e8b]">Números:</strong> +150M de
+              usuários, adoção massiva em escolas e universidades. [21]
+            </p>
+            <div class="mt-auto">
+              <p class="font-semibold text-green-600">
+                ✓ Fortes: Grátis, extremamente fácil de usar, integração
+                perfeita com o ecossistema Google. [22, 23]
+              </p>
+              <p class="font-semibold text-red-600">
+                ✗ Fracos: Funcionalidades de LMS muito limitadas, sem gestão
+                avançada de notas, dependente de internet. [23]
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="mercado" class="mb-12">
+        <h2 class="text-3xl font-bold text-[#003f5c] mb-6 text-center">
+          Análise de Mercado
+        </h2>
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h3 class="text-xl font-semibold text-[#4d6e8b] mb-2">
+            Um Setor em Crescimento Exponencial
+          </h3>
+          <p class="text-gray-700 leading-relaxed">
+            O mercado de tecnologia educacional está em forte e contínua
+            expansão, tanto globalmente quanto no Brasil. A tendência é de
+            crescimento acelerado, impulsionado pela digitalização do ensino,
+            pela expansão do EAD (que já representa 49% das matrículas no ensino
+            superior brasileiro) e por iniciativas governamentais. [24, 1, 2] O
+            Brasil se consolidou como o epicentro das EdTechs na América Latina,
+            concentrando 68,9% das empresas ativas no setor e atraindo cerca de
+            80% dos investimentos de capital de risco da região. [25, 26]
+          </p>
+        </div>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-semibold text-[#4d6e8b] mb-2 text-center">
+              Crescimento do Mercado de LMS (Educacional, Brasil)
+            </h3>
+            <p class="text-center text-gray-600 mb-4">
+              O segmento específico de LMS para educação no Brasil apresenta o
+              crescimento mais expressivo, com uma taxa anual composta (CAGR)
+              projetada de 21%, saltando de um mercado de US$ 136 milhões em
+              2021 para mais de US$ 625 milhões em 2029. [1]
+            </p>
+            <div class="chart-container">
+              <canvas id="marketGrowthChart"></canvas>
+            </div>
+          </div>
+          <div class="bg-white rounded-lg shadow-md p-6">
+            <h3 class="text-xl font-semibold text-[#4d6e8b] mb-2 text-center">
+              Oportunidade de Mercado
+            </h3>
+            <p class="text-center text-gray-600 mb-4">
+              A oportunidade é vasta. O TAM representa o mercado global de LMS.
+              O SAM foca no mercado brasileiro de LMS para ensino superior,
+              nosso alvo principal. O SOM é a fatia inicial que podemos capturar
+              com uma solução focada em usabilidade e na experiência do aluno.
+            </p>
+            <div class="chart-container">
+              <canvas id="marketShareChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="personas" class="mb-12">
+        <h2 class="text-3xl font-bold text-[#003f5c] mb-6 text-center">
+          Personas
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center"
+          >
+            <img
+              src="https://placehold.co/150x150/8cb2d9/f0f4f9?text=J"
+              alt="Avatar de Juliana"
+              class="w-36 h-36 rounded-full mb-4 border-4 border-[#c1d1e8]"
+            />
+            <h3 class="text-2xl font-bold text-[#003f5c]">Juliana, 21 anos</h3>
+            <p class="text-[#4d6e8b] font-semibold">
+              Estudante de Ciência da Computação
+            </p>
+            <div class="text-left w-full mt-4">
+              <h4 class="font-bold text-lg text-[#4d6e8b] mb-2">Rotina:</h4>
+              <p class="text-gray-700">
+                Juliana passa o dia entre aulas, estudos e um estágio de meio
+                período. Usa o LMS da faculdade diariamente para baixar
+                materiais, entregar trabalhos e verificar notas, mas se sente
+                sobrecarregada com a desorganização da plataforma.
+              </p>
+              <h4 class="font-bold text-lg text-[#4d6e8b] mt-4 mb-2">
+                😫 Dores:
+              </h4>
+              <ul class="list-disc list-inside text-gray-700 space-y-1">
+                <li>
+                  Perde tempo procurando materiais em pastas desorganizadas.
+                </li>
+                <li>A interface do LMS é lenta e pouco intuitiva.</li>
+                <li>
+                  Informações sobre estágios e eventos são espalhadas por vários
+                  canais.
+                </li>
+              </ul>
+              <h4 class="font-bold text-lg text-[#4d6e8b] mt-4 mb-2">
+                ✨ Desejos:
+              </h4>
+              <ul class="list-disc list-inside text-gray-700 space-y-1">
+                <li>
+                  Um "hub" que centralize tudo: aulas, notas, eventos e
+                  carreira.
+                </li>
+                <li>Uma interface moderna, rápida e organizada por padrão.</li>
+                <li>
+                  Receber notificações personalizadas sobre oportunidades
+                  relevantes.
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div
+            class="bg-white rounded-lg shadow-md p-6 flex flex-col items-center text-center"
+          >
+            <img
+              src="https://placehold.co/150x150/8cb2d9/f0f4f9?text=M"
+              alt="Avatar de Marcos"
+              class="w-36 h-36 rounded-full mb-4 border-4 border-[#c1d1e8]"
+            />
+            <h3 class="text-2xl font-bold text-[#003f5c]">Marcos, 45 anos</h3>
+            <p class="text-[#4d6e8b] font-semibold">Professor Universitário</p>
+            <div class="text-left w-full mt-4">
+              <h4 class="font-bold text-lg text-[#4d6e8b] mb-2">Rotina:</h4>
+              <p class="text-gray-700">
+                Dr. Marcos leciona para três turmas grandes. Ele utiliza o LMS
+                para postar slides, criar quizzes e se comunicar com os alunos,
+                mas acha o processo de upload e organização de conteúdo
+                repetitivo e demorado.
+              </p>
+              <h4 class="font-bold text-lg text-[#4d6e8b] mt-4 mb-2">
+                😫 Dores:
+              </h4>
+              <ul class="list-disc list-inside text-gray-700 space-y-1">
+                <li>
+                  Leva muito tempo para organizar o material de cada disciplina.
+                </li>
+                <li>
+                  A comunicação com os alunos pela plataforma é ineficiente.
+                </li>
+                <li>
+                  É difícil acompanhar o engajamento individual dos alunos.
+                </li>
+              </ul>
+              <h4 class="font-bold text-lg text-[#4d6e8b] mt-4 mb-2">
+                ✨ Desejos:
+              </h4>
+              <ul class="list-disc list-inside text-gray-700 space-y-1">
+                <li>
+                  Modelos prontos para estruturar disciplinas rapidamente.
+                </li>
+                <li>Ferramentas de comunicação mais ágeis e integradas.</li>
+                <li>
+                  Dashboards simples para visualizar o progresso da turma e de
+                  alunos.
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="estrategia" class="mb-12">
+        <h2 class="text-3xl font-bold text-[#003f5c] mb-6 text-center">
+          Estratégia e Diferenciais
+        </h2>
+
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h3 class="text-2xl font-bold text-[#003f5c] mb-3">
+            Proposta de Valor e Posicionamento de Produto
+          </h3>
+          <p class="text-gray-700 leading-relaxed">
+            Nossa Proposta de Valor é clara e direta, focada em resolver a dor
+            central do mercado:
+          </p>
+          <blockquote
+            class="mt-4 p-4 bg-[#f0f4f9] border-l-4 border-[#003f5c] italic text-gray-800"
+          >
+            "Para estudantes e professores universitários frustrados com
+            plataformas complicadas, nossa solução é a plataforma de
+            aprendizagem que combina um design radicalmente simples com
+            ferramentas poderosas de comunidade e segurança, transformando a
+            obrigação de usar em vontade de aprender."
+          </blockquote>
+          <p class="text-gray-700 leading-relaxed mt-4">
+            Nos posicionamos não como mais uma LMS, mas como uma nova categoria:
+            a plataforma de experiência de aprendizagem, focada no bem-estar e
+            na eficiência do usuário.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+          <div
+            class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition-shadow"
+          >
+            <div class="text-6xl mb-4">🚀</div>
+            <h3 class="text-2xl font-bold text-[#003f5c] mb-2">
+              Hub da Vida Acadêmica
+            </h3>
+            <p class="text-gray-700">
+              Centralizamos não apenas o conteúdo das aulas, mas também
+              oportunidades de estágio, pesquisa, eventos e grupos de estudo.
+              Tudo em um feed personalizado, transformando o LMS em um
+              verdadeiro ecossistema para o desenvolvimento do aluno.
+            </p>
+          </div>
+          <div
+            class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition-shadow"
+          >
+            <div class="text-6xl mb-4">🎨</div>
+            <h3 class="text-2xl font-bold text-[#003f5c] mb-2">
+              Foco na Experiência de Usuário
+            </h3>
+            <p class="text-gray-700">
+              Foco total em uma interface limpa, rápida e intuitiva. Com uma
+              estrutura de organização padronizada e inteligente, eliminamos a
+              frustração de encontrar materiais e navegar pela plataforma, tanto
+              para alunos quanto para professores.
+            </p>
+          </div>
+          <div
+            class="bg-white rounded-lg shadow-md p-6 text-center hover:shadow-xl transition-shadow"
+          >
+            <div class="text-6xl mb-4">🛡️</div>
+            <h3 class="text-2xl font-bold text-[#003f5c] mb-2">
+              Comunidade e Bem-Estar
+            </h3>
+            <p class="text-gray-700">
+              Ferramentas proativas para construir um ambiente seguro e
+              positivo, com moderação inteligente, canais de denúncia e recursos
+              que incentivam a colaboração construtiva, endereçando a crescente
+              preocupação com a segurança digital.
+            </p>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h3 class="text-2xl font-bold text-[#003f5c] mb-3">
+            Estratégia Go-to-Market para o Ambiente Universitário
+          </h3>
+          <p class="text-gray-700 leading-relaxed">
+            Nossa entrada no mercado seguirá uma abordagem estratégica de "Land
+            and Expand" (Conquistar e Expandir), focada em conquistar os
+            usuários finais antes de negociações institucionais.
+          </p>
+          <div class="mt-4 space-y-4">
+            <div>
+              <h4 class="font-bold text-lg text-[#4d6e8b]">
+                Passo 1: Conquistar (Land)
+              </h4>
+              <p class="text-gray-700">
+                Oferecer uma versão gratuita e funcional para professores
+                individuais ou departamentos específicos, especialmente em
+                cursos de EAD. O objetivo é criar um núcleo de usuários
+                apaixonados que se tornem defensores da marca dentro da
+                instituição.
+              </p>
+            </div>
+            <div>
+              <h4 class="font-bold text-lg text-[#4d6e8b]">
+                Passo 2: Expandir (Expand)
+              </h4>
+              <p class="text-gray-700">
+                Utilizar os dados de uso, engajamento e depoimentos da fase
+                inicial como prova social para iniciar conversas com a
+                administração. O argumento de venda focará no retorno sobre o
+                investimento (ROI), demonstrando como uma melhor experiência do
+                usuário leva a maiores taxas de retenção e sucesso do aluno.
+                [15, 29, 30]
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="conclusao" class="mb-12">
+        <div class="bg-white rounded-lg shadow-md p-6">
+          <h2 class="text-3xl font-bold text-[#003f5c] mb-4 text-center">
+            Conclusão e Próximos Passos
+          </h2>
+          <div class="text-gray-700 leading-relaxed space-y-4">
+            <p>
+              A pesquisa confirma que o mercado brasileiro de LMS para o ensino
+              superior, apesar de maduro e em crescimento, está preso a um
+              paradigma ultrapassado. Os players dominantes competem em
+              funcionalidades, mas falham no essencial: a experiência do
+              usuário. A frustração de estudantes e professores não é um
+              problema de nicho, mas uma dor sistêmica e generalizada.
+            </p>
+            <p class="font-semibold text-[#4d6e8b]">
+              A principal lacuna é a ausência de uma plataforma que adote uma
+              filosofia "B2B2C": vendida para a instituição, mas projetada com
+              uma obsessão pela experiência do aluno e do professor. Nenhuma
+              solução atual equilibra usabilidade, funcionalidade essencial e um
+              foco deliberado na construção de uma comunidade acadêmica segura e
+              integrada.
+            </p>
+            <p>
+              Os próximos passos envolvem o desenvolvimento de um Protótipo de
+              Mínima Viabilidade (MVP) focado no "Hub da Vida Acadêmica" e na
+              "Experiência de Usuário Superior", validando essas funcionalidades
+              com um grupo piloto de estudantes e professores para coletar
+              feedback e iterar sobre a solução.
+            </p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script>
+      window.addEventListener("DOMContentLoaded", (event) => {
+        const brilliantBluesPalette = {
+          darkBlue: "#003f5c",
+          mediumBlue: "#4d6e8b",
+          lightBlue: "#8cb2d9",
+          paleBlue: "#c1d1e8",
+          background: "#f0f4f9",
+        };
+
+        const tooltipTitleCallback = (tooltipItems) => {
+          const item = tooltipItems[0];
+          let label = item.chart.data.labels[item.dataIndex];
+          if (Array.isArray(label)) {
+            return label.join(" ");
+          }
+          return label;
+        };
+
+        const marketGrowthCtx = document
+          .getElementById("marketGrowthChart")
+          .getContext("2d");
+        const marketGrowthChart = new Chart(marketGrowthCtx, {
+          type: "line",
+          data: {
+            labels: ["2023", "2024", "2025", "2026", "2027", "2028", "2029"],
+            datasets: [
+              {
+                label: "Valor de Mercado (em Bilhões USD)",
+                data: [17.8, 20.3, 23.2, 26.5, 30.3, 34.6, 43.6],
+                backgroundColor: "rgba(77, 110, 139, 0.2)",
+                borderColor: brilliantBluesPalette.darkBlue,
+                tension: 0.4,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: false,
+                ticks: {
+                  callback: function (value, index, values) {
+                    return "$" + value + " Bi";
+                  },
+                },
+              },
+            },
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                callbacks: {
+                  title: tooltipTitleCallback,
+                },
+              },
+            },
+          },
+        });
+
+        const marketShareCtx = document
+          .getElementById("marketShareChart")
+          .getContext("2d");
+        const marketShareChart = new Chart(marketShareCtx, {
+          type: "doughnut",
+          data: {
+            labels: [
+              "TAM - Mercado Total (R$ 500M)",
+              "SAM - Mercado-Alvo (R$ 150M)",
+              "SOM - Mercado Atingível (R$ 15M)",
+            ],
+            datasets: [
+              {
+                label: "Tamanho do Mercado (Brasil)",
+                data: [335, 150, 15],
+                backgroundColor: [
+                  brilliantBluesPalette.paleBlue,
+                  brilliantBluesPalette.lightBlue,
+                  brilliantBluesPalette.darkBlue,
+                ],
+                borderColor: brilliantBluesPalette.background,
+                hoverOffset: 4,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                position: "bottom",
+              },
+              tooltip: {
+                callbacks: {
+                  title: tooltipTitleCallback,
+                  label: function (context) {
+                    let label =
+                      context.chart.data.labels[context.dataIndex] || "";
+                    if (label) {
+                      label = label.split("(")[0].trim();
+                    }
+                    let value = context.parsed;
+                    return label + ": R$" + value + "M";
+                  },
+                },
+              },
+            },
+          },
+        });
+      });
+    </script>
+  </body>
+</html>
