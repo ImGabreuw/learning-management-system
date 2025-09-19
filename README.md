@@ -920,6 +920,4 @@ erDiagram
     }
 ```
 
-### Módulo: Gestão de Disciplinas
-
-
+- [Disciplinas](./docs/modeling/disciplinas.md)
