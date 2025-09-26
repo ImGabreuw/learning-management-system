@@ -1,8 +1,14 @@
 # Modelagem do módulo "Arquivos"
 
+## Diagrama de Casos de Uso
+
+![](../assets/files.png)
+
+Adicionalmente, todos os casos de uso **incluem** o caso de uso "Controle de Acesso por Role" para garantir que apenas usuários autorizados possam realizar operações de upload, download, listagem e exclusão de arquivos.
+
 ## Diagrama de Sequência
 
-### FILE-RF1
+### FILE-RF1: Upload de arquivo
 
 ```mermaid
 sequenceDiagram
@@ -10,23 +16,34 @@ sequenceDiagram
     participant boundary as ArquivoBoundary
     participant controller as ArquivoController
     participant service as ArquivoService
-    participant storage as ArquivoStorage
+    participant gridFsTemplate as GridFsTemplate
 
-    Usuario->>boundary: uploadArquivo(arquivo, metadados)
-    boundary->>controller: uploadArquivo(arquivo, metadados)
-    controller->>controller: validarTipoArquivo(arquivo)
-    alt arquivo válido
-        controller->>service: armazenarArquivo(arquivo, metadados)
-        service->>storage: salvarArquivo(arquivo)
-        storage-->>service: confirmacaoUpload
-        service-->>controller: respostaSucesso()
-        controller-->>boundary: exibirMensagemUpload()
+    Usuario->>+boundary: Enviar MultipartFile para Upload
+    boundary->>+controller: uploadArquivo(multipartFile, metadados, usuarioId)
+    controller->>+service: uploadArquivo(multipartFile, metadados, usuarioId)
+    
+    alt usuário autenticado e arquivo válido
+        service->>service: Validar autenticação, permissões e arquivo
+        service->>service: Extrair metadados e criar DBObject
+        service->>+gridFsTemplate: store(inputStream, filename, contentType, metaData)
+        gridFsTemplate-->>-service: ObjectId
+        service-->>-controller: Resposta com ObjectId
+        controller-->>-boundary: Exibir mensagem de sucesso
+        boundary-->>-Usuario: (Toast) Arquivo enviado com sucesso!
     else arquivo inválido
-        controller-->>boundary: exibirErroTipoArquivo()
+        service->>service: Validação falha
+        service-->>controller: Erro de validação
+        controller-->>boundary: Exibir erro
+        boundary-->>Usuario: (Toast) Tipo de arquivo não permitido
+    else usuário não autorizado
+        service->>service: Verificação de acesso falha
+        service-->>controller: Erro de autorização
+        controller-->>boundary: Exibir erro de acesso
+        boundary-->>Usuario: Redirecionar para página de acesso negado
     end
 ```
 
-### FILE-RF2
+### FILE-RF2: Download de arquivo
 
 ```mermaid
 sequenceDiagram
@@ -34,24 +51,40 @@ sequenceDiagram
     participant boundary as ArquivoBoundary
     participant controller as ArquivoController
     participant service as ArquivoService
-    participant storage as ArquivoStorage
+    participant gridFsTemplate as GridFsTemplate
+    participant gridFsOperations as GridFsOperations
 
-    Usuario->>boundary: downloadArquivo(arquivoId)
-    boundary->>controller: downloadArquivo(arquivoId)
-    controller->>service: obterArquivo(arquivoId)
-    service->>storage: recuperarArquivo(arquivoId)
-    alt arquivo existe
-        storage-->>service: arquivo
-        service-->>controller: arquivo
-        controller-->>boundary: iniciarDownload(arquivo)
+    Usuario->>+boundary: Solicitar Download de Arquivo
+    boundary->>+controller: downloadArquivo(objectId, usuarioId)
+    controller->>+service: downloadArquivo(objectId, usuarioId)
+    
+    alt usuário autenticado e arquivo existe
+        service->>service: Validar autenticação e permissões
+        service->>+gridFsTemplate: findOne(Query com ObjectId)
+        gridFsTemplate-->>-service: GridFSFile
+        service->>service: Validar disponibilidade e permissões do arquivo
+        service->>+gridFsOperations: getResource(GridFSFile)
+        gridFsOperations-->>-service: GridFsResource
+        service->>service: Extrair InputStream
+        service-->>-controller: LoadFile com InputStream
+        controller-->>-boundary: Iniciar download
+        boundary-->>-Usuario: Download iniciado
     else arquivo não encontrado
-        storage-->>service: arquivoNaoEncontrado
-        service-->>controller: erroArquivoNaoEncontrado()
-        controller-->>boundary: exibirErroArquivoNaoEncontrado()
+        service->>service: Validação de acesso
+        service->>gridFsTemplate: Buscar arquivo por ObjectId
+        gridFsTemplate-->>service: null
+        service-->>controller: Erro arquivo não encontrado
+        controller-->>boundary: Exibir erro
+        boundary-->>Usuario: (Toast) Arquivo não encontrado
+    else usuário não autorizado
+        service->>service: Verificação de acesso falha
+        service-->>controller: Erro de autorização
+        controller-->>boundary: Exibir erro de acesso
+        boundary-->>Usuario: Redirecionar para página de acesso negado
     end
 ```
 
-### FILE-RF3
+### FILE-RF3: Listagem de arquivos
 
 ```mermaid
 sequenceDiagram
@@ -59,122 +92,126 @@ sequenceDiagram
     participant boundary as ArquivoBoundary
     participant controller as ArquivoController
     participant service as ArquivoService
-    participant repo as ArquivoRepository
+    participant gridFsTemplate as GridFsTemplate
 
-    Usuario->>boundary: solicitarListaArquivos(pagina, tamanho)
-    boundary->>controller: listarArquivos(pagina, tamanho)
-    controller->>service: listarArquivosPaginados(pagina, tamanho)
-    service->>repo: buscarPaginado(pagina, tamanho)
-    repo-->>service: listaArquivos
-    service-->>controller: listaArquivos
-    controller-->>boundary: exibirListaArquivos(listaArquivos)
+    Usuario->>+boundary: Acessar Lista de Arquivos
+    boundary->>+controller: listarArquivos(filtros, paginacao, usuarioId)
+    controller->>+service: listarArquivos(filtros, paginacao, usuarioId)
+    
+    alt usuário autenticado e filtros válidos
+        service->>service: Validar autenticação, permissões e filtros
+        service->>service: Criar Query GridFS com filtros de segurança
+        service->>+gridFsTemplate: find(query) com paginação
+        gridFsTemplate-->>-service: Lista de GridFSFiles
+        service->>+gridFsTemplate: find(query).count()
+        gridFsTemplate-->>-service: Total de arquivos
+        service->>service: Formatar resultados e extrair metadados
+        service-->>-controller: Page com GridFSFileInfo
+        controller-->>-boundary: Exibir lista paginada
+        boundary-->>-Usuario: Apresentar lista de arquivos paginada
+    else filtros inválidos
+        service->>service: Validação de filtros falha
+        service-->>controller: Erro de validação
+        controller-->>boundary: Exibir erro
+        boundary-->>Usuario: (Toast) Filtros inválidos. Verifique os parâmetros.
+    else usuário não autorizado
+        service->>service: Verificação de acesso falha
+        service-->>controller: Erro de autorização
+        controller-->>boundary: Exibir erro de acesso
+        boundary-->>Usuario: Redirecionar para página de acesso negado
+    end
+```
+
+### FILE-RF4: Excluir arquivo
+
+```mermaid
+sequenceDiagram
+    actor Usuario
+    participant boundary as ArquivoBoundary
+    participant controller as ArquivoController
+    participant service as ArquivoService
+    participant gridFsTemplate as GridFsTemplate
+
+    Usuario->>+boundary: Solicitar Exclusão de Arquivo
+    boundary->>+controller: excluirArquivo(objectId, usuarioId)
+    controller->>+service: excluirArquivo(objectId, usuarioId)
+    
+    alt usuário autenticado e arquivo existe
+        service->>service: Validar autenticação e permissões
+        service->>+gridFsTemplate: findOne(Query com ObjectId)
+        gridFsTemplate-->>-service: GridFSFile
+        service->>service: Verificar se uploadedBy == usuarioId
+        
+        alt usuário é dono do arquivo
+            service->>service: Validar propriedade do arquivo
+            service->>+gridFsTemplate: delete(Query com ObjectId)
+            gridFsTemplate-->>-service: Confirmação de exclusão
+            service-->>-controller: Resposta de sucesso
+            controller-->>-boundary: Exibir mensagem de sucesso
+            boundary-->>-Usuario: (Toast) Arquivo excluído com sucesso!
+        else usuário não é dono
+            service->>service: Verificação de propriedade falha
+            service-->>controller: Erro de autorização
+            controller-->>boundary: Exibir erro de acesso
+            boundary-->>Usuario: (Toast) Você não tem permissão para excluir este arquivo
+        end
+        
+    else arquivo não encontrado
+        service->>service: Validação de acesso
+        service->>gridFsTemplate: Buscar arquivo por ObjectId
+        service-->>controller: Erro arquivo não encontrado
+        controller-->>boundary: Exibir erro
+        boundary-->>Usuario: (Toast) Arquivo não encontrado
+    else usuário não autorizado
+        service->>service: Verificação de acesso falha
+        service-->>controller: Erro de autorização
+        controller-->>boundary: Exibir erro de acesso
+        boundary-->>Usuario: Redirecionar para página de acesso negado
+    end
 ```
 
 ## Diagrama de Classes
 
 ```mermaid
 classDiagram
-    class ArquivoBoundary {
-        +uploadArquivo(arquivo, metadados) void
-        +downloadArquivo(arquivoId) void
-        +solicitarListaArquivos(pagina, tamanho) void
-        +exibirMensagemUpload() void
-        +exibirErroTipoArquivo() void
-        +iniciarDownload(arquivo) void
-        +exibirListaArquivos(lista) void
-    }
-
-    class ArquivoController {
-        +uploadArquivo(arquivo, metadados) ResponseEntity
-        +downloadArquivo(arquivoId) ResponseEntity
-        +listarArquivos(pagina, tamanho) ResponseEntity
-        -validarTipoArquivo(arquivo) boolean
-    }
-
-    class ArquivoService {
-        +armazenarArquivo(arquivo, metadados) Arquivo
-        +obterArquivo(arquivoId) Arquivo
-        +listarArquivosPaginados(pagina, tamanho) Page~Arquivo~
-        -extrairMetadados(arquivo) Map
-        -gerarNomeUnico(nomeOriginal) String
-    }
-
-    class ArquivoRepository {
-        +buscarPaginado(pagina, tamanho) Page~Arquivo~
-        +buscarPorId(id) Optional~Arquivo~
-        +salvar(arquivo) Arquivo
-        +deletar(id) void
-        +buscarPorTipo(tipo) List~Arquivo~
-    }
-
-    class ArquivoStorage {
-        +salvarArquivo(arquivo) String
-        +recuperarArquivo(arquivoId) byte[]
-        +deletarArquivo(arquivoId) boolean
-        +existeArquivo(arquivoId) boolean
-    }
-
-    class Arquivo {
-        -id: String
-        -nomeOriginal: String
-        -nomeArmazenado: String
-        -caminho: String
-        -tamanho: Long
-        -tipo: TipoArquivo
-        -dataUpload: LocalDateTime
+    class File {
+        <<Entity>>
+        -_id: ObjectId
+        -filename: String
+        -originalName: String
+        -contentType: String
+        -length: Long
         -checksum: String
-        -metadados: Map~String, Object~
-        +getId() String
-        +getNomeOriginal() String
-        +getTamanho() Long
-        +getTipo() TipoArquivo
-        +getDataUpload() LocalDateTime
-        +getMetadados() Map
+        -metadata: FileMetadata
+        +validate(): Boolean
+        +isExpired(): Boolean
     }
 
-    class TipoArquivo {
+    class FileMetadata {
+        <<Entity>>
+        -fileType: FileType
+        -title: String
+        -description: String
+        -tags: List~String~
+        -uploadedAt: LocalDateTime
+        -uploadedBy: String
+        +hasTag(tag: String): Boolean
+    }
+
+    class FileType {
         <<enumeration>>
         PDF
         XLSX
         TXT
-'       WORD
-        +getExtensoes() List~String~
-        +isValido(extensao) boolean
-        +getMimeTypes() List~String~
+        WORD
+        -mimeType: String
+        -extensions: List~String~
+        +getMimeType(): String
+        +getExtensions(): List~String~
+        +isValid(contentType: String): boolean
+        +fromMimeType(mimeType: String): FileType
     }
 
-    ArquivoBoundary --> ArquivoController : chama
-    ArquivoController --> ArquivoService : usa
-    ArquivoService --> ArquivoRepository : usa
-    ArquivoService --> ArquivoStorage : usa
-    ArquivoRepository --> Arquivo : gerencia
-    Arquivo --> TipoArquivo : tem
-    ArquivoService "1" --> "*" Arquivo : processa
-```
-
-## Entidade MongoDB
-
-```mermaid
-erDiagram
-    ARQUIVO ||--o{ METADADO : contains
-
-    ARQUIVO {
-        string id
-        string nomeOriginal
-        string nomeArmazenado
-        string caminho
-        long tamanho
-        string tipo
-        timestamp dataUpload
-        string checksum
-        string usuarioId
-        boolean ativo
-    }
-
-    METADADO {
-        string arquivoId
-        string chave
-        string valor
-        string tipoDado
-    }
+    File "1" -- "1" FileMetadata : contains
+    FileMetadata "1" -- "1" FileType : has
 ```

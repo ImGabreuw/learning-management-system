@@ -105,6 +105,7 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 | FILE-RF1 | O sistema deve permitir upload de arquivos (PDF, slides, vídeo) | Alta       |
 | FILE-RF2 | O sistema deve permitir download de arquivos                    | Média      |
 | FILE-RF3 | O sistema deve permitir listar arquivos com metadados           | Baixo      |
+| FILE-RF4 | O sistema deve permitir excluir arquivos                        | Baixo      |
 
 #### Módulo: Oportunidades
 
@@ -163,8 +164,8 @@ Administrador:
 
 ### Módulos
 
-- [Autenticação e Autorização](./docs/modeling/authentication.md)
-- [Usuários](./docs/modeling/users.md)
-- [Arquivos](./docs/modeling/files.md)
-- [Disciplinas](./docs/modeling/subjects.md)
-- [Oportunidades](./docs/modeling/opportunities.md)
+- [Autenticação e Autorização](https://github.com/ImGabreuw/learning-management-system/blob/master/docs/modeling/authentication.md)
+- [Usuários](https://github.com/ImGabreuw/learning-management-system/blob/master/docs/modeling/users.md)
+- [Arquivos](https://github.com/ImGabreuw/learning-management-system/blob/master/docs/modeling/files.md)
+- [Disciplinas](https://github.com/ImGabreuw/learning-management-system/blob/master/docs/modeling/subjects.md)
+- [Oportunidades](https://github.com/ImGabreuw/learning-management-system/blob/master/docs/modeling/opportunities.md)
