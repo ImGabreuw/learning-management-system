@@ -242,3 +242,13 @@ graph TB
     AuthService --> MicrosoftOAuth2
 
 ```
+#### Legenda:
+
+```mermaid
+%%{init: {'theme': 'default'}}%%
+graph TB
+subgraph Pacote[Pacote]
+        Componente[Componente]
+        Database[(Database)]
+    end
+```
