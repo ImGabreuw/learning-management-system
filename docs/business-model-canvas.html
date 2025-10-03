@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Model Canvas - Plataforma LMS Inovadora</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        .chart-container { position: relative; width: 100%; max-width: 600px; margin-left: auto; margin-right: auto; height: 320px; max-height: 400px; }
+        @media (min-width: 768px) { .chart-container { height: 400px; } }
+        
+        .canvas-card {
+            background-color: white;
+            border-radius: 0.5rem;
+            border: 1px solid #E2E8F0;
+            padding: 1rem;
+            transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .canvas-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.07), 0 4px 6px -4px rgb(0 0 0 / 0.07);
+        }
+    </style>
+</head>
+<body class="bg-[#F1F5F9] text-[#0F172A]">
+
+    <header class="bg-[#1E3A8A] text-white p-6 shadow-lg sticky top-0 z-10">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl md:text-3xl font-bold">Business Model Canvas: Plataforma LMS</h1>
+            <nav class="hidden md:block">
+                <a href="#canvas" class="text-white hover:text-[#93C5FD] px-3">O Canvas</a>
+                <a href="#financeiro" class="text-white hover:text-[#93C5FD] px-3">Análise Financeira</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8">
+        <section class="text-center mb-12">
+            <h2 class="text-3xl font-bold text-[#1E3A8A] mb-4">Construindo o Futuro da Educação Corporativa</h2>
+            <p class="max-w-3xl mx-auto text-lg text-[#334155]">
+                Este relatório apresenta uma proposta estratégica de modelo de negócios para uma nova plataforma LMS, fundamentada em uma análise aprofundada das tendências de mercado e do público-alvo. O objetivo é criar uma solução de alto valor que atenda às demandas dinâmicas do treinamento corporativo.
+            </p>
+        </section>
+
+        <section id="canvas" class="mb-12">
+            <h3 class="text-2xl font-bold text-center text-[#1E3A8A] mb-8">O Modelo de Negócios Visual</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <!-- Col 1: Parcerias -->
+                <div class="flex flex-col gap-6">
+                    <div class="canvas-card flex-1">
+                        <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto mb-3 text-[#3B82F6]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V19a2 2 0 00-2-2H7a2 2 0 00-2 2v2m14-7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                            <h4 class="text-lg font-bold mb-3">Parcerias-Chave</h4>
+                        </div>
+                        <ul class="list-none text-sm text-[#334155] space-y-3 flex-grow">
+                            <li><strong>Nível 1 (Adoção):</strong> Alunos da universidade, com foco inicial nos cursos de computação para validação e feedback (early adopters).</li>
+                            <li><strong>Nível 2 (Validação):</strong> Professores influentes que se tornam defensores da plataforma e promovem o uso em suas turmas.</li>
+                            <li><strong>Nível 3 (Expansão):</strong> Diretores e tomadores de decisão em outras universidades para escalar o negócio e firmar contratos institucionais.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Col 2: Atividades e Recursos -->
+                <div class="flex flex-col gap-6">
+                    <div class="canvas-card">
+                       <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto mb-3 text-[#3B82F6]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                           <h4 class="text-lg font-bold mb-3">Atividades-Chave</h4>
+                       </div>
+                        <ul class="list-disc list-inside text-sm text-[#334155] space-y-2 flex-grow">
+                            <li><strong>Desenvolvimento Ágil:</strong> Iteração contínua da plataforma com base no feedback direto de alunos e professores.</li>
+                            <li><strong>Engajamento no Campus:</strong> Gestão do programa piloto, workshops e criação de uma comunidade de usuários.</li>
+                            <li><strong>Coleta de Prova Social:</strong> Coleta de depoimentos e dados de uso para construir cases de sucesso.</li>
+                            <li><strong>Relacionamento Institucional:</strong> Apresentação dos resultados para a diretoria e tomadores de decisão.</li>
+                        </ul>
+                    </div>
+                    <div class="canvas-card">
+                       <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto mb-3 text-[#3B82F6]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4M4 7s0 4 8 4 8-4 8-4m-8 8v4m0 0H8m4 0h4"></path></svg>
+                           <h4 class="text-lg font-bold mb-3">Recursos-Chave</h4>
+                       </div>
+                       <ul class="list-disc list-inside text-sm text-[#334155] space-y-2 flex-grow">
+                            <li><strong>Plataforma MVP:</strong> Solução funcional focada na experiência do usuário e no "Hub Acadêmico".</li>
+                            <li><strong>Comunidade de Pilotos:</strong> Base de alunos e professores engajados que fornecem validação.</li>
+                            <li><strong>Equipe de Produto:</strong> Desenvolvedores e designers com foco em UX educacional.</li>
+                            <li><strong>Dados de Validação:</strong> Métricas de engajamento e depoimentos que comprovam o valor da solução.</li>
+                       </ul>
+                    </div>
+                </div>
+
+                <!-- Col 3: Proposta de Valor -->
+                <div class="flex flex-col gap-6">
+                    <div class="canvas-card flex-1">
+                        <div class="text-center">
+                             <svg class="w-16 h-16 mx-auto mb-3 text-[#3B82F6]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm0 0c-1.657 0-3 1.343-3 3v6h6v-6c0-1.657-1.343-3-3-3zM3 14s.895-1.928 2.358-2.5M21 14s-.895-1.928-2.358-2.5m-11.284 5.5A2.35 2.35 0 006.642 22h10.716a2.35 2.35 0 002.284-2.5"></path></svg>
+                            <h4 class="text-lg font-bold mb-3">Proposta de Valor</h4>
+                        </div>
+                        <div class="text-sm text-[#334155] space-y-3 flex-grow">
+                            <p class="italic text-center font-semibold">"Uma plataforma que combina design simples com ferramentas de comunidade, transformando a obrigação de usar em vontade de aprender."</p>
+                            <div class="text-left space-y-2">
+                                <div>
+                                    <h5 class="font-bold">🚀 Hub da Vida Acadêmica:</h5>
+                                    <p>Centraliza aulas, estágios, eventos e pesquisa em um feed personalizado.</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold">🎨 Foco na Experiência do Usuário:</h5>
+                                    <p>Interface limpa, rápida e intuitiva para eliminar a frustração de alunos e professores.</p>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold">🛡️ Comunidade e Bem-Estar:</h5>
+                                    <p>Ambiente seguro e positivo com moderação inteligente e ferramentas de colaboração.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Col 4: Relacionamento e Canais -->
+                <div class="flex flex-col gap-6">
+                     <div class="canvas-card">
+                        <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto mb-3 text-[#3B82F6]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            <h4 class="text-lg font-bold mb-3">Rel. com Clientes</h4>
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-[#334155] space-y-2 flex-grow">
+                            <li><strong>Comunidade de Alunos Embaixadores:</strong> Criação de um grupo de "early adopters" para feedback e promoção orgânica.</li>
+                            <li><strong>Suporte Próximo a Professores:</strong> Workshops e um canal direto para garantir o sucesso do programa piloto.</li>
+                            <li><strong>Relacionamento Estratégico:</strong> Apresentação de dados de sucesso e ROI para a gestão universitária.</li>
+                            <li><strong>Suporte Automatizado:</strong> Base de conhecimento e tutoriais para autoatendimento em escala.</li>
+                        </ul>
+                    </div>
+                    <div class="canvas-card">
+                       <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto mb-3 text-[#3B82F6]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            <h4 class="text-lg font-bold mb-3">Canais</h4>
+                       </div>
+                       <ul class="list-disc list-inside text-sm text-[#334155] space-y-2 flex-grow">
+                           <li><strong>Marketing de Guerrilha:</strong> Ações no campus e presença em eventos acadêmicos.</li>
+                           <li><strong>Canais Digitais de Alunos:</strong> Grupos de cursos e redes sociais universitárias.</li>
+                           <li><strong>Programa Piloto:</strong> Parcerias com professores para validação e criação de cases.</li>
+                           <li><strong>Venda Direta Institucional:</strong> Abordagem consultiva à administração da universidade.</li>
+                       </ul>
+                    </div>
+                </div>
+                
+                <!-- Col 5: Segmentos -->
+                <div class="flex flex-col gap-6">
+                    <div class="canvas-card flex-1">
+                        <div class="text-center">
+                            <svg class="w-16 h-16 mx-auto mb-3 text-[#3B82F6]" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                           <h4 class="text-lg font-bold mb-3">Segmentos de Clientes</h4>
+                        </div>
+                        <ul class="list-disc list-inside text-sm text-[#334155] space-y-2 flex-grow">
+                            <li><strong>Médias Empresas:</strong> Buscam solução escalável e custo-benefício.</li>
+                            <li><strong>Grandes Corporações:</strong> Necessitam de personalização e integrações robustas.</li>
+                            <li><strong>Instituições de Ensino:</strong> Utilizam a plataforma para criar e vender cursos (B2B2C).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Row -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <div class="canvas-card">
+                    <div class="text-center">
+                        <svg class="w-16 h-16 mx-auto mb-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"></path></svg>
+                        <h4 class="text-lg font-bold mb-3">Estrutura de Custos</h4>
+                    </div>
+                    <ul class="list-disc list-inside text-sm text-[#334155] space-y-2 flex-grow">
+                        <li><strong>Custos com Pessoal:</strong> Salários e benefícios (principal custo).</li>
+                        <li><strong>Infraestrutura e Hospedagem:</strong> Custos com servidores e serviços cloud.</li>
+                        <li><strong>Marketing e Vendas:</strong> Publicidade, eventos e comissões.</li>
+                    </ul>
+                </div>
+                <div class="canvas-card">
+                    <div class="text-center">
+                         <svg class="w-16 h-16 mx-auto mb-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+                         <h4 class="text-lg font-bold mb-3">Fontes de Receita</h4>
+                    </div>
+                     <ul class="list-disc list-inside text-sm text-[#334155] space-y-2 flex-grow">
+                        <li><strong>Assinatura (SaaS):</strong> Planos mensais/anuais baseados em usuários ativos.</li>
+                        <li><strong>Serviços Profissionais:</strong> Taxas para implementação e treinamento.</li>
+                        <li><strong>Marketplace:</strong> Comissão sobre cursos de parceiros.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="financeiro" class="pt-12">
+            <h3 class="text-2xl font-bold text-center text-[#1E3A8A] mb-8">Análise Estratégica e Financeira</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h4 class="text-xl font-bold text-center mb-4">Fontes de Receita vs. Estrutura de Custos</h4>
+                     <p class="text-center text-[#334155] mb-4">Uma análise comparativa dos principais fluxos de receita projetados contra as maiores despesas operacionais, destacando um modelo focado em receita recorrente.</p>
+                    <div class="chart-container">
+                        <canvas id="financeChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h4 class="text-xl font-bold text-center mb-4">Projeção de Crescimento de Receita (SOM)</h4>
+                    <p class="text-center text-[#334155] mb-4">Com base no Mercado Atingível (SOM) de R$15M, projeta-se uma penetração agressiva, impulsionada pela proposta de valor inovadora.</p>
+                    <div class="chart-container">
+                        <canvas id="growthChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#0F172A] text-white mt-12 py-6">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2025 Análise de Negócios LMS. Todos os direitos reservados.</p>
+            <p class="text-sm text-gray-400">Este é um documento de análise estratégica.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                if (Array.isArray(label)) {
+                    return label.join(' ');
+                }
+                return label;
+            };
+
+            const commonPlugins = {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: '#0F172A', font: { family: "'Inter', sans-serif" } }
+                },
+                tooltip: { callbacks: { title: tooltipTitleCallback } }
+            };
+            
+            const financeCtx = document.getElementById('financeChart').getContext('2d');
+            new Chart(financeCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Receitas Anuais (Projeção)', 'Custos Anuais (Projeção)'],
+                    datasets: [
+                        { label: 'Assinaturas (SaaS)', data: [70, 0], backgroundColor: '#1E3A8A' },
+                        { label: 'Serviços Profissionais', data: [20, 0], backgroundColor: '#3B82F6' },
+                        { label: 'Marketplace', data: [10, 0], backgroundColor: '#60A5FA' },
+                        { label: 'Pessoal', data: [0, 55], backgroundColor: '#ef4444' },
+                        { label: 'Infraestrutura & Mkt', data: [0, 35], backgroundColor: '#f87171' },
+                        { label: 'Outros', data: [0, 10], backgroundColor: '#fca5a5' }
+                    ]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, plugins: commonPlugins,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, beginAtZero: true, ticks: { callback: value => value + '%' } }
+                    }
+                }
+            });
+
+            const growthCtx = document.getElementById('growthChart').getContext('2d');
+            new Chart(growthCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Ano 1', 'Ano 2', 'Ano 3', 'Ano 4', 'Ano 5'],
+                    datasets: [{
+                        label: 'Receita Anual (em milhões de R$)',
+                        data: [0.8, 2.5, 5.5, 9.0, 15.0],
+                        borderColor: '#1E3A8A',
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: false, plugins: commonPlugins,
+                    scales: { y: { beginAtZero: true, ticks: { callback: value => 'R$' + value + 'M' } } }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
