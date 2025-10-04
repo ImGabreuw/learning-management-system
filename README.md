@@ -170,85 +170,240 @@ Administrador:
 - [Disciplinas](https://github.com/ImGabreuw/learning-management-system/blob/master/docs/modeling/subjects.md)
 - [Oportunidades](https://github.com/ImGabreuw/learning-management-system/blob/master/docs/modeling/opportunities.md)
 
-### Arquitetura
+## Capítulo 6: Arquitetura do Sistema
 
-```mermaid
-%%{init: {'theme': 'default'}}%%
-graph TB
-    subgraph Boundary
-        Boundary_Disciplinas[DisciplinasBoundary]
-        Boundary_Usuarios[UsuariosBoundary]
-        Boundary_Oportunidades[OportunidadesBoundary]
-        Boundary_Arquivos[ArquivosBoundary]
-    end
+### Visão Geral
 
-    subgraph Controller
-        Controller_Disciplinas[DisciplinasController]
-        Controller_Usuarios[UsuariosController]
-        Controller_Oportunidades[OportunidadesController]
-        Controller_Arquivos[ArquivosController]
-    end
+![](docs/assets/architecture.png)
 
-    subgraph Service
-        Service_Disciplinas[DisciplinasService]
-        Service_Usuarios[UsuariosService]
-        Service_Oportunidades[OportunidadesService]
-        Service_Arquivos[ArquivosService]
-    end
+**Legenda:**
 
-    subgraph DAO
-        DAO_Disciplinas[DisciplinasDAO]
-        DAO_Usuarios[UsuariosDAO]
-        DAO_Oportunidades[OportunidadesDAO]
-        DAO_Arquivos[ArquivosDAO]
-    end
+![](docs/assets/architecture_caption.png)
 
-    subgraph MongoDB
-        DB_Disciplinas[(Disciplinas Collection)]
-        DB_Usuarios[(Usuarios Collection)]
-        DB_Oportunidades[(Oportunidades Collection)]
-        DB_Arquivos[(Arquivos Collection)]
-    end
+### Tecnologias
 
-    subgraph Autenticação
-        MicrosoftOAuth2[Microsoft OAuth2 Service]
-        AuthService[AuthService]
-    end
+- **Frontend:** Next.js 15 e Tailwind CSS
+- **Backend:** Java 21 com Spring
+- **Banco de Dados:** MongoDB e MongoDB GridFS
+- **Cloud:** AWS + Docker
+- **CI/CD:** GitHub Actions
 
-    %% Conexões principais
-    Boundary_Disciplinas --> Controller_Disciplinas
-    Boundary_Usuarios --> Controller_Usuarios
-    Boundary_Oportunidades --> Controller_Oportunidades
-    Boundary_Arquivos --> Controller_Arquivos
+### Pipelines
 
-    Controller_Disciplinas --> Service_Disciplinas
-    Controller_Usuarios --> Service_Usuarios
-    Controller_Oportunidades --> Service_Oportunidades
-    Controller_Arquivos --> Service_Arquivos
+#### Frontend
 
-    Service_Disciplinas --> DAO_Disciplinas
-    Service_Usuarios --> DAO_Usuarios
-    Service_Oportunidades --> DAO_Oportunidades
-    Service_Arquivos --> DAO_Arquivos
+```yaml
+name: Frontend CI/CD
 
-    DAO_Disciplinas --> DB_Disciplinas
-    DAO_Usuarios --> DB_Usuarios
-    DAO_Oportunidades --> DB_Oportunidades
-    DAO_Arquivos --> DB_Arquivos
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'web/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'web/**'
 
-    %% Autenticação
-    Boundary_Usuarios --> AuthService
-    Controller_Usuarios --> AuthService
-    AuthService --> MicrosoftOAuth2
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_WEB }}
+  
+  ECS_CLUSTER: ${{ secrets.ECS_CLUSTER_WEB }}
+  ECS_SERVICE: ${{ secrets.ECS_SERVICE_WEB }}
+  ECS_TASK_DEFINITION_PATH: web/ecs-task-definition.json
+  CONTAINER_NAME: web-app
 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      id-token: write 
+      
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+        working-directory: ./web 
+
+      - name: Build Next.js Project
+        run: npm run build
+        working-directory: ./web
+        
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        
+      - name: Build and Push Docker Image to ECR
+        uses: docker/build-push-action@v5
+        with:
+          context: ./web
+          push: true
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build 
+    runs-on: ubuntu-latest
+    environment: Production
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Render ECS Task Definition
+        id: render-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION_PATH }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Deploy to ECS Service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-task.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
 ```
-#### Legenda:
 
-```mermaid
-%%{init: {'theme': 'default'}}%%
-graph TB
-subgraph Pacote[Pacote]
-        Componente[Componente]
-        Database[(Database)]
-    end
+#### Backend
+
+```yaml
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'backend/**'
+
+env:
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  ECR_REGISTRY: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com
+  ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY_BACKEND }}
+
+  ECS_CLUSTER: ${{ secrets.ECS_CLUSTER_BACKEND }} 
+  ECS_SERVICE: ${{ secrets.ECS_SERVICE_BACKEND }} 
+  ECS_TASK_DEFINITION_PATH: backend/ecs-task-definition.json 
+  CONTAINER_NAME: backend-app
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      id-token: write 
+      
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '21'
+          
+      - name: Configure Maven Cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+            
+      - name: Build Spring Boot Project (Maven)
+        run: mvn -B package --file backend/pom.xml -DskipTests 
+        
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+        
+      - name: Build and Push Docker Image to ECR
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build_and_push 
+    runs-on: ubuntu-latest
+    environment: Production
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+          
+      - name: Render ECS Task Definition
+        id: render-task
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ env.ECS_TASK_DEFINITION_PATH }}
+          container-name: ${{ env.CONTAINER_NAME }}
+          image: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ github.sha }}
+
+      - name: Deploy to ECS Service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.render-task.outputs.task-definition }}
+          service: ${{ env.ECS_SERVICE }}
+          cluster: ${{ env.ECS_CLUSTER }}
+          wait-for-service-stability: true
 ```
