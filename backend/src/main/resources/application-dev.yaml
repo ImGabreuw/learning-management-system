@@ -55,14 +55,13 @@ app:
 # Configurações de logging
 logging:
   level:
-    com.mackenzie.lms: DEBUG
+    com.metis.backend: DEBUG
     org.springframework.security: DEBUG
     org.springframework.web: INFO
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   file:
-    name: logs/mackenzie-lms.log
+    name: logs/app.log
 
 # Configurações de CORS
 cors:
