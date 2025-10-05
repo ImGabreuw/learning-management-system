@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @Scope("prototype")
@@ -29,7 +30,6 @@ public class RecommenderService {
     private KnowledgeGraph graph;
 
     private void initialize(String userId) {
-
         NodeEntity userNode = nodeRepository
                 .findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
@@ -39,30 +39,58 @@ public class RecommenderService {
 
         Set<String> discoveredOpportunities = new HashSet<>();
         List<EdgeEntity> connectedFrom = edgeRepository.findAllConnectedFrom(userId);
-        for (EdgeEntity userEdge : connectedFrom) {
-            NodeEntity targetNode = nodeRepository.findById(userEdge.getId().getTargetId()).orElse(null);
 
+        Set<String> targetNodeIds = new HashSet<>();
+        for (EdgeEntity edgeEntity : connectedFrom) {
+            String targetId = edgeEntity.getId().getTargetId();
+            targetNodeIds.add(targetId);
+        }
+
+        Map<String, NodeEntity> targetNodes = new HashMap<>();
+        for (NodeEntity nodeEntity : nodeRepository.findAllById(targetNodeIds)) {
+            if (targetNodes.containsKey(nodeEntity.getId())) {
+                log.warn("Duplicate node found with id: {}", nodeEntity.getId());
+                continue;
+            }
+            targetNodes.put(nodeEntity.getId(), nodeEntity);
+        }
+
+        for (EdgeEntity userEdge : connectedFrom) {
+            NodeEntity targetNode = targetNodes.get(userEdge.getId().getTargetId());
             if (targetNode == null) {
                 log.warn("Invalid edge found with missing target node: {}", userEdge);
                 continue;
             }
 
             this.graph.addNode(NodeMapper.toLibrary(targetNode));
-
             String targetNodeId = targetNode.getId();
             this.graph.addEdge(userId, userEdge.getType(), targetNodeId);
 
             List<EdgeEntity> connectedTo = edgeRepository.findAllConnectedToExcluding(targetNodeId, discoveredOpportunities);
-            for (EdgeEntity opportunityEdge : connectedTo) {
-                NodeEntity sourceNode = nodeRepository.findById(opportunityEdge.getId().getSourceId()).orElse(null);
 
+            Set<String> sourceNodeIds = new HashSet<>();
+            for (EdgeEntity edge : connectedTo) {
+                String sourceId = edge.getId().getSourceId();
+                sourceNodeIds.add(sourceId);
+            }
+
+            Map<String, NodeEntity> sourceNodes = new HashMap<>();
+            for (NodeEntity n : nodeRepository.findAllById(sourceNodeIds)) {
+                if (sourceNodes.containsKey(n.getId())) {
+                    log.warn("Duplicate node found with id: {}", n.getId());
+                    continue;
+                }
+                sourceNodes.put(n.getId(), n);
+            }
+
+            for (EdgeEntity opportunityEdge : connectedTo) {
+                NodeEntity sourceNode = sourceNodes.get(opportunityEdge.getId().getSourceId());
                 if (sourceNode == null) {
                     log.warn("Invalid edge found with missing source node: {}", opportunityEdge);
                     continue;
                 }
 
                 this.graph.addNode(NodeMapper.toLibrary(sourceNode));
-
                 String sourceNodeId = sourceNode.getId();
                 this.graph.addEdge(sourceNodeId, opportunityEdge.getType(), targetNodeId);
 
@@ -72,6 +100,7 @@ public class RecommenderService {
             }
         }
     }
+
 
     public List<OpportunityResponse> recommend(String userId, int topN) {
         initialize(userId);
