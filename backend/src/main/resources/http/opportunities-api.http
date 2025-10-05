@@ -1,0 +1,75 @@
+### Save User Profile
+POST {{host}}/api/opportunities/batch
+Content-Type: application/json
+
+[
+  {
+    "name": "aluno1",
+    "email": "aluno1@mackenzista.com.br",
+    "state": "SP",
+    "city": "São Paulo",
+    "skills": [
+      "hab_java"
+    ],
+    "interests": [
+      "tema_ia"
+    ],
+    "preferredJobTypes": []
+  },
+  {
+    "name": "aluno2",
+    "email": "aluno2@mackenzista.com.br",
+    "state": "SP",
+    "city": "São Paulo",
+    "skills": [
+      "hab_python",
+      "hab_sql"
+    ],
+    "interests": [
+      "tema_dados"
+    ],
+    "preferredJobTypes": []
+  }
+]
+
+### Save Opportunities
+POST {{host}}/api/opportunities/batch
+Content-Type: application/json
+
+[
+  {
+    "title": "Desenvolvedor(a) de IA Full-Stack",
+    "description": "Buscamos um(a) desenvolvedor(a) para se juntar à nossa equipe de inovação. Você trabalhará no desenvolvimento de soluções de inteligência artificial, utilizando Java e Python para criar e integrar modelos de machine learning em nossas plataformas.",
+    "requiredSkills": [
+      "hab_java",
+      "hab_python"
+    ],
+    "relatedThemes": [
+      "tema_ia"
+    ],
+    "location": "São Paulo, SP",
+    "type": "Tempo Integral",
+    "organization": "InovaTech Soluções",
+    "applicationUrl": "https://inova.tech/carreiras/vaga/dev-ia-fs-01",
+    "applicationDeadline": "2025-11-30",
+    "minimumSalary": 8000.00,
+    "maximumSalary": 12000.00
+  },
+  {
+    "title": "Analista de Dados Jr",
+    "description": "Vaga para atuar na extração, tratamento e análise de grandes volumes de dados. O candidato ideal terá forte conhecimento em SQL e paixão por transformar dados em insights acionáveis para o negócio.",
+    "requiredSkills": [
+      "hab_sql"
+    ],
+    "relatedThemes": [
+      "tema_dados"
+    ],
+    "location": "Remoto",
+    "type": "Tempo Integral",
+    "organization": "DataDriven Corp.",
+    "applicationUrl": "https://datadriven.corp/vagas/analista-jr-02",
+    "applicationDeadline": "2025-12-15",
+    "minimumSalary": 4500.00,
+    "maximumSalary": 6500.00
+  }
+]
