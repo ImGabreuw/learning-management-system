@@ -1,4 +1,4 @@
-package com.metis.backend.auth.model;
+package com.mackenzie.lms.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -60,7 +60,16 @@ public class User {
     }
 
     public boolean isValidMackenzieEmail() {
-        return email != null && email.endsWith("@mackenzie.br");
+        if (email == null) return false;
+
+        String[] allowedDomains = { "@mackenzie.br", "@mackenzista.com.br" };
+
+        for (String domain : allowedDomains) {
+            if (email.endsWith(domain)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void updateLastLogin() {
