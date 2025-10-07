@@ -7,11 +7,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
-import Navigation from "@/components/navigation"
-import { FuzzySearch } from "@/components/fuzzy-search"
-import { RecommendationEngine } from "@/components/recommendation-engine"
-import { ExternalToolsHub } from "@/components/external-tools-hub"
-import { TaskDetailPanel } from "@/components/task-detail-panel"
+import Navigation from "@/components/ui/navigation"
+import { FuzzySearch } from "@/components/ui/fuzzy-search"
+import { RecommendationEngine } from "@/components/ui/recommendation-engine"
+import { ExternalToolsHub } from "@/components/ui/external-tools-hub"
+import { TaskDetailPanel } from "@/components/ui/task-detail-panel"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export default function LMSDashboard() {

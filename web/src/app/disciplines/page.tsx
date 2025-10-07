@@ -29,7 +29,7 @@ import {
   PlayCircle,
   MapPin,
 } from "lucide-react"
-import Navigation from "@/components/navigation"
+import Navigation from "@/components/ui/navigation"
 
 interface Assignment {
   id: string

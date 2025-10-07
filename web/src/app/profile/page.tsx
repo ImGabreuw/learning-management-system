@@ -1,8 +1,8 @@
 "use client"
 
-import Navigation from "@/components/navigation"
-import { Breadcrumb } from "@/components/breadcrumb"
-import { ProfileManagement } from "@/components/profile-management"
+import Navigation from "@/components/ui/navigation"
+import { Breadcrumb } from "@/components/ui/breadcrumb"
+import { ProfileManagement } from "@/components/ui/profile-management"
 
 export default function ProfilePage() {
   return (
