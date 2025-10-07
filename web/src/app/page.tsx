@@ -1,24 +1,24 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 "use client"
 
 import { useState } from "react"
-import { Search, Calendar, BookOpen, Target, Settings, Bell, User, ChevronDown, ExternalLink } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import Link from "next/link"
+import { Search, Calendar, BookOpen, Target, Filter } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
+import { Button } from "@/components/ui/button"
+import Navigation from "@/components/navigation"
 import { FuzzySearch } from "@/components/fuzzy-search"
 import { RecommendationEngine } from "@/components/recommendation-engine"
 import { ExternalToolsHub } from "@/components/external-tools-hub"
-import { ProfileManagement } from "@/components/profile-management"
+import { TaskDetailPanel } from "@/components/task-detail-panel"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export default function LMSDashboard() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedFilters, setSelectedFilters] = useState<string[]>([])
+  const [selectedTask, setSelectedTask] = useState<any>(null)
+  const [opportunitiesFilter, setOpportunitiesFilter] = useState("todas")
+  const [integrationsFilter, setIntegrationsFilter] = useState("todas")
+  const [activeSection, setActiveSection] = useState<"dashboard" | "opportunities" | "integrations">("dashboard")
 
   // Mock data
   const assignments = [
@@ -31,6 +31,12 @@ export default function LMSDashboard() {
       dueDate: "Quarta-feira, 13 de Setembro",
       time: "23:59",
       progress: 65,
+      subtasks: [
+        { id: 1, title: "Configurar ambiente", completed: true },
+        { id: 2, title: "Implementar servidor", completed: true },
+        { id: 3, title: "Implementar cliente", completed: false },
+        { id: 4, title: "Testar comunicação", completed: false },
+      ],
     },
     {
       id: 2,
@@ -41,6 +47,11 @@ export default function LMSDashboard() {
       dueDate: "Segunda-feira, 30 de Setembro",
       time: "23:59",
       progress: 0,
+      subtasks: [
+        { id: 1, title: "Exercício 1", completed: false },
+        { id: 2, title: "Exercício 2", completed: false },
+        { id: 3, title: "Exercício 3", completed: false },
+      ],
     },
   ]
 
@@ -59,63 +70,14 @@ export default function LMSDashboard() {
     { id: 6, name: "Projetos Empreendedores", progress: 89, nextClass: "Pitch Final", color: "bg-teal-500" },
   ]
 
-  const integrations = [
-    { name: "Google Calendar", status: "connected", icon: Calendar },
-    { name: "Notion", status: "connected", icon: BookOpen },
-    { name: "GitHub", status: "disconnected", icon: ExternalLink },
-    { name: "Slack", status: "disconnected", icon: ExternalLink },
-  ]
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-sm border-b border-slate-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">M</span>
-                </div>
-                <span className="text-xl font-bold text-slate-900">Metis</span>
-              </div>
-            </div>
+      <Navigation />
 
-            <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm">
-                <Bell className="h-4 w-4" />
-              </Button>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center space-x-2">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src="/placeholder.svg?height=32&width=32" />
-                      <AvatarFallback>UN</AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm font-medium">@username</span>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>
-                    <User className="h-4 w-4 mr-2" />
-                    Perfil
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="h-4 w-4 mr-2" />
-                    Configurações
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         {/* Welcome Section */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Olá, username</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Olá, João Silva</h1>
           <p className="text-slate-600">Você tem uma Prova Integrada marcada para o dia 30 de Setembro.</p>
         </div>
 
@@ -178,17 +140,29 @@ export default function LMSDashboard() {
           </Card>
         </div>
 
-        {/* Main Content Tabs */}
-        <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-            <TabsTrigger value="opportunities">Oportunidades</TabsTrigger>
-            <TabsTrigger value="integrations">Integrações</TabsTrigger>
-            <TabsTrigger value="profile">Perfil</TabsTrigger>
-          </TabsList>
+        <div className="flex items-center space-x-2 mb-6">
+          <Button
+            variant={activeSection === "dashboard" ? "default" : "outline"}
+            onClick={() => setActiveSection("dashboard")}
+          >
+            Dashboard
+          </Button>
+          <Button
+            variant={activeSection === "opportunities" ? "default" : "outline"}
+            onClick={() => setActiveSection("opportunities")}
+          >
+            Oportunidades
+          </Button>
+          <Button
+            variant={activeSection === "integrations" ? "default" : "outline"}
+            onClick={() => setActiveSection("integrations")}
+          >
+            Integrações
+          </Button>
+        </div>
 
-          <TabsContent value="dashboard" className="space-y-6">
-            {/* Assignments & Projects */}
+        {activeSection === "dashboard" && (
+          <div className="space-y-6">
             <Card className="border-0 shadow-lg bg-white/70 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Minhas Tarefas & Projetos</CardTitle>
@@ -196,7 +170,11 @@ export default function LMSDashboard() {
               <CardContent>
                 <div className="space-y-4">
                   {assignments.map((assignment) => (
-                    <div key={assignment.id} className="p-4 border border-slate-200 rounded-lg bg-white">
+                    <div
+                      key={assignment.id}
+                      className="p-4 border border-slate-200 rounded-lg bg-white cursor-pointer hover:shadow-md transition-shadow"
+                      onClick={() => setSelectedTask(assignment)}
+                    >
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-semibold text-slate-900">{assignment.title}</h3>
                         <Badge variant={assignment.status === "Em Progresso" ? "default" : "secondary"}>
@@ -231,7 +209,6 @@ export default function LMSDashboard() {
               </CardContent>
             </Card>
 
-            {/* Courses */}
             <Card className="border-0 shadow-lg bg-white/70 backdrop-blur-sm">
               <CardHeader>
                 <CardTitle>Meus Cursos</CardTitle>
@@ -239,89 +216,140 @@ export default function LMSDashboard() {
               <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {courses.map((course) => (
-                    <Card key={course.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
-                      <CardContent className="p-4">
-                        <div className={`w-full h-32 ${course.color} rounded-lg mb-4 flex items-center justify-center`}>
-                          <BookOpen className="h-8 w-8 text-white" />
-                        </div>
-                        <h3 className="font-semibold text-slate-900 mb-2">{course.name}</h3>
-                        <p className="text-sm text-slate-600 mb-3">Próxima aula: {course.nextClass}</p>
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs text-slate-600">Progresso</span>
-                            <span className="text-xs text-slate-600">{course.progress}%</span>
+                    <Link key={course.id} href={`/course/${course.id}`}>
+                      <Card className="border-0 shadow-md hover:shadow-lg transition-shadow cursor-pointer">
+                        <CardContent className="p-4">
+                          <div
+                            className={`w-full h-32 ${course.color} rounded-lg mb-4 flex items-center justify-center`}
+                          >
+                            <BookOpen className="h-8 w-8 text-white" />
                           </div>
-                          <Progress value={course.progress} className="h-2" />
-                        </div>
-                      </CardContent>
-                    </Card>
+                          <h3 className="font-semibold text-slate-900 mb-2">{course.name}</h3>
+                          <p className="text-sm text-slate-600 mb-3">Próxima aula: {course.nextClass}</p>
+                          <div className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-xs text-slate-600">Progresso</span>
+                              <span className="text-xs text-slate-600">{course.progress}%</span>
+                            </div>
+                            <Progress value={course.progress} className="h-2" />
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </Link>
                   ))}
                 </div>
               </CardContent>
             </Card>
-          </TabsContent>
+          </div>
+        )}
 
-          <TabsContent value="opportunities" className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/70 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
+        {activeSection === "opportunities" && (
+          <Card className="border-0 shadow-lg bg-white/70 backdrop-blur-sm">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
                   <Target className="h-5 w-5 text-blue-600" />
-                  <span>Oportunidades Recomendadas</span>
-                </CardTitle>
-                <CardDescription>
-                  Sistema inteligente que cruza seu perfil acadêmico com oportunidades disponíveis
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <RecommendationEngine
-                  onApply={(id) => {
-                    console.log(`[v0] User applied to opportunity: ${id}`)
-                    // Here you would handle the application process
-                  }}
-                  onSave={(id) => {
-                    console.log(`[v0] User saved opportunity: ${id}`)
-                    // Here you would handle saving the opportunity
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
+                  <div>
+                    <CardTitle>Oportunidades Recomendadas</CardTitle>
+                    <CardDescription>
+                      Sistema inteligente que cruza seu perfil acadêmico com oportunidades disponíveis
+                    </CardDescription>
+                  </div>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <Filter className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setOpportunitiesFilter("todas")}>
+                      <span className={opportunitiesFilter === "todas" ? "font-semibold" : ""}>Todas</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpportunitiesFilter("estagios")}>
+                      <span className={opportunitiesFilter === "estagios" ? "font-semibold" : ""}>Estágios</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpportunitiesFilter("empregos")}>
+                      <span className={opportunitiesFilter === "empregos" ? "font-semibold" : ""}>Empregos</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpportunitiesFilter("bolsas")}>
+                      <span className={opportunitiesFilter === "bolsas" ? "font-semibold" : ""}>Bolsas</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <RecommendationEngine
+                filter={opportunitiesFilter}
+                onApply={(id) => {
+                  console.log(`[v0] User applied to opportunity: ${id}`)
+                }}
+                onSave={(id) => {
+                  console.log(`[v0] User saved opportunity: ${id}`)
+                }}
+              />
+            </CardContent>
+          </Card>
+        )}
 
-          <TabsContent value="integrations" className="space-y-6">
-            <Card className="border-0 shadow-lg bg-white/70 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <ExternalLink className="h-5 w-5 text-blue-600" />
-                  <span>Hub de Integrações</span>
-                </CardTitle>
-                <CardDescription>Conecte e gerencie suas ferramentas favoritas em um só lugar</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ExternalToolsHub
-                  onConnect={(id) => {
-                    console.log(`[v0] Connected integration: ${id}`)
-                  }}
-                  onDisconnect={(id) => {
-                    console.log(`[v0] Disconnected integration: ${id}`)
-                  }}
-                  onSync={(id) => {
-                    console.log(`[v0] Synced integration: ${id}`)
-                  }}
-                />
-              </CardContent>
-            </Card>
-          </TabsContent>
-
-          <TabsContent value="profile" className="space-y-6">
-            <ProfileManagement
-              onSave={(profile) => {
-                console.log(`[v0] Profile updated:`, profile)
-                // Here you would save the profile to your backend
-              }}
-            />
-          </TabsContent>
-        </Tabs>
+        {activeSection === "integrations" && (
+          <Card className="border-0 shadow-lg bg-white/70 backdrop-blur-sm">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Target className="h-5 w-5 text-blue-600" />
+                  <div>
+                    <CardTitle>Hub de Integrações</CardTitle>
+                    <CardDescription>Conecte e gerencie suas ferramentas favoritas em um só lugar</CardDescription>
+                  </div>
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <Filter className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => setIntegrationsFilter("todas")}>
+                      <span className={integrationsFilter === "todas" ? "font-semibold" : ""}>Todas</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIntegrationsFilter("produtividade")}>
+                      <span className={integrationsFilter === "produtividade" ? "font-semibold" : ""}>
+                        Produtividade
+                      </span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIntegrationsFilter("comunicacao")}>
+                      <span className={integrationsFilter === "comunicacao" ? "font-semibold" : ""}>Comunicação</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setIntegrationsFilter("desenvolvimento")}>
+                      <span className={integrationsFilter === "desenvolvimento" ? "font-semibold" : ""}>
+                        Desenvolvimento
+                      </span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <ExternalToolsHub
+                filter={integrationsFilter}
+                onConnect={(id) => {
+                  console.log(`[v0] Connected integration: ${id}`)
+                }}
+                onDisconnect={(id) => {
+                  console.log(`[v0] Disconnected integration: ${id}`)
+                }}
+                onSync={(id) => {
+                  console.log(`[v0] Synced integration: ${id}`)
+                }}
+              />
+            </CardContent>
+          </Card>
+        )}
       </div>
+
+      {selectedTask && <TaskDetailPanel task={selectedTask} onClose={() => setSelectedTask(null)} />}
     </div>
   )
 }

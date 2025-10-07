@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useMemo } from "react"
 import { Target, TrendingUp, Clock, MapPin, DollarSign, Users, ExternalLink, Heart, BookmarkPlus } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface UserProfile {
   interests: string[]
@@ -40,12 +39,11 @@ interface RecommendationEngineProps {
   userProfile?: UserProfile
   onApply?: (opportunityId: string) => void
   onSave?: (opportunityId: string) => void
+  filter?: string // Added filter prop to support external filtering
 }
 
-export function RecommendationEngine({ userProfile, onApply, onSave }: RecommendationEngineProps) {
-  const [opportunities, setOpportunities] = useState<Opportunity[]>([])
+export function RecommendationEngine({ userProfile, onApply, onSave, filter = "todas" }: RecommendationEngineProps) {
   const [savedOpportunities, setSavedOpportunities] = useState<string[]>([])
-  const [selectedType, setSelectedType] = useState<string>("all")
 
   // Mock user profile if not provided
   const defaultProfile: UserProfile = {
@@ -240,16 +238,22 @@ export function RecommendationEngine({ userProfile, onApply, onSave }: Recommend
       .sort((a, b) => (b.match || 0) - (a.match || 0))
   }, [calculateMatch])
 
-  // Filter opportunities by type
   const filteredOpportunities = useMemo(() => {
-    if (selectedType === "all") return rankedOpportunities
-    return rankedOpportunities.filter((opp) => opp.type === selectedType)
-  }, [rankedOpportunities, selectedType])
+    if (filter === "todas") return rankedOpportunities
 
-  useEffect(() => {
-    setOpportunities(filteredOpportunities)
-    // disable-next-line react-hooks/exhaustive-deps
-  }, [filteredOpportunities])
+    // Map filter values to opportunity types
+    const filterMap: Record<string, string> = {
+      estagios: "internship",
+      empregos: "job",
+      bolsas: "scholarship",
+      hackathons: "hackathon",
+      cursos: "course",
+      competicoes: "competition",
+    }
+
+    const opportunityType = filterMap[filter] || filter
+    return rankedOpportunities.filter((opp) => opp.type === opportunityType)
+  }, [rankedOpportunities, filter])
 
   const getTypeIcon = (type: string) => {
     switch (type) {
@@ -325,7 +329,7 @@ export function RecommendationEngine({ userProfile, onApply, onSave }: Recommend
               <Target className="h-5 w-5 text-blue-600" />
               <div>
                 <p className="text-sm font-medium text-gray-900">Oportunidades Encontradas</p>
-                <p className="text-2xl font-bold text-blue-600">{opportunities.length}</p>
+                <p className="text-2xl font-bold text-blue-600">{filteredOpportunities.length}</p>
               </div>
             </div>
           </CardContent>
@@ -338,8 +342,11 @@ export function RecommendationEngine({ userProfile, onApply, onSave }: Recommend
               <div>
                 <p className="text-sm font-medium text-gray-900">Match Médio</p>
                 <p className="text-2xl font-bold text-green-600">
-                  {opportunities.length > 0
-                    ? Math.round(opportunities.reduce((sum, opp) => sum + (opp.match || 0), 0) / opportunities.length)
+                  {filteredOpportunities.length > 0
+                    ? Math.round(
+                        filteredOpportunities.reduce((sum, opp) => sum + (opp.match || 0), 0) /
+                          filteredOpportunities.length,
+                      )
                     : 0}
                   %
                 </p>
@@ -361,152 +368,139 @@ export function RecommendationEngine({ userProfile, onApply, onSave }: Recommend
         </Card>
       </div>
 
-      {/* Filter Tabs */}
-      <Tabs value={selectedType} onValueChange={setSelectedType}>
-        <TabsList className="grid w-full grid-cols-7">
-          <TabsTrigger value="all">Todas</TabsTrigger>
-          <TabsTrigger value="internship">Estágios</TabsTrigger>
-          <TabsTrigger value="job">Empregos</TabsTrigger>
-          <TabsTrigger value="hackathon">Hackathons</TabsTrigger>
-          <TabsTrigger value="course">Cursos</TabsTrigger>
-          <TabsTrigger value="scholarship">Bolsas</TabsTrigger>
-          <TabsTrigger value="competition">Competições</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value={selectedType} className="space-y-4">
-          {opportunities.length === 0 ? (
-            <Card className="border-0 shadow-md">
-              <CardContent className="p-8 text-center">
-                <Target className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-600">Nenhuma oportunidade encontrada para este filtro.</p>
-              </CardContent>
-            </Card>
-          ) : (
-            opportunities.map((opportunity) => (
-              <Card key={opportunity.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex-1">
-                      <div className="flex items-center space-x-2 mb-2">
-                        <div className={`p-1 rounded ${getTypeColor(opportunity.type)}`}>
-                          {getTypeIcon(opportunity.type)}
-                        </div>
-                        <Badge className={getTypeColor(opportunity.type)}>{getTypeLabel(opportunity.type)}</Badge>
-                        {opportunity.match && (
-                          <Badge className="bg-green-100 text-green-800">{opportunity.match}% match</Badge>
-                        )}
+      <div className="space-y-4">
+        {filteredOpportunities.length === 0 ? (
+          <Card className="border-0 shadow-md">
+            <CardContent className="p-8 text-center">
+              <Target className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-600">Nenhuma oportunidade encontrada para este filtro.</p>
+            </CardContent>
+          </Card>
+        ) : (
+          filteredOpportunities.map((opportunity) => (
+            <Card key={opportunity.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
+              <CardContent className="p-6">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <div className={`p-1 rounded ${getTypeColor(opportunity.type)}`}>
+                        {getTypeIcon(opportunity.type)}
                       </div>
-
-                      <h3 className="text-lg font-semibold text-gray-900 mb-1">{opportunity.title}</h3>
-                      <p className="text-sm text-gray-600 mb-2">{opportunity.company}</p>
-                      <p className="text-sm text-gray-700 mb-3">{opportunity.description}</p>
-
-                      {/* Match Reasons */}
-                      {opportunity.reasons && opportunity.reasons.length > 0 && (
-                        <div className="mb-3">
-                          <p className="text-xs font-medium text-gray-600 mb-1">Por que recomendamos:</p>
-                          <ul className="text-xs text-gray-600 space-y-1">
-                            {opportunity.reasons.map((reason, index) => (
-                              <li key={index} className="flex items-center space-x-1">
-                                <div className="w-1 h-1 bg-green-500 rounded-full"></div>
-                                <span>{reason}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
+                      <Badge className={getTypeColor(opportunity.type)}>{getTypeLabel(opportunity.type)}</Badge>
+                      {opportunity.match && (
+                        <Badge className="bg-green-100 text-green-800">{opportunity.match}% match</Badge>
                       )}
-
-                      {/* Tags */}
-                      <div className="flex flex-wrap gap-1 mb-3">
-                        {opportunity.tags.slice(0, 5).map((tag) => (
-                          <Badge key={tag} variant="outline" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                        {opportunity.tags.length > 5 && (
-                          <Badge variant="outline" className="text-xs">
-                            +{opportunity.tags.length - 5} mais
-                          </Badge>
-                        )}
-                      </div>
-
-                      {/* Details */}
-                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-gray-600">
-                        <div className="flex items-center space-x-1">
-                          <MapPin className="h-3 w-3" />
-                          <span>{opportunity.location}</span>
-                        </div>
-                        <div className="flex items-center space-x-1">
-                          <Clock className="h-3 w-3" />
-                          <span>Prazo: {opportunity.deadline}</span>
-                        </div>
-                        {opportunity.salary && (
-                          <div className="flex items-center space-x-1">
-                            <DollarSign className="h-3 w-3" />
-                            <span>{opportunity.salary}</span>
-                          </div>
-                        )}
-                        {opportunity.duration && (
-                          <div className="flex items-center space-x-1">
-                            <Clock className="h-3 w-3" />
-                            <span>{opportunity.duration}</span>
-                          </div>
-                        )}
-                      </div>
                     </div>
 
-                    {/* Match Score Visualization */}
-                    {opportunity.match && (
-                      <div className="ml-4 text-center">
-                        <div className="relative w-16 h-16">
-                          <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
-                            <path
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                              fill="none"
-                              stroke="#e5e7eb"
-                              strokeWidth="2"
-                            />
-                            <path
-                              d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                              fill="none"
-                              stroke="#10b981"
-                              strokeWidth="2"
-                              strokeDasharray={`${opportunity.match}, 100`}
-                            />
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-sm font-bold text-green-600">{opportunity.match}%</span>
-                          </div>
-                        </div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-1">{opportunity.title}</h3>
+                    <p className="text-sm text-gray-600 mb-2">{opportunity.company}</p>
+                    <p className="text-sm text-gray-700 mb-3">{opportunity.description}</p>
+
+                    {/* Match Reasons */}
+                    {opportunity.reasons && opportunity.reasons.length > 0 && (
+                      <div className="mb-3">
+                        <p className="text-xs font-medium text-gray-600 mb-1">Por que recomendamos:</p>
+                        <ul className="text-xs text-gray-600 space-y-1">
+                          {opportunity.reasons.map((reason, index) => (
+                            <li key={index} className="flex items-center space-x-1">
+                              <div className="w-1 h-1 bg-green-500 rounded-full"></div>
+                              <span>{reason}</span>
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     )}
-                  </div>
 
-                  {/* Actions */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex space-x-2">
-                      <Button size="sm" onClick={() => onApply?.(opportunity.id)}>
-                        <ExternalLink className="h-3 w-3 mr-1" />
-                        Candidatar-se
-                      </Button>
-                      <Button size="sm" variant="outline" onClick={() => handleSave(opportunity.id)}>
-                        <Heart
-                          className={`h-3 w-3 mr-1 ${savedOpportunities.includes(opportunity.id) ? "fill-current text-red-500" : ""}`}
-                        />
-                        {savedOpportunities.includes(opportunity.id) ? "Salvo" : "Salvar"}
-                      </Button>
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {opportunity.tags.slice(0, 5).map((tag) => (
+                        <Badge key={tag} variant="outline" className="text-xs">
+                          {tag}
+                        </Badge>
+                      ))}
+                      {opportunity.tags.length > 5 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{opportunity.tags.length - 5} mais
+                        </Badge>
+                      )}
                     </div>
 
-                    <Badge variant="outline" className="text-xs">
-                      Dificuldade: {opportunity.difficulty}
-                    </Badge>
+                    {/* Details */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-gray-600">
+                      <div className="flex items-center space-x-1">
+                        <MapPin className="h-3 w-3" />
+                        <span>{opportunity.location}</span>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        <Clock className="h-3 w-3" />
+                        <span>Prazo: {opportunity.deadline}</span>
+                      </div>
+                      {opportunity.salary && (
+                        <div className="flex items-center space-x-1">
+                          <DollarSign className="h-3 w-3" />
+                          <span>{opportunity.salary}</span>
+                        </div>
+                      )}
+                      {opportunity.duration && (
+                        <div className="flex items-center space-x-1">
+                          <Clock className="h-3 w-3" />
+                          <span>{opportunity.duration}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
-            ))
-          )}
-        </TabsContent>
-      </Tabs>
+
+                  {/* Match Score Visualization */}
+                  {opportunity.match && (
+                    <div className="ml-4 text-center">
+                      <div className="relative w-16 h-16">
+                        <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 36 36">
+                          <path
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none"
+                            stroke="#e5e7eb"
+                            strokeWidth="2"
+                          />
+                          <path
+                            d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                            fill="none"
+                            stroke="#10b981"
+                            strokeWidth="2"
+                            strokeDasharray={`${opportunity.match}, 100`}
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-sm font-bold text-green-600">{opportunity.match}%</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                  <div className="flex space-x-2">
+                    <Button size="sm" onClick={() => onApply?.(opportunity.id)}>
+                      <ExternalLink className="h-3 w-3 mr-1" />
+                      Candidatar-se
+                    </Button>
+                    <Button size="sm" variant="outline" onClick={() => handleSave(opportunity.id)}>
+                      <Heart
+                        className={`h-3 w-3 mr-1 ${savedOpportunities.includes(opportunity.id) ? "fill-current text-red-500" : ""}`}
+                      />
+                      {savedOpportunities.includes(opportunity.id) ? "Salvo" : "Salvar"}
+                    </Button>
+                  </div>
+
+                  <Badge variant="outline" className="text-xs">
+                    Dificuldade: {opportunity.difficulty}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
+          ))
+        )}
+      </div>
     </div>
   )
 }

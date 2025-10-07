@@ -1,11 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 "use client"
 
 import type React from "react"
 
-import { useState, useEffect } from "react"
+import { useState, useMemo } from "react"
 import {
   Calendar,
   BookOpen,
@@ -28,7 +25,6 @@ import { Badge } from "@/components/ui/badge"
 import { Switch } from "@/components/ui/switch"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   Dialog,
   DialogContent,
@@ -57,15 +53,14 @@ interface ExternalToolsHubProps {
   onConnect?: (integrationId: string) => void
   onDisconnect?: (integrationId: string) => void
   onSync?: (integrationId: string) => void
+  filter?: string // Added filter prop to support external filtering
 }
 
-export function ExternalToolsHub({ onConnect, onDisconnect, onSync }: ExternalToolsHubProps) {
-  const [integrations, setIntegrations] = useState<Integration[]>([])
+export function ExternalToolsHub({ onConnect, onDisconnect, onSync, filter = "todas" }: ExternalToolsHubProps) {
   const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null)
   const [isConnecting, setIsConnecting] = useState<string | null>(null)
-  const [selectedCategory, setSelectedCategory] = useState<string>("all")
+  const [integrationStatuses, setIntegrationStatuses] = useState<Record<string, Integration["status"]>>({})
 
-  // Mock integrations data
   const mockIntegrations: Integration[] = [
     {
       id: "google-calendar",
@@ -73,7 +68,7 @@ export function ExternalToolsHub({ onConnect, onDisconnect, onSync }: ExternalTo
       description: "Sincronize suas aulas, prazos e eventos acadêmicos",
       icon: Calendar,
       status: "connected",
-      category: "calendar",
+      category: "productivity",
       features: ["Sincronização de eventos", "Lembretes automáticos", "Calendário compartilhado"],
       lastSync: "2 minutos atrás",
       syncFrequency: "realtime",
@@ -85,26 +80,6 @@ export function ExternalToolsHub({ onConnect, onDisconnect, onSync }: ExternalTo
       data: {
         upcomingEvents: 5,
         totalEvents: 23,
-      },
-    },
-    {
-      id: "notion",
-      name: "Notion",
-      description: "Organize suas anotações e projetos acadêmicos",
-      icon: BookOpen,
-      status: "connected",
-      category: "productivity",
-      features: ["Sincronização de páginas", "Templates acadêmicos", "Colaboração em tempo real"],
-      lastSync: "5 minutos atrás",
-      syncFrequency: "hourly",
-      settings: {
-        workspaceId: "academic-workspace",
-        autoSync: true,
-        templateSync: true,
-      },
-      data: {
-        pages: 12,
-        databases: 3,
       },
     },
     {
@@ -148,12 +123,24 @@ export function ExternalToolsHub({ onConnect, onDisconnect, onSync }: ExternalTo
       features: ["Gravações de aulas", "Agendamento automático", "Relatórios de presença"],
       syncFrequency: "manual",
     },
+    {
+      id: "trello",
+      name: "Trello",
+      description: "Organize tarefas e projetos em quadros visuais",
+      icon: BookOpen,
+      status: "disconnected",
+      category: "productivity",
+      features: ["Quadros de projetos", "Listas de tarefas", "Colaboração em equipe"],
+      syncFrequency: "hourly",
+    },
   ]
 
-  useEffect(() => {
-    setIntegrations(mockIntegrations)
-    // disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const integrations = useMemo(() => {
+    return mockIntegrations.map((int) => ({
+      ...int,
+      status: integrationStatuses[int.id] || int.status,
+    }))
+  }, [integrationStatuses])
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -222,36 +209,43 @@ export function ExternalToolsHub({ onConnect, onDisconnect, onSync }: ExternalTo
 
     // Simulate connection process
     setTimeout(() => {
-      setIntegrations((prev) =>
-        prev.map((int) => (int.id === integration.id ? { ...int, status: "connected", lastSync: "Agora" } : int)),
-      )
+      setIntegrationStatuses((prev) => ({
+        ...prev,
+        [integration.id]: "connected",
+      }))
       setIsConnecting(null)
       onConnect?.(integration.id)
     }, 2000)
   }
 
   const handleDisconnect = (integration: Integration) => {
-    setIntegrations((prev) =>
-      prev.map((int) => (int.id === integration.id ? { ...int, status: "disconnected", lastSync: undefined } : int)),
-    )
+    setIntegrationStatuses((prev) => ({
+      ...prev,
+      [integration.id]: "disconnected",
+    }))
     onDisconnect?.(integration.id)
   }
 
   const handleSync = (integration: Integration) => {
-    setIntegrations((prev) => prev.map((int) => (int.id === integration.id ? { ...int, status: "syncing" } : int)))
+    setIntegrationStatuses((prev) => ({
+      ...prev,
+      [integration.id]: "syncing",
+    }))
 
     // Simulate sync process
     setTimeout(() => {
-      setIntegrations((prev) =>
-        prev.map((int) => (int.id === integration.id ? { ...int, status: "connected", lastSync: "Agora" } : int)),
-      )
+      setIntegrationStatuses((prev) => ({
+        ...prev,
+        [integration.id]: "connected",
+      }))
     }, 3000)
 
     onSync?.(integration.id)
   }
 
-  const filteredIntegrations =
-    selectedCategory === "all" ? integrations : integrations.filter((int) => int.category === selectedCategory)
+  const filteredIntegrations = useMemo(() => {
+    return filter === "todas" ? integrations : integrations.filter((int) => int.category === filter)
+  }, [integrations, filter])
 
   const connectedCount = integrations.filter((int) => int.status === "connected").length
   const totalCount = integrations.length
@@ -313,203 +307,185 @@ export function ExternalToolsHub({ onConnect, onDisconnect, onSync }: ExternalTo
         </Card>
       </div>
 
-      {/* Category Filter */}
-      <Tabs value={selectedCategory} onValueChange={setSelectedCategory}>
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="all">Todas</TabsTrigger>
-          <TabsTrigger value="productivity">Produtividade</TabsTrigger>
-          <TabsTrigger value="communication">Comunicação</TabsTrigger>
-          <TabsTrigger value="development">Desenvolvimento</TabsTrigger>
-          <TabsTrigger value="storage">Armazenamento</TabsTrigger>
-          <TabsTrigger value="calendar">Calendário</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value={selectedCategory} className="space-y-4">
-          {filteredIntegrations.length === 0 ? (
-            <Card className="border-0 shadow-md">
-              <CardContent className="p-8 text-center">
-                <Settings className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-600">Nenhuma integração encontrada nesta categoria.</p>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {filteredIntegrations.map((integration) => (
-                <Card key={integration.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
-                  <CardContent className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="p-2 bg-gray-100 rounded-lg">
-                          <integration.icon className="h-6 w-6 text-gray-700" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900">{integration.name}</h3>
-                          <p className="text-sm text-gray-600">{integration.description}</p>
-                        </div>
+      <div className="space-y-4">
+        {filteredIntegrations.length === 0 ? (
+          <Card className="border-0 shadow-md">
+            <CardContent className="p-8 text-center">
+              <Settings className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-600">Nenhuma integração encontrada nesta categoria.</p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filteredIntegrations.map((integration) => (
+              <Card key={integration.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
+                <CardContent className="p-6">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-gray-100 rounded-lg">
+                        <integration.icon className="h-6 w-6 text-gray-700" />
                       </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">{integration.name}</h3>
+                        <p className="text-sm text-gray-600">{integration.description}</p>
+                      </div>
+                    </div>
 
-                      <div className="flex items-center space-x-2">
-                        {getStatusIcon(integration.status)}
-                        <Badge className={getStatusColor(integration.status)}>
-                          {getStatusLabel(integration.status)}
+                    <div className="flex items-center space-x-2">
+                      {getStatusIcon(integration.status)}
+                      <Badge className={getStatusColor(integration.status)}>{getStatusLabel(integration.status)}</Badge>
+                    </div>
+                  </div>
+
+                  {/* Features */}
+                  <div className="mb-4">
+                    <p className="text-xs font-medium text-gray-600 mb-2">Recursos:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {integration.features.slice(0, 3).map((feature) => (
+                        <Badge key={feature} variant="outline" className="text-xs">
+                          {feature}
                         </Badge>
-                      </div>
+                      ))}
+                      {integration.features.length > 3 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{integration.features.length - 3} mais
+                        </Badge>
+                      )}
                     </div>
+                  </div>
 
-                    {/* Features */}
-                    <div className="mb-4">
-                      <p className="text-xs font-medium text-gray-600 mb-2">Recursos:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {integration.features.slice(0, 3).map((feature) => (
-                          <Badge key={feature} variant="outline" className="text-xs">
-                            {feature}
-                          </Badge>
-                        ))}
-                        {integration.features.length > 3 && (
-                          <Badge variant="outline" className="text-xs">
-                            +{integration.features.length - 3} mais
-                          </Badge>
-                        )}
+                  {/* Connection Info */}
+                  {integration.status === "connected" && integration.lastSync && (
+                    <div className="mb-4 p-3 bg-green-50 rounded-lg">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-green-700">Última sincronização:</span>
+                        <span className="text-green-600 font-medium">{integration.lastSync}</span>
                       </div>
-                    </div>
-
-                    {/* Connection Info */}
-                    {integration.status === "connected" && integration.lastSync && (
-                      <div className="mb-4 p-3 bg-green-50 rounded-lg">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-green-700">Última sincronização:</span>
-                          <span className="text-green-600 font-medium">{integration.lastSync}</span>
+                      {integration.data && (
+                        <div className="mt-2 text-xs text-green-600">
+                          {integration.id === "google-calendar" &&
+                            `${integration.data.upcomingEvents} eventos próximos`}
+                          {integration.id === "trello" &&
+                            `${integration.data.cards} cartões, ${integration.data.boards} quadros`}
                         </div>
-                        {integration.data && (
-                          <div className="mt-2 text-xs text-green-600">
-                            {integration.id === "google-calendar" &&
-                              `${integration.data.upcomingEvents} eventos próximos`}
-                            {integration.id === "notion" &&
-                              `${integration.data.pages} páginas, ${integration.data.databases} databases`}
-                          </div>
-                        )}
-                      </div>
-                    )}
+                      )}
+                    </div>
+                  )}
 
-                    {integration.status === "error" && (
-                      <div className="mb-4 p-3 bg-red-50 rounded-lg">
-                        <p className="text-sm text-red-700">Erro na sincronização. Verifique as configurações.</p>
-                      </div>
-                    )}
+                  {integration.status === "error" && (
+                    <div className="mb-4 p-3 bg-red-50 rounded-lg">
+                      <p className="text-sm text-red-700">Erro na sincronização. Verifique as configurações.</p>
+                    </div>
+                  )}
 
-                    {/* Actions */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex space-x-2">
-                        {integration.status === "disconnected" ? (
+                  {/* Actions */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex space-x-2">
+                      {integration.status === "disconnected" ? (
+                        <Button
+                          size="sm"
+                          onClick={() => handleConnect(integration)}
+                          disabled={isConnecting === integration.id}
+                        >
+                          {isConnecting === integration.id ? (
+                            <>
+                              <Sync className="h-3 w-3 mr-1 animate-spin" />
+                              Conectando...
+                            </>
+                          ) : (
+                            <>
+                              <Plus className="h-3 w-3 mr-1" />
+                              Conectar
+                            </>
+                          )}
+                        </Button>
+                      ) : (
+                        <>
                           <Button
                             size="sm"
-                            onClick={() => handleConnect(integration)}
-                            disabled={isConnecting === integration.id}
+                            variant="outline"
+                            onClick={() => handleSync(integration)}
+                            disabled={integration.status === "syncing"}
                           >
-                            {isConnecting === integration.id ? (
-                              <>
-                                <Sync className="h-3 w-3 mr-1 animate-spin" />
-                                Conectando...
-                              </>
-                            ) : (
-                              <>
-                                <Plus className="h-3 w-3 mr-1" />
-                                Conectar
-                              </>
-                            )}
+                            <Sync
+                              className={`h-3 w-3 mr-1 ${integration.status === "syncing" ? "animate-spin" : ""}`}
+                            />
+                            Sincronizar
                           </Button>
-                        ) : (
-                          <>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => handleSync(integration)}
-                              disabled={integration.status === "syncing"}
-                            >
-                              <Sync
-                                className={`h-3 w-3 mr-1 ${integration.status === "syncing" ? "animate-spin" : ""}`}
-                              />
-                              Sincronizar
-                            </Button>
 
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button size="sm" variant="outline">
-                                  <Settings className="h-3 w-3 mr-1" />
-                                  Configurar
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <DialogTitle>Configurações - {integration.name}</DialogTitle>
-                                  <DialogDescription>
-                                    Ajuste as configurações de sincronização e recursos
-                                  </DialogDescription>
-                                </DialogHeader>
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button size="sm" variant="outline">
+                                <Settings className="h-3 w-3 mr-1" />
+                                Configurar
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Configurações - {integration.name}</DialogTitle>
+                                <DialogDescription>
+                                  Ajuste as configurações de sincronização e recursos
+                                </DialogDescription>
+                              </DialogHeader>
 
-                                <div className="space-y-4">
-                                  <div className="space-y-2">
-                                    <Label>Frequência de Sincronização</Label>
-                                    <Select defaultValue={integration.syncFrequency}>
-                                      <SelectTrigger>
-                                        <SelectValue />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="realtime">Tempo Real</SelectItem>
-                                        <SelectItem value="hourly">A cada hora</SelectItem>
-                                        <SelectItem value="daily">Diariamente</SelectItem>
-                                        <SelectItem value="manual">Manual</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-
-                                  {integration.settings && (
-                                    <div className="space-y-3">
-                                      {Object.entries(integration.settings).map(([key, value]) => (
-                                        <div key={key} className="flex items-center justify-between">
-                                          <Label className="text-sm capitalize">
-                                            {key.replace(/([A-Z])/g, " $1").toLowerCase()}
-                                          </Label>
-                                          {typeof value === "boolean" ? (
-                                            <Switch checked={value} />
-                                          ) : (
-                                            <Input defaultValue={value.toString()} className="w-32" />
-                                          )}
-                                        </div>
-                                      ))}
-                                    </div>
-                                  )}
-
-                                  <div className="flex justify-between pt-4">
-                                    <Button
-                                      variant="destructive"
-                                      size="sm"
-                                      onClick={() => handleDisconnect(integration)}
-                                    >
-                                      <Trash2 className="h-3 w-3 mr-1" />
-                                      Desconectar
-                                    </Button>
-                                    <Button size="sm">Salvar Configurações</Button>
-                                  </div>
+                              <div className="space-y-4">
+                                <div className="space-y-2">
+                                  <Label>Frequência de Sincronização</Label>
+                                  <Select defaultValue={integration.syncFrequency}>
+                                    <SelectTrigger>
+                                      <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      <SelectItem value="realtime">Tempo Real</SelectItem>
+                                      <SelectItem value="hourly">A cada hora</SelectItem>
+                                      <SelectItem value="daily">Diariamente</SelectItem>
+                                      <SelectItem value="manual">Manual</SelectItem>
+                                    </SelectContent>
+                                  </Select>
                                 </div>
-                              </DialogContent>
-                            </Dialog>
-                          </>
-                        )}
-                      </div>
 
-                      <div className="flex items-center space-x-1 text-xs text-gray-500">
-                        {getCategoryIcon(integration.category)}
-                        <span className="capitalize">{integration.category}</span>
-                      </div>
+                                {integration.settings && (
+                                  <div className="space-y-3">
+                                    {Object.entries(integration.settings).map(([key, value]) => (
+                                      <div key={key} className="flex items-center justify-between">
+                                        <Label className="text-sm capitalize">
+                                          {key.replace(/([A-Z])/g, " $1").toLowerCase()}
+                                        </Label>
+                                        {typeof value === "boolean" ? (
+                                          <Switch checked={value} />
+                                        ) : (
+                                          <Input defaultValue={value.toString()} className="w-32" />
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+
+                                <div className="flex justify-between pt-4">
+                                  <Button variant="destructive" size="sm" onClick={() => handleDisconnect(integration)}>
+                                    <Trash2 className="h-3 w-3 mr-1" />
+                                    Desconectar
+                                  </Button>
+                                  <Button size="sm">Salvar Configurações</Button>
+                                </div>
+                              </div>
+                            </DialogContent>
+                          </Dialog>
+                        </>
+                      )}
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
-        </TabsContent>
-      </Tabs>
+
+                    <div className="flex items-center space-x-1 text-xs text-gray-500">
+                      {getCategoryIcon(integration.category)}
+                      <span className="capitalize">{integration.category}</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* Quick Actions */}
       <Card className="border-0 shadow-md">

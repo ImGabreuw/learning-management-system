@@ -191,7 +191,6 @@ export function FuzzySearch({ onSearch }: FuzzySearchProps) {
       setResults([])
       setIsSearching(false)
     }
-    // disable-next-line react-hooks/exhaustive-deps
   }, [query, fuzzySearch, selectedFilters, typeFilters, onSearch])
 
   const getTypeIcon = (type: string) => {
@@ -357,7 +356,7 @@ export function FuzzySearch({ onSearch }: FuzzySearchProps) {
               <div className="flex items-center justify-between">
                 <p className="text-sm text-gray-600">
                   {results.length} resultado{results.length !== 1 ? "s" : ""} encontrado
-                  {results.length !== 1 ? "s" : ""} para &quot;{query}&quot;
+                  {results.length !== 1 ? "s" : ""} para "{query}"
                 </p>
               </div>
 
@@ -409,7 +408,7 @@ export function FuzzySearch({ onSearch }: FuzzySearchProps) {
           ) : (
             <div className="text-center py-8">
               <Search className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-600">Nenhum resultado encontrado para &quot;{query}&quot;</p>
+              <p className="text-gray-600">Nenhum resultado encontrado para "{query}"</p>
               <p className="text-sm text-gray-500 mt-1">Tente termos diferentes ou remova alguns filtros</p>
             </div>
           )}
