@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: metis-test
+
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/metis-test
+      auto-index-creation: true
+    redis:
+      host: localhost
+      port: 6379
+      timeout: 2000ms
+
+# Configurações JWT para testes
+app:
+  jwt:
+    secret: testSecretKeyForJunitTests2024!@#$%^&*()_+
+    expiration: 86400000 # 24 horas
+
+# Desabilita o OAuth2 para testes unitários
+# spring:
+#   autoconfigure:
+#     exclude: org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+
+# Configurações de logging para testes
+logging:
+  level:
+    com.metis.backend: INFO
+    org.springframework.security: INFO
+    org.springframework.web: WARN
+    org.springframework.data.mongodb: WARN
