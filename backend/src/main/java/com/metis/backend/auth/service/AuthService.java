@@ -1,13 +1,13 @@
-package com.mackenzie.lms.service;
+package com.metis.backend.auth.service;
 
-import com.mackenzie.lms.dto.UserDto;
-import com.mackenzie.lms.dto.request.LoginRequest;
-import com.mackenzie.lms.dto.response.AuthResponse;
-import com.mackenzie.lms.model.User;
-import com.mackenzie.lms.repository.UserRepository;
-import com.mackenzie.lms.security.UserPrincipal;
-import com.mackenzie.lms.security.jwt.JwtTokenProvider;
-import com.mackenzie.lms.exception.InvalidEmailException;
+import com.metis.backend.auth.dto.UserDto;
+import com.metis.backend.auth.dto.request.LoginRequest;
+import com.metis.backend.auth.response.AuthResponse;
+import com.metis.backend.auth.model.User;
+import com.metis.backend.auth.repository.UserRepository;
+import com.metis.backend.auth.security.UserPrincipal;
+import com.metis.backend.auth.security.jwt.JwtTokenProvider;
+import com.metis.backend.auth.exception.InvalidEmailException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

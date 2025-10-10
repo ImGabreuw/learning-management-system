@@ -1,4 +1,4 @@
-package com.mackenzie.lms.model;
+package com.metis.backend.auth.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;

@@ -1,4 +1,4 @@
-package com.mackenzie.lms.dto.request;
+package com.metis.backend.auth.dto.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
