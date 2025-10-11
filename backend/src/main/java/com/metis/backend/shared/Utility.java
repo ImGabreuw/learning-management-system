@@ -27,10 +27,22 @@ public class Utility {
             throw new IllegalArgumentException("Value cannot be null or empty");
         }
 
-        return value
-                .trim()
-                .replaceAll("\\s+", "_")
-                .toLowerCase();
+        // decompor caracteres Unicode compostos em forma "base + marcas". Ex. é → e + acento
+        String normalized = java.text.Normalizer.normalize(value, java.text.Normalizer.Form.NFD);
+
+        // normalizar e remover acentos
+        normalized = normalized.replaceAll("\\p{M}", "");
+
+        // substituir qualquer caracter não alfanumérico por underscore
+        normalized = normalized.trim().replaceAll("[^\\p{Alnum}]+", "_");
+
+        // colapsar múltiplos underscores consecutivos em apenas um
+        normalized = normalized.replaceAll("_+", "_");
+
+        // remover underscores no início ou no fim da string
+        normalized = normalized.replaceAll("^_+|_+$", "");
+
+        return normalized.toLowerCase();
     }
 
 }

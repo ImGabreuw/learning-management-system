@@ -109,6 +109,8 @@ public class KnowledgeGraphService {
         opportunityNode.setProperty("organization", request.organization());
         opportunityNode.setProperty("applicationUrl", request.applicationUrl());
         opportunityNode.setProperty("applicationDeadline", request.applicationDeadline());
+        opportunityNode.setUpdatedAt(LocalDateTime.now());
+        opportunityNode.setCreatedAt(LocalDateTime.now());
 
         if (request.minimumSalary() != null) {
             opportunityNode.setProperty("minimumSalary", request.minimumSalary().toString());
@@ -127,6 +129,8 @@ public class KnowledgeGraphService {
             skillNode.setId(nodeId);
             skillNode.setType(NodeType.SKILL);
             skillNode.setProperty("name", skill);
+            skillNode.setUpdatedAt(LocalDateTime.now());
+            skillNode.setCreatedAt(LocalDateTime.now());
 
             NodeEntity skillNodeSaved = nodeRepository.save(skillNode);
             requiredSkillsId.add(nodeId);
@@ -137,6 +141,7 @@ public class KnowledgeGraphService {
             edgeId.setTargetId(skillNodeSaved.getId());
             requiresSkillEdge.setId(edgeId);
             requiresSkillEdge.setType(RelationType.REQUIRES_SKILL);
+            requiresSkillEdge.setCreatedAt(LocalDateTime.now());
 
             edgeRepository.save(requiresSkillEdge);
         }
@@ -148,6 +153,8 @@ public class KnowledgeGraphService {
             themeNode.setId(nodeId);
             themeNode.setType(NodeType.THEME);
             themeNode.setProperty("name", theme);
+            themeNode.setUpdatedAt(LocalDateTime.now());
+            themeNode.setCreatedAt(LocalDateTime.now());
 
             NodeEntity themeNodeSaved = nodeRepository.save(themeNode);
             relatedThemesId.add(nodeId);
@@ -158,6 +165,7 @@ public class KnowledgeGraphService {
             edgeId.setTargetId(themeNodeSaved.getId());
             relatedToThemeEdge.setId(edgeId);
             relatedToThemeEdge.setType(RelationType.RELATED_TO_THEME);
+            relatedToThemeEdge.setCreatedAt(LocalDateTime.now());
 
             edgeRepository.save(relatedToThemeEdge);
         }
