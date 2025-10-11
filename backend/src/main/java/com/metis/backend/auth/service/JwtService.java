@@ -4,11 +4,13 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.metis.backend.config.MetisProperties;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
@@ -20,16 +22,22 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class JwtService {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private final MetisProperties metisProperties;
 
-    @Value("${jwt.expiration}")
-    private Long expiration;
+    private String getSecret() {
+        return metisProperties.getJwt().getSecret();
+    }
 
-    @Value("${jwt.refresh-expiration}")
-    private Long refreshExpiration;
+    private Long getExpiration() {
+        return metisProperties.getJwt().getExpiration();
+    }
+
+    private Long getRefreshExpiration() {
+        return metisProperties.getJwt().getRefreshExpiration();
+    }
 
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
@@ -37,12 +45,12 @@ public class JwtService {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList()));
 
-        return createToken(claims, userDetails.getUsername(), expiration);
+        return createToken(claims, userDetails.getUsername(), getExpiration());
     }
 
     public String generateRefreshToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, userDetails.getUsername(), refreshExpiration);
+        return createToken(claims, userDetails.getUsername(), getRefreshExpiration());
     }
 
     private String createToken(Map<String, Object> claims, String subject, Long validity) {
@@ -89,7 +97,7 @@ public class JwtService {
     }
 
     private SecretKey getSigningKey() {
-        byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
+        byte[] keyBytes = getSecret().getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

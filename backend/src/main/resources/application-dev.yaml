@@ -1,7 +1,4 @@
 spring:
-  application:
-    name: metis
-
   data:
     mongodb:
       uri: mongodb://localhost:27017/metis
@@ -40,22 +37,23 @@ spring:
             user-name-attribute: userPrincipalName
             jwk-set-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/discovery/v2.0/keys
 
-jwt:
-  secret: ${JWT_SECRET}
-  expiration: 86400000 # 24 horas em milissegundos
-  refresh-expiration: 604800000 # 7 dias em milissegundos
+metis:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: 86400000 # 24 horas em milissegundos
+    refresh-expiration: 604800000 # 7 dias em milissegundos
 
-mackenzie:
-  allowed-email-domains:
-    - mackenzie.br
-    - mackenzista.com.br
+  auth:
+    allowed-email-domains:
+      - mackenzie.br
+      - mackenzista.com.br
 
-  # Roles padrão
-  default-roles:
-    - ROLE_USER
+    # Roles padrão
+    default-roles:
+      - ROLE_USER
 
-  admin-emails:
-    - admin@mackenzie.br
+    admin-emails:
+      - admin@mackenzie.br
 
 logging:
   level:
