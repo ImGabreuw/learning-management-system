@@ -1,5 +1,6 @@
 package com.metis.backend.api;
 
+import com.metis.backend.opportunities.models.response.OpportunityCreatedResponse;
 import com.metis.backend.opportunities.models.response.UserProfileCreatedResponse;
 import com.metis.backend.opportunities.repositories.EdgeRepository;
 import com.metis.backend.opportunities.repositories.NodeRepository;
@@ -118,10 +119,11 @@ class OpportunityResourceTest {
         }
 
         assertThat(nodeRepository.count()).isGreaterThan(0);
+        assertThat(edgeRepository.count()).isGreaterThan(0);
     }
 
     @Test
-    void saveOpportunitiesBatch_Success() {
+    void shouldCreateOpportunities() {
         String requestBody = """
                 [
                   {
@@ -164,18 +166,32 @@ class OpportunityResourceTest {
 
         HttpEntity<String> entity = new HttpEntity<>(requestBody, createHeaders());
 
-        ResponseEntity<String> response = restTemplate.exchange(
+        ResponseEntity<List<OpportunityCreatedResponse>> response = restTemplate.exchange(
                 "http://localhost:" + port + "/api/opportunities/batch",
                 HttpMethod.POST,
                 entity,
-                String.class
+                new ParameterizedTypeReference<>() {
+                }
         );
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(response.getBody()).contains("id");
-        assertThat(response.getBody()).contains("requiredSkillsId");
-        assertThat(response.getBody()).contains("relatedThemesId");
+
+        List<OpportunityCreatedResponse> opportunities = response.getBody();
+        assertThat(opportunities).isNotNull();
+        assertThat(opportunities.size()).isEqualTo(2);
+
+        for (OpportunityCreatedResponse opportunity : opportunities) {
+            String id = opportunity.getId();
+            assertThat(id).isNotNull();
+            assertThat(Utility.isUUID(id)).isTrue();
+
+            assertThat(opportunity.getRequiredSkillsId()).isNotNull();
+            assertThat(opportunity.getRequiredSkillsId().size()).isGreaterThan(0);
+            assertThat(opportunity.getRelatedThemesId()).isNotNull();
+            assertThat(opportunity.getRelatedThemesId().size()).isGreaterThan(0);
+        }
 
         assertThat(nodeRepository.count()).isGreaterThan(0);
+        assertThat(edgeRepository.count()).isGreaterThan(0);
     }
 }
