@@ -6,6 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @Document(collection = "nodes")
@@ -17,7 +18,7 @@ public class NodeEntity {
 
     private NodeType type;
 
-    private Map<String, Object> properties;
+    private Map<String, Object> properties = new HashMap<>();
 
     private LocalDateTime updatedAt;
     private LocalDateTime createdAt;

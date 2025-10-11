@@ -1,6 +1,3 @@
-server:
-  port: 8080
-
 spring:
   application:
     name: metis-test
@@ -14,18 +11,28 @@ spring:
       port: 6379
       timeout: 2000ms
 
-# Configurações JWT para testes
-app:
+  # Desabilita o OAuth2 para testes
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientWebSecurityAutoConfiguration
+
+metis:
   jwt:
     secret: testSecretKeyForJunitTests2024!@#$%^&*()_+
-    expiration: 86400000 # 24 horas
+    expiration: 86400000 # 24 horas em milissegundos
+    refresh-expiration: 604800000 # 7 dias em milissegundos
 
-# Desabilita o OAuth2 para testes unitários
-# spring:
-#   autoconfigure:
-#     exclude: org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration
+  auth:
+    allowed-email-domains:
+      - mackenzie.br
+      - mackenzista.com.br
 
-# Configurações de logging para testes
+    # Roles padrão
+    default-roles:
+      - ROLE_USER
+
+    admin-emails:
+      - admin@mackenzie.br
+
 logging:
   level:
     com.metis.backend: INFO
