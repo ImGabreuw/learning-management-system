@@ -1,6 +1,6 @@
-package br.mackenzie.auth.security;
+package com.metis.backend.auth.security;
 
-import br.mackenzie.auth.service.UserService;
+import com.metis.backend.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,70 +22,57 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Configuração de segurança Spring Security
- * Implementa OAuth2 + JWT + RBAC (Role-Based Access Control)
- */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
-    
+
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final UserService userService;
     private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
-    
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                
-                // Configuração de autorização
+
                 .authorizeHttpRequests(auth -> auth
-                        // Endpoints públicos
                         .requestMatchers(
-                                "/api/v1/auth/login",
-                                "/api/v1/auth/oauth2/**",
+                                "/api/auth/login",
+                                "/api/auth/oauth2/**",
                                 "/login/oauth2/**",
                                 "/oauth2/**",
                                 "/actuator/health"
                         ).permitAll()
-                        
-                        // Endpoints de admin
-                        .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
-                        
-                        // Todos os outros endpoints requerem autenticação
+
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
                         .anyRequest().authenticated()
                 )
-                
-                // Configuração OAuth2
+
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/api/v1/auth/login")
+                        .loginPage("/api/auth/login")
                         .successHandler(oAuth2LoginSuccessHandler)
-                        .failureUrl("/api/v1/auth/login?error=true")
+                        .failureUrl("/api/auth/login?error=true")
                 )
-                
-                // Configuração de logout
+
                 .logout(logout -> logout
-                        .logoutUrl("/api/v1/auth/logout")
-                        .logoutSuccessUrl("/api/v1/auth/login")
+                        .logoutUrl("/api/auth/logout")
+                        .logoutSuccessUrl("/api/auth/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )
-                
-                // Política de sessão stateless (JWT)
+
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                
-                // Adiciona filtro JWT antes do filtro de autenticação padrão
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
-        
-        return http.build();
+
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
-    
+
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -93,12 +80,12 @@ public class SecurityConfig {
         // Não define passwordEncoder porque usamos OAuth2 (sem senha)
         return authProvider;
     }
-    
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
         return config.getAuthenticationManager();
     }
-    
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -108,9 +95,10 @@ public class SecurityConfig {
         configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
-        
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 }

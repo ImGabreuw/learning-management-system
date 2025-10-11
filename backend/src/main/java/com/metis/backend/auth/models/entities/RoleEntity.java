@@ -1,4 +1,4 @@
-package br.mackenzie.auth.model;
+package com.metis.backend.auth.models.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,28 +7,26 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 
-/**
- * Entidade que representa uma Role (papel/permissão) no sistema
- */
-@Data
+@Document(collection = "roles")
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "roles")
-public class Role implements GrantedAuthority {
-    
+@Data
+public class RoleEntity implements GrantedAuthority {
+
     @Id
     private String id;
-    
-    private String name; // Ex: ROLE_USER, ROLE_ADMIN, ROLE_PROFESSOR, etc.
-    
+
+    private String name;
+
     private String description;
-    
-    public Role(String name) {
+
+    public RoleEntity(String name) {
         this.name = name;
     }
-    
+
     @Override
     public String getAuthority() {
         return name;
     }
+
 }

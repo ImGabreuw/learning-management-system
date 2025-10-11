@@ -1,6 +1,8 @@
-package br.mackenzie.auth.service;
+package com.metis.backend.auth.service;
 
-import br.mackenzie.auth.model.User;
+import com.metis.backend.auth.models.entities.UserEntity;
+import com.metis.backend.auth.models.response.OAuth2LoginResponse;
+import com.metis.backend.auth.models.response.RefreshTokenResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,116 +10,90 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
-
-/**
- * Serviço responsável pela lógica de autenticação
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    
     private final UserService userService;
     private final JwtService jwtService;
-    
-    /**
-     * Processa login via OAuth2 Microsoft e gera tokens JWT
-     */
-    public Map<String, String> processOAuth2Login(OAuth2User oAuth2User, HttpServletRequest request) {
-        // Extrai informações do OAuth2User
+
+    public OAuth2LoginResponse processOAuth2Login(OAuth2User oAuth2User, HttpServletRequest request) {
         String email = oAuth2User.getAttribute("userPrincipalName");
         String name = oAuth2User.getAttribute("displayName");
         String microsoftId = oAuth2User.getAttribute("id");
-        
+
         if (email == null || email.isBlank()) {
             email = oAuth2User.getAttribute("mail");
         }
-        
-        log.info("Processando login OAuth2 para: {}", email);
-        
-        // Valida email do Mackenzie
+
+        log.info("Processing OAuth2 login for: {}", email);
+
         if (!userService.isValidMackenzieEmail(email)) {
-            throw new IllegalArgumentException("Email não pertence aos domínios permitidos do Mackenzie");
+            throw new IllegalArgumentException("E-mail não pertence a um domínio permitido do Mackenzie.");
         }
-        
-        // Cria ou atualiza usuário
-        User user = userService.createOrUpdateUser(email, name, microsoftId);
-        
-        // Atualiza IP do último login
+
+        UserEntity userEntity = userService.createOrUpdateUser(email, name, microsoftId);
+
         String ipAddress = getClientIpAddress(request);
         userService.updateLastLoginIp(email, ipAddress);
-        
-        // Gera tokens JWT
-        String accessToken = jwtService.generateToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
-        
-        log.info("Login bem-sucedido para: {}", email);
-        
-        return Map.of(
-                "accessToken", accessToken,
-                "refreshToken", refreshToken,
-                "tokenType", "Bearer",
-                "expiresIn", "86400"
-        );
+
+        String accessToken = jwtService.generateToken(userEntity);
+        String refreshToken = jwtService.generateRefreshToken(userEntity);
+
+        log.info("Successful login for: {}", email);
+
+        return OAuth2LoginResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .tokenType("Bearer")
+                .expiresIn(86400L)
+                .build();
     }
-    
-    /**
-     * Realiza logout invalidando o token
-     */
+
     public void logout(String email, String token) {
-        log.info("Processando logout para: {}", email);
+        log.info("Processing logout for: {}", email);
         userService.invalidateToken(email, token);
     }
-    
-    /**
-     * Valida se um token é válido e não foi invalidado
-     */
+
     public boolean validateToken(String token, UserDetails userDetails) {
         if (!jwtService.validateToken(token, userDetails)) {
             return false;
         }
-        
+
         String email = userDetails.getUsername();
         return !userService.isTokenInvalidated(email, token);
     }
-    
-    /**
-     * Renova o access token usando o refresh token
-     */
-    public Map<String, String> refreshToken(String refreshToken) {
+
+    public RefreshTokenResponse refreshToken(String refreshToken) {
         String email = jwtService.extractUsername(refreshToken);
         UserDetails userDetails = userService.loadUserByUsername(email);
-        
+
         if (!jwtService.validateToken(refreshToken, userDetails)) {
-            throw new IllegalArgumentException("Refresh token inválido ou expirado");
+            throw new IllegalArgumentException("Refresh token is invalid or expired");
         }
-        
+
         String newAccessToken = jwtService.generateToken(userDetails);
-        
-        log.info("Token renovado para: {}", email);
-        
-        return Map.of(
-                "accessToken", newAccessToken,
-                "tokenType", "Bearer",
-                "expiresIn", "86400"
-        );
+        log.info("Token refreshed for: {}", email);
+
+        return RefreshTokenResponse
+                .builder()
+                .accessToken(newAccessToken)
+                .tokenType("Bearer")
+                .expiresIn(86400L)
+                .build();
     }
-    
-    /**
-     * Extrai o endereço IP do cliente
-     */
+
     private String getClientIpAddress(HttpServletRequest request) {
         String xForwardedFor = request.getHeader("X-Forwarded-For");
         if (xForwardedFor != null && !xForwardedFor.isEmpty()) {
             return xForwardedFor.split(",")[0].trim();
         }
-        
+
         String xRealIp = request.getHeader("X-Real-IP");
         if (xRealIp != null && !xRealIp.isEmpty()) {
             return xRealIp;
         }
-        
+
         return request.getRemoteAddr();
     }
 }

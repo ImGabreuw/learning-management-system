@@ -1,4 +1,4 @@
-package br.mackenzie.auth.dto;
+package com.metis.backend.auth.models.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

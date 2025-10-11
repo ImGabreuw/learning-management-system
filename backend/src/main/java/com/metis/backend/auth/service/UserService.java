@@ -1,9 +1,9 @@
-package br.mackenzie.auth.service;
+package com.metis.backend.auth.service;
 
-import br.mackenzie.auth.model.Role;
-import br.mackenzie.auth.model.User;
-import br.mackenzie.auth.repository.RoleRepository;
-import br.mackenzie.auth.repository.UserRepository;
+import com.metis.backend.auth.models.entities.RoleEntity;
+import com.metis.backend.auth.models.entities.UserEntity;
+import com.metis.backend.auth.repository.RoleRepository;
+import com.metis.backend.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +17,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Serviço responsável pelo gerenciamento de usuários
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -39,13 +36,11 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado: " + email));
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com email informado."));
     }
 
-    /**
-     * Valida se o email pertence aos domínios permitidos do Mackenzie
-     */
     public boolean isValidMackenzieEmail(String email) {
         if (email == null || email.isBlank()) {
             return false;
@@ -56,20 +51,15 @@ public class UserService implements UserDetailsService {
                 .anyMatch(domain -> emailLower.endsWith("@" + domain));
     }
 
-    /**
-     * Cria ou atualiza um usuário após autenticação OAuth2
-     */
-    public User createOrUpdateUser(String email, String name, String microsoftId) {
-        // Valida se o email é do Mackenzie
+    public UserEntity createOrUpdateUser(String email, String name, String microsoftId) {
         if (!isValidMackenzieEmail(email)) {
-            throw new IllegalArgumentException("Email não pertence aos domínios permitidos do Mackenzie");
+            throw new IllegalArgumentException("E-mail não pertence a um domínio permitido do Mackenzie.");
         }
 
-        // Busca usuário existente ou cria novo
-        User user = userRepository.findByEmail(email)
+        UserEntity userEntity = userRepository.findByEmail(email)
                 .orElseGet(() -> {
-                    log.info("Criando novo usuário: {}", email);
-                    return User.builder()
+                    log.info("Creating new user: {}", email);
+                    return UserEntity.builder()
                             .email(email)
                             .createdAt(LocalDateTime.now())
                             .accountNonExpired(true)
@@ -80,71 +70,55 @@ public class UserService implements UserDetailsService {
                             .build();
                 });
 
-        // Atualiza informações
-        user.setName(name);
-        user.setMicrosoftId(microsoftId);
-        user.setLastLoginAt(LocalDateTime.now());
+        userEntity.setName(name);
+        userEntity.setMicrosoftId(microsoftId);
+        userEntity.setLastLoginAt(LocalDateTime.now());
 
-        // Atribui roles
-        if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            Set<Role> roles = assignRoles(email);
-            user.setRoles(roles);
+        if (userEntity.getRoleEntities() == null || userEntity.getRoleEntities().isEmpty()) {
+            Set<RoleEntity> roleEntities = assignRoles(email);
+            userEntity.setRoleEntities(roleEntities);
         }
 
-        return userRepository.save(user);
+        return userRepository.save(userEntity);
     }
 
-    /**
-     * Atribui roles ao usuário baseado em regras de negócio
-     */
-    private Set<Role> assignRoles(String email) {
-        Set<Role> roles = new HashSet<>();
+    private Set<RoleEntity> assignRoles(String email) {
+        Set<RoleEntity> roleEntities = new HashSet<>();
 
-        // Adiciona roles padrão
         for (String roleName : defaultRoles) {
-            Role role = roleRepository.findByName(roleName)
-                    .orElseGet(() -> roleRepository.save(new Role(roleName)));
-            roles.add(role);
+            RoleEntity roleEntity = roleRepository.findByName(roleName)
+                    .orElseGet(() -> roleRepository.save(new RoleEntity(roleName)));
+            roleEntities.add(roleEntity);
         }
 
-        // Verifica se é admin
         if (adminEmails.contains(email.toLowerCase())) {
-            Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+            RoleEntity adminRoleEntity = roleRepository.findByName("ROLE_ADMIN")
                     .orElseGet(() -> {
-                        Role newRole = new Role();
-                        newRole.setName("ROLE_ADMIN");
-                        newRole.setDescription("Administrador do sistema");
-                        return roleRepository.save(newRole);
+                        RoleEntity newRoleEntity = new RoleEntity();
+                        newRoleEntity.setName("ROLE_ADMIN");
+                        newRoleEntity.setDescription("System administrator");
+                        return roleRepository.save(newRoleEntity);
                     });
-            roles.add(adminRole);
+            roleEntities.add(adminRoleEntity);
         }
 
-        return roles;
+        return roleEntities;
     }
 
-    /**
-     * Invalida um token para logout
-     */
     public void invalidateToken(String email, String token) {
         userRepository.findByEmail(email).ifPresent(user -> {
             user.invalidateToken(token);
             userRepository.save(user);
-            log.info("Token invalidado para usuário: {}", email);
+            log.info("Token invalidated for user: {}", email);
         });
     }
 
-    /**
-     * Verifica se um token foi invalidado
-     */
     public boolean isTokenInvalidated(String email, String token) {
         return userRepository.findByEmail(email)
                 .map(user -> user.isTokenInvalidated(token))
                 .orElse(false);
     }
 
-    /**
-     * Atualiza o IP do último login
-     */
     public void updateLastLoginIp(String email, String ipAddress) {
         userRepository.findByEmail(email).ifPresent(user -> {
             user.setLastLoginIp(ipAddress);

@@ -1,7 +1,7 @@
-package br.mackenzie.auth.security;
+package com.metis.backend.auth.security;
 
-import br.mackenzie.auth.service.AuthService;
-import jakarta.servlet.ServletException;
+import com.metis.backend.auth.models.response.OAuth2LoginResponse;
+import com.metis.backend.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,55 +12,42 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.Map;
 
-/**
- * Handler executado após login OAuth2 bem-sucedido
- * Gera tokens JWT e redireciona com os tokens
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    
+
     private final AuthService authService;
-    
+
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request,
             HttpServletResponse response,
             Authentication authentication
-    ) throws IOException, ServletException {
-        
+    ) throws IOException {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        
+
         try {
-            // Processa login e gera tokens
-            Map<String, String> tokens = authService.processOAuth2Login(oAuth2User, request);
-            
-            // Monta URL de redirecionamento com tokens
+            OAuth2LoginResponse tokens = authService.processOAuth2Login(oAuth2User, request);
             String redirectUrl = buildRedirectUrl(tokens);
-            
-            log.info("Login OAuth2 bem-sucedido, redirecionando para: {}", redirectUrl);
-            
+            String email = oAuth2User.getAttribute("email");
+
+            log.info("Successful OAuth2 login for user ({}), redirecting to {}", email, redirectUrl);
             getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-            
         } catch (Exception e) {
-            log.error("Erro ao processar login OAuth2: {}", e.getMessage(), e);
+            log.error("Error processing OAuth2 login: {}", e.getMessage());
             response.sendRedirect("/api/v1/auth/login?error=oauth2_processing_failed");
         }
     }
-    
-    /**
-     * Constrói URL de redirecionamento com os tokens
-     * Em produção, você pode redirecionar para o frontend da aplicação
-     */
-    private String buildRedirectUrl(Map<String, String> tokens) {
+
+    private String buildRedirectUrl(OAuth2LoginResponse tokens) {
         return String.format(
                 "/api/v1/auth/oauth2/success?accessToken=%s&refreshToken=%s&tokenType=%s",
-                tokens.get("accessToken"),
-                tokens.get("refreshToken"),
-                tokens.get("tokenType")
+                tokens.getAccessToken(),
+                tokens.getRefreshToken(),
+                tokens.getTokenType()
         );
     }
+
 }

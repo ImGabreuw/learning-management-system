@@ -1,8 +1,3 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /
-
 spring:
   application:
     name: metis
@@ -22,37 +17,46 @@ spring:
           max-idle: 8
           min-idle: 0
 
-  # Configuração OAuth2 Microsoft
   security:
     oauth2:
       client:
         registration:
           microsoft:
-            client-id: ${MICROSOFT_CLIENT_ID}
-            client-secret: ${MICROSOFT_CLIENT_SECRET}
+            client-id: ${AZURE_CLIENT_ID}
+            client-secret: ${AZURE_CLIENT_SECRET}
             scope:
               - openid
               - profile
               - email
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            client-authentication-method: client_secret_basic
+              - User.Read
             authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            client-name: Microsoft
         provider:
           microsoft:
-            authorization-uri: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
-            token-uri: https://login.microsoftonline.com/common/oauth2/v2.0/token
+            authorization-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/authorize
+            token-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/token
             user-info-uri: https://graph.microsoft.com/v1.0/me
-            user-info-authentication-method: header
-            user-name-attribute: mail
-            jwk-set-uri: https://login.microsoftonline.com/common/discovery/v2.0/keys
+            user-name-attribute: userPrincipalName
+            jwk-set-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/discovery/v2.0/keys
 
-# Configurações JWT
-app:
-  jwt:
-    secret: ${JWT_SECRET:mackenzieSecretKey2024!@#$%^&*()_+}
-    expiration: ${JWT_EXPIRATION:86400000} # 24 horas em millisegundos
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: 86400000 # 24 horas em milissegundos
+  refresh-expiration: 604800000 # 7 dias em milissegundos
 
-# Configurações de logging
+mackenzie:
+  allowed-email-domains:
+    - mackenzie.br
+    - mackenzista.com.br
+
+  # Roles padrão
+  default-roles:
+    - ROLE_USER
+
+  admin-emails:
+    - admin@mackenzie.br
+
 logging:
   level:
     com.metis.backend: DEBUG
@@ -62,24 +66,3 @@ logging:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   file:
     name: logs/app.log
-
-# Configurações de CORS
-cors:
-  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000,http://localhost:4200}
-  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
-  allowed-headers: "*"
-  allow-credentials: true
-
-# Configurações da aplicação
-mackenzie:
-  lms:
-    version: 1.0.0
-    environment: ${APP_ENVIRONMENT:development}
-    file:
-      upload:
-        max-size: 10MB
-        allowed-types: pdf,docx,pptx,mp4,avi,mov
-    security:
-      jwt:
-        blacklist:
-          cleanup-interval: 3600000 # 1 hora em millisegundos
