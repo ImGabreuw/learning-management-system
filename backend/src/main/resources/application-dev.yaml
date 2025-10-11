@@ -58,8 +58,6 @@ metis:
 logging:
   level:
     com.metis.backend: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.web: INFO
   pattern:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   file:

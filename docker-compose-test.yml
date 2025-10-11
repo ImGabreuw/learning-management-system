@@ -8,7 +8,6 @@ services:
     environment:
       - MONGO_INITDB_DATABASE=metis-test
     volumes:
-      - .docker/mongodb-test:/data/db
       - ./scripts/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
 
   mongo-express:
@@ -33,7 +32,5 @@ services:
     container_name: metis-redis-test
     ports:
       - "6379:6379"
-    volumes:
-      - .docker/redis-test:/data
     restart: unless-stopped
     command: redis-server --appendonly yes

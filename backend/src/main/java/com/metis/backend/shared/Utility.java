@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Utility {
@@ -43,6 +44,15 @@ public class Utility {
         normalized = normalized.replaceAll("^_+|_+$", "");
 
         return normalized.toLowerCase();
+    }
+
+    public static boolean isUUID(String str) {
+        try {
+            UUID.fromString(str);
+            return true;
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
     }
 
 }
