@@ -50,12 +50,10 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
       - JWT_SECRET=${JWT_SECRET:-defaultSecretKey2024!@#}
-      - MICROSOFT_CLIENT_ID=${MICROSOFT_CLIENT_ID}
-      - MICROSOFT_CLIENT_SECRET=${MICROSOFT_CLIENT_SECRET}
-      - APP_ENVIRONMENT=production
+      - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
+      - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
+      - AZURE_TENANT_ID=${AZURE_TENANT_ID}
     restart: unless-stopped
 
   web:
