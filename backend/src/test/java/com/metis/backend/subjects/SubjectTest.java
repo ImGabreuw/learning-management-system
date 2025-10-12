@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @DataMongoTest
@@ -20,6 +21,18 @@ public class SubjectTest {
 
     @Autowired
     private SubjectService subjectService;
+
+    @Test
+    public void shouldSaveAndFindById(){
+        SubjectEntity subjectEntity = new SubjectEntity();
+        subjectEntity.setId("s1");
+
+        subjectService.saveList(Collections.singletonList(subjectEntity));
+
+        SubjectEntity result = subjectService.findById("s1");
+
+        Assert.notNull(result, "Subject not found");
+    }
 
     @Test
     public void shouldSaveAndListByTeacher() {
@@ -50,7 +63,7 @@ public class SubjectTest {
         subjectService.saveList(subjectsToSave);
 
         //Procurando no banco
-        List<SubjectEntity> subjectsFound = subjectService.listByTeacher("t1");
+        List<SubjectEntity> subjectsFound = subjectService.listByTeacher(teacher.getUserAssociatedId());
 
         //Verificando se foram encontradas
         Assert.notNull(subjectsFound, "Subjects not found: Null list");
@@ -94,7 +107,7 @@ public class SubjectTest {
         subjectService.saveList(subjectsToSave);
 
         //Procurando no banco
-        List<SubjectEntity> subjectsFound = subjectService.listByStudent("st1");
+        List<SubjectEntity> subjectsFound = subjectService.listByStudent(student.getUserAssociatedId());
 
         //Verificando se foram encontradas
         Assert.notNull(subjectsFound, "subjects not found:  Null list");

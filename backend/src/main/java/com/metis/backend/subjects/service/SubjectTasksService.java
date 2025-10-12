@@ -15,8 +15,8 @@ public class SubjectTasksService {
     private final SubjectTasksRepository subjectTasksRepository;
 
     @Transactional(readOnly = true)
-    public List<SubjectTaskEntity> listBySubjectAndStudent(String subjectId, String studentId) {
-        return subjectTasksRepository.findBySubjectAndStudent(subjectId, studentId);
+    public List<SubjectTaskEntity> listBySubjectAndStudent(String subjectId, String studentUserId) {
+        return subjectTasksRepository.findBySubjectAndStudent(subjectId, studentUserId);
     }
 
     @Transactional(readOnly = true)

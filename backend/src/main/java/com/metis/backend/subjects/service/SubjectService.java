@@ -15,17 +15,24 @@ public class SubjectService {
     private final SubjectRepository subjectRepository;
 
     @Transactional(readOnly = true)
-    public List<SubjectEntity> listByTeacher(String teacherId) {
-        return subjectRepository.findByTeacher(teacherId);
+    public List<SubjectEntity> listByTeacher(String teacherUserId) {
+        return subjectRepository.findByTeacher(teacherUserId);
     }
 
     @Transactional(readOnly = true)
-    public List<SubjectEntity> listByStudent(String studentId) {
-        return subjectRepository.findByStudent(studentId);
+    public List<SubjectEntity> listByStudent(String studentUserId) {
+        return subjectRepository.findByStudent(studentUserId);
+    }
+
+    @Transactional(readOnly = true)
+    public SubjectEntity findById(String subjectId) {
+        return subjectRepository.findById(subjectId);
     }
 
     @Transactional
     public void saveList(List<SubjectEntity> subjects) {
         subjectRepository.saveAll(subjects);
     }
+
+
 }

@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface SubjectTasksRepository extends MongoRepository<SubjectTaskEntity, String> {
 
-    @Query("{'subjectId': ?0, 'studentsScore' : { $elemMatch : {'student.id' : ?1}}}")
-    List<SubjectTaskEntity> findBySubjectAndStudent(String subjectId, String studentId);
+    @Query("{'subjectId': ?0, 'studentsScore' : { $elemMatch : {'student.userAssociatedId' : ?1}}}")
+    List<SubjectTaskEntity> findBySubjectAndStudent(String subjectId, String studentUserId);
 
     @Query("{'subjectId': ?0}")
     List<SubjectTaskEntity> findBySubject(String subjectId);

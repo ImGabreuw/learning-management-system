@@ -84,7 +84,9 @@ public class SubjectTasksTest {
         subjectTasksService.saveList(tasksToSave);
 
         //Procurando no banco
-        List<SubjectTaskEntity> tasksFound = subjectTasksService.listBySubjectAndStudent(subject.getId(), student.getId());
+        List<SubjectTaskEntity> tasksFound = subjectTasksService.listBySubjectAndStudent(
+                subject.getId(),
+                student.getUserAssociatedId());
 
         //Validando
         Assert.notNull(tasksFound, "Tasks not Found: Null list");
