@@ -33,3 +33,7 @@ build/
 .vscode/
 
 logs/
+
+src/.idea
+src/main/main.iml
+pom.xml
