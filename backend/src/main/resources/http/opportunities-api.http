@@ -1,5 +1,5 @@
 ### Save User Profile
-POST {{host}}/api/opportunities/batch
+POST {{host}}/api/opportunities/user-profile/batch
 Content-Type: application/json
 
 [
@@ -9,10 +9,10 @@ Content-Type: application/json
     "state": "SP",
     "city": "São Paulo",
     "skills": [
-      "hab_java"
+      "Java"
     ],
     "interests": [
-      "tema_ia"
+      "Inteligência Artificial"
     ],
     "preferredJobTypes": []
   },
@@ -22,11 +22,11 @@ Content-Type: application/json
     "state": "SP",
     "city": "São Paulo",
     "skills": [
-      "hab_python",
-      "hab_sql"
+      "Python",
+      "SQL"
     ],
     "interests": [
-      "tema_dados"
+      "Análise de Dados"
     ],
     "preferredJobTypes": []
   }

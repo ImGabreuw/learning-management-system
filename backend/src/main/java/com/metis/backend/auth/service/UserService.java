@@ -1,12 +1,12 @@
 package com.metis.backend.auth.service;
 
+import com.metis.backend.config.MetisProperties;
 import com.metis.backend.auth.models.entities.RoleEntity;
 import com.metis.backend.auth.models.entities.UserEntity;
 import com.metis.backend.auth.repository.RoleRepository;
 import com.metis.backend.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -24,21 +24,13 @@ public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
-    @Value("${mackenzie.allowed-email-domains}")
-    private List<String> allowedEmailDomains;
-
-    @Value("${mackenzie.default-roles}")
-    private List<String> defaultRoles;
-
-    @Value("${mackenzie.admin-emails}")
-    private List<String> adminEmails;
+    private final MetisProperties metisProperties;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository
                 .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com email informado."));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
     }
 
     public boolean isValidMackenzieEmail(String email) {
@@ -47,13 +39,14 @@ public class UserService implements UserDetailsService {
         }
 
         String emailLower = email.toLowerCase();
+        List<String> allowedEmailDomains = metisProperties.getAuth().getAllowedEmailDomains();
         return allowedEmailDomains.stream()
                 .anyMatch(domain -> emailLower.endsWith("@" + domain));
     }
 
     public UserEntity createOrUpdateUser(String email, String name, String microsoftId) {
         if (!isValidMackenzieEmail(email)) {
-            throw new IllegalArgumentException("E-mail não pertence a um domínio permitido do Mackenzie.");
+            throw new IllegalArgumentException("Email does not belong to allowed Mackenzie domains");
         }
 
         UserEntity userEntity = userRepository.findByEmail(email)
@@ -85,12 +78,14 @@ public class UserService implements UserDetailsService {
     private Set<RoleEntity> assignRoles(String email) {
         Set<RoleEntity> roleEntities = new HashSet<>();
 
+        List<String> defaultRoles = metisProperties.getAuth().getDefaultRoles();
         for (String roleName : defaultRoles) {
             RoleEntity roleEntity = roleRepository.findByName(roleName)
                     .orElseGet(() -> roleRepository.save(new RoleEntity(roleName)));
             roleEntities.add(roleEntity);
         }
 
+        List<String> adminEmails = metisProperties.getAuth().getAdminEmails();
         if (adminEmails.contains(email.toLowerCase())) {
             RoleEntity adminRoleEntity = roleRepository.findByName("ROLE_ADMIN")
                     .orElseGet(() -> {
