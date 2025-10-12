@@ -148,9 +148,10 @@ sequenceDiagram
 ```mermaid
 classDiagram
     class Pessoa {
-        -id: int
+        -id: string
         -nome: string
         -email: string
+        -usuarioAssociado: string
         +fazerLogin(): bool
     }
 
@@ -174,23 +175,25 @@ classDiagram
     }
 
     class Disciplina {
-        -id: int
+        -id: string
         -nome: string
         -descricao: string
     }
 
     class TarefaDisciplina {
+        -id: string
         -descrição: string
         -abreEm: LocalDateTime
         -fechaEm: LocalDateTime
     }
 
     class NotasTarefa {
+        -id:string
         -nota: double
     }
 
     class Documento {
-        -id: int
+        -id: string
         -titulo: string
         -arquivo: blob
     }
