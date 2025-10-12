@@ -5,19 +5,21 @@ import com.metis.backend.subjects.model.entity.SubjectEntity;
 import com.metis.backend.subjects.model.entity.SubjectStudent;
 import com.metis.backend.subjects.model.entity.SubjectTeacher;
 import com.metis.backend.subjects.service.SubjectService;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @DataMongoTest
-@RequiredArgsConstructor
+@Import(SubjectService.class)
 public class SubjectTest {
 
-    private final SubjectService subjectService;
+    @Autowired
+    private SubjectService subjectService;
 
     @Test
     public void shouldSaveAndListByTeacher() {
@@ -54,6 +56,9 @@ public class SubjectTest {
         Assert.notNull(subjectsFound, "Subjects not found: Null list");
         Assert.noNullElements(subjectsFound, "subjects not found: Null elements found");
         Assert.notEmpty(subjectsFound, "subjects not found: Empty list");
+        if(subjectsFound.size() != subjectsToSave.size()) {
+            throw new RuntimeException("Subjects not found: Size mismatch");
+        }
 
     }
 
@@ -95,6 +100,9 @@ public class SubjectTest {
         Assert.notNull(subjectsFound, "subjects not found:  Null list");
         Assert.noNullElements(subjectsFound, "subjects not found: Null elements found");
         Assert.notEmpty(subjectsFound, "subjects not found: Empty list");
+        if(subjectsFound.size() != subjectsToSave.size()) {
+            throw new RuntimeException("Subjects not found: Size mismatch");
+        }
 
     }
 

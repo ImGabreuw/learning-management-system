@@ -6,19 +6,23 @@ import com.metis.backend.subjects.model.entity.SubjectEntity;
 import com.metis.backend.subjects.model.entity.SubjectStudent;
 import com.metis.backend.subjects.model.entity.SubjectTaskEntity;
 import com.metis.backend.subjects.service.SubjectTasksService;
-import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @DataMongoTest
-@RequiredArgsConstructor
+@Import(SubjectTasksService.class)
 public class SubjectTasksTest {
 
-    private final SubjectTasksService subjectTasksService;
+    @Autowired
+    private SubjectTasksService subjectTasksService;
 
     @Test
     public void shouldSaveAndListBySubjectAndStudent() {
@@ -53,6 +57,7 @@ public class SubjectTasksTest {
         //Task1
         List<StudentTaskScore> studentsScoreT1 = new ArrayList<>();
         StudentTaskScore st1Score = new StudentTaskScore();
+        st1Score.setId("sts1");
         st1Score.setStudent(student);
         studentsScoreT1.add(st1Score);
         task1.setStudentsScore(studentsScoreT1);
@@ -60,6 +65,7 @@ public class SubjectTasksTest {
         //Task2
         List<StudentTaskScore> studentsScoreT2 = new ArrayList<>();
         StudentTaskScore st2Score = new StudentTaskScore();
+        st2Score.setId("sts2");
         st2Score.setStudent(student);
         studentsScoreT2.add(st2Score);
         task2.setStudentsScore(studentsScoreT2);
@@ -67,6 +73,7 @@ public class SubjectTasksTest {
         //Task3
         List<StudentTaskScore> studentsScoreT3 = new ArrayList<>();
         StudentTaskScore st3Score = new StudentTaskScore();
+        st3Score.setId("sts3");
         st3Score.setStudent(student);
         studentsScoreT3.add(st3Score);
         task3.setStudentsScore(studentsScoreT3);
@@ -83,6 +90,9 @@ public class SubjectTasksTest {
         Assert.notNull(tasksFound, "Tasks not Found: Null list");
         Assert.noNullElements(tasksFound, "Tasks not Found: Null elements found");
         Assert.notEmpty(tasksFound, "Tasks not Found: Empty list");
+        if(tasksFound.size() != tasksToSave.size()) {
+            throw new RuntimeException("Tasks not found: Size mismatch");
+        }
 
     }
 
@@ -120,6 +130,9 @@ public class SubjectTasksTest {
         Assert.notNull(tasksFound, "Tasks not Found: Null list");
         Assert.noNullElements(tasksFound, "Tasks not Found: Null elements found");
         Assert.notEmpty(tasksFound, "Tasks not Found: Empty list");
+        if(tasksFound.size() != tasksToSave.size()) {
+            throw new RuntimeException("Tasks not found: Size mismatch");
+        }
 
     }
 
@@ -164,6 +177,9 @@ public class SubjectTasksTest {
         Assert.notNull(tasksFound, "Tasks not Found: Null list");
         Assert.noNullElements(tasksFound, "Tasks not Found: Null elements found");
         Assert.notEmpty(tasksFound, "Tasks not Found: Empty list");
+        if(tasksFound.size() != tasksToSave.size()) {
+            throw new RuntimeException("Tasks not found: Size mismatch");
+        }
 
     }
 }

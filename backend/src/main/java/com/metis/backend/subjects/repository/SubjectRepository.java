@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SubjectRepository extends MongoRepository<SubjectEntity, Integer> {
 
-    @Query("{'teacher': ?0 }")
+    @Query("{'teacher.id' : ?0 }")
     List<SubjectEntity> findByTeacher(String teacherId);
 
     @Query("{ 'students' : { $elemMatch : { 'id' : ?0} } }")
