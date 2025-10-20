@@ -21,6 +21,8 @@ public class SubjectEntity {
 
     private List<String> studentsUserId;
 
+    private List<LocalDateTime> occursIn;
+
     private List<String> subjectDocumentsIds;
 
 }
