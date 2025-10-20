@@ -11,7 +11,7 @@ public class StudentTaskSubmission {
 
     private String studentUserId;
 
-    private double score;
+    private Float score;
 
     private LocalDateTime submittedIn;
 
