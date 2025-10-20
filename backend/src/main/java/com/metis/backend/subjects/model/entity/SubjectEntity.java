@@ -21,6 +21,6 @@ public class SubjectEntity {
 
     private List<String> studentsUserId;
 
-    private List<SubjectDocument> subjectDocuments;
+    private List<String> subjectDocumentsIds;
 
 }
