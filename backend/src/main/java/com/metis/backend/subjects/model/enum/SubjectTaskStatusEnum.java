@@ -1,16 +1,16 @@
 package com.metis.backend.subjects.model.enum;
 
 public enum SubjectTaskTypeEnum {
-  CONCLUIDA("Concluída"),EM_ANDAMENTO("Em Andamento");
+  PENDING("Pendente"), DONE("Concluída");
 
-  private String typeAsStr;
+  private String translation;
 
-  public SubjectTaskTypeEnum(String typeAsStr){
-      this.typeAsStr = typeAsStr;
+  public SubjectTaskTypeEnum(String translation){
+      this.translation = translation;
   }
 
-  public String getTypeAsStr(){
-      return this.typeAsStr;
+  public String getTranslation(){
+      return this.translation;
   }
 
 }
