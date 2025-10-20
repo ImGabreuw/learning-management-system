@@ -13,7 +13,7 @@ public class StudentTaskSubmission {
 
     private Float score;
 
-    private LocalDateTime submittedIn;
+    private LocalDateTime submittedAt;
 
     private SubjectTaskStatusEnum status;
 }
