@@ -22,9 +22,7 @@ public class SubjectTaskEntity {
 
     private String subjectId;
 
-    private List<StudentTaskScore> studentsScore;
-
-    private SubjectTaskStatusEnum status;
+    private List<StudentTaskSubmission> studentsSubmissions;
 
     private SubjectTaskTypeEnum type;
 
