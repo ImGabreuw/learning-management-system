@@ -26,5 +26,7 @@ public class SubjectTaskEntity {
 
     private SubjectTaskStatusEnum status;
 
+    private SubjectTaskTypeEnum type;
+
 
 }
