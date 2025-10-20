@@ -24,5 +24,7 @@ public class SubjectTaskEntity {
 
     private List<StudentTaskScore> studentsScore;
 
+    private SubjectTaskStatusEnum status;
+
 
 }
