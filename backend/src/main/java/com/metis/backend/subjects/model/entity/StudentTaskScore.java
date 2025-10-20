@@ -9,7 +9,7 @@ public class StudentTaskScore {
     @Id
     private String id;
 
-    private SubjectStudent student;
+    private String studentUserId;
 
     private double score;
 }
