@@ -4,7 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 
 @Data
-public class StudentTaskScore {
+public class StudentTaskSubmission {
 
     @Id
     private String id;
@@ -12,4 +12,6 @@ public class StudentTaskScore {
     private String studentUserId;
 
     private double score;
+
+    private LocalDateTime submittedIn;
 }
