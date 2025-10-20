@@ -17,9 +17,9 @@ public class SubjectEntity {
 
     private String description;
 
-    private SubjectTeacher teacher;
+    private String teacherUserId;
 
-    private List<SubjectStudent> students;
+    private List<String> studentsUserId;
 
     private List<SubjectDocument> subjectDocuments;
 
