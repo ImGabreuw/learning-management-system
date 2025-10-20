@@ -14,4 +14,6 @@ public class StudentTaskSubmission {
     private double score;
 
     private LocalDateTime submittedIn;
+
+    private SubjectTaskStatusEnum status;
 }
