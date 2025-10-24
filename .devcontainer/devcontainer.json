@@ -1,11 +1,18 @@
 {
     "image":"mcr.microsoft.com/devcontainers/universal:2",
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/roul/devcontainer-features/mise-java:1": {},
+        "ghcr.io/roul/devcontainer-features/mise-node:1": {}
+    },
     "customizations": {
-        "vscode": {
-            "extensions": [
-                "streetsidesoftware.code-spell-checker",
-                "vscjava.vscode-java-pack"
-            ]
-        }
-    }
+		"vscode": {
+			"extensions": [
+				"vmware.vscode-boot-dev-pack",
+				"vscjava.vscode-lombok",
+				"vscjava.vscode-java-pack",
+				"GitHub.copilot"
+			]
+		}
+	}
 }
