@@ -1,11 +1,11 @@
-package com.metis.backend.subjects.model.enum;
+package com.metis.backend.subjects.model.enums;
 
 public enum SubjectTaskTypeEnum {
   TASK("Atividade"), PROJECT("Projeto");
 
-  private String translation;
+  private final String translation;
 
-  public SubjectTaskTypeEnum(String translation){
+  SubjectTaskTypeEnum(String translation){
       this.translation = translation;
   }
 
