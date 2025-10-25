@@ -2,8 +2,6 @@ package com.metis.backend.subjects;
 
 import com.metis.backend.auth.models.entities.UserEntity;
 import com.metis.backend.subjects.model.entity.SubjectEntity;
-import com.metis.backend.subjects.model.entity.SubjectStudent;
-import com.metis.backend.subjects.model.entity.SubjectTeacher;
 import com.metis.backend.subjects.service.SubjectService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +9,6 @@ import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.util.Assert;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -37,25 +34,21 @@ public class SubjectTest {
     @Test
     public void shouldSaveAndListByTeacher() {
         //Definindo professor
-        UserEntity user = new UserEntity();
-        user.setId("u1");
-
-        SubjectTeacher teacher = new SubjectTeacher();
-        teacher.setId("t1");
-        teacher.setUserAssociatedId("u1");
+        UserEntity teacher = new UserEntity();
+        teacher.setId("u1");
 
         //Criando disciplinas associadas
         SubjectEntity subject = new SubjectEntity();
         subject.setId("s1");
-        subject.setTeacher(teacher);
+        subject.setTeacherUserId(teacher.getId());
 
         SubjectEntity subject2 = new SubjectEntity();
         subject2.setId("s2");
-        subject2.setTeacher(teacher);
+        subject2.setTeacherUserId(teacher.getId());
 
         SubjectEntity subject3 = new SubjectEntity();
         subject3.setId("s3");
-        subject3.setTeacher(teacher);
+        subject3.setTeacherUserId(teacher.getId());
 
         //Salvando no banco
         List<SubjectEntity> subjectsToSave = List.of(subject, subject2, subject3);
@@ -63,7 +56,7 @@ public class SubjectTest {
         subjectService.saveList(subjectsToSave);
 
         //Procurando no banco
-        List<SubjectEntity> subjectsFound = subjectService.listByTeacher(teacher.getUserAssociatedId());
+        List<SubjectEntity> subjectsFound = subjectService.listByTeacher(teacher.getId());
 
         //Verificando se foram encontradas
         Assert.notNull(subjectsFound, "Subjects not found: Null list");
@@ -78,28 +71,21 @@ public class SubjectTest {
     @Test
     public void shouldSaveAndListByStudent() {
         //Definindo aluno
-        UserEntity user = new UserEntity();
-        user.setId("u1");
-
-        SubjectStudent student = new SubjectStudent();
-        student.setId("st1");
-        student.setUserAssociatedId("u1");
+        UserEntity student = new UserEntity();
+        student.setId("u1");
 
         //Criando disciplinas
         SubjectEntity subject = new SubjectEntity();
         subject.setId("s1");
-        subject.setStudents(new ArrayList<>());
-        subject.getStudents().add(student);
+        subject.setStudentsUserId(List.of(student.getId()));
 
         SubjectEntity subject2 = new SubjectEntity();
         subject2.setId("s2");
-        subject2.setStudents(new ArrayList<>());
-        subject2.getStudents().add(student);
+        subject2.setStudentsUserId(List.of(student.getId()));
 
         SubjectEntity subject3 = new SubjectEntity();
         subject3.setId("s3");
-        subject3.setStudents(new ArrayList<>());
-        subject3.getStudents().add(student);
+        subject3.setStudentsUserId(List.of(student.getId()));
 
         //Salvando no banco
         List<SubjectEntity> subjectsToSave = List.of(subject, subject2, subject3);
@@ -107,7 +93,7 @@ public class SubjectTest {
         subjectService.saveList(subjectsToSave);
 
         //Procurando no banco
-        List<SubjectEntity> subjectsFound = subjectService.listByStudent(student.getUserAssociatedId());
+        List<SubjectEntity> subjectsFound = subjectService.listByStudent(student.getId());
 
         //Verificando se foram encontradas
         Assert.notNull(subjectsFound, "subjects not found:  Null list");

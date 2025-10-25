@@ -1,9 +1,8 @@
 package com.metis.backend.subjects;
 
 import com.metis.backend.auth.models.entities.UserEntity;
-import com.metis.backend.subjects.model.entity.StudentTaskScore;
+import com.metis.backend.subjects.model.entity.StudentTaskSubmission;
 import com.metis.backend.subjects.model.entity.SubjectEntity;
-import com.metis.backend.subjects.model.entity.SubjectStudent;
 import com.metis.backend.subjects.model.entity.SubjectTaskEntity;
 import com.metis.backend.subjects.service.SubjectTasksService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +26,8 @@ public class SubjectTasksTest {
     @Test
     public void shouldSaveAndListBySubjectAndStudent() {
         //Criando aluno
-        UserEntity user = new UserEntity();
-        user.setId("u1");
-
-        SubjectStudent student = new SubjectStudent();
-        student.setId("st1");
-        student.setUserAssociatedId(user.getId());
+        UserEntity student = new UserEntity();
+        student.setId("u1");
 
         //Criando disciplina
         SubjectEntity subject = new SubjectEntity();
@@ -55,28 +50,28 @@ public class SubjectTasksTest {
 
         //2. Entidade de pontuações
         //Task1
-        List<StudentTaskScore> studentsScoreT1 = new ArrayList<>();
-        StudentTaskScore st1Score = new StudentTaskScore();
-        st1Score.setId("sts1");
-        st1Score.setStudent(student);
-        studentsScoreT1.add(st1Score);
-        task1.setStudentsScore(studentsScoreT1);
+        List<StudentTaskSubmission> studentsSubmissionsT1 = new ArrayList<>();
+        StudentTaskSubmission st1Submission = new StudentTaskSubmission();
+        st1Submission.setId("sts1");
+        st1Submission.setStudentUserId(student.getId());
+        studentsSubmissionsT1.add(st1Submission);
+        task1.setStudentsSubmissions(studentsSubmissionsT1);
 
         //Task2
-        List<StudentTaskScore> studentsScoreT2 = new ArrayList<>();
-        StudentTaskScore st2Score = new StudentTaskScore();
-        st2Score.setId("sts2");
-        st2Score.setStudent(student);
-        studentsScoreT2.add(st2Score);
-        task2.setStudentsScore(studentsScoreT2);
+        List<StudentTaskSubmission> studentsSubmissionsT2 = new ArrayList<>();
+        StudentTaskSubmission st2Submission = new StudentTaskSubmission();
+        st2Submission.setId("sts2");
+        st2Submission.setStudentUserId(student.getId());
+        studentsSubmissionsT2.add(st2Submission);
+        task2.setStudentsSubmissions(studentsSubmissionsT2);
 
         //Task3
-        List<StudentTaskScore> studentsScoreT3 = new ArrayList<>();
-        StudentTaskScore st3Score = new StudentTaskScore();
-        st3Score.setId("sts3");
-        st3Score.setStudent(student);
-        studentsScoreT3.add(st3Score);
-        task3.setStudentsScore(studentsScoreT3);
+        List<StudentTaskSubmission> studentsSubmissionsT3 = new ArrayList<>();
+        StudentTaskSubmission st3Submission = new StudentTaskSubmission();
+        st3Submission.setId("sts3");
+        st3Submission.setStudentUserId(student.getId());
+        studentsSubmissionsT3.add(st3Submission);
+        task3.setStudentsSubmissions(studentsSubmissionsT3);
 
         //Salvando no banco
         List<SubjectTaskEntity> tasksToSave = List.of(task1, task2, task3);
@@ -86,7 +81,7 @@ public class SubjectTasksTest {
         //Procurando no banco
         List<SubjectTaskEntity> tasksFound = subjectTasksService.listBySubjectAndStudent(
                 subject.getId(),
-                student.getUserAssociatedId());
+                student.getId());
 
         //Validando
         Assert.notNull(tasksFound, "Tasks not Found: Null list");

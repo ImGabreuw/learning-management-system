@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Document(collection = "subjects")
@@ -17,10 +18,12 @@ public class SubjectEntity {
 
     private String description;
 
-    private SubjectTeacher teacher;
+    private String teacherUserId;
 
-    private List<SubjectStudent> students;
+    private List<String> studentsUserId;
 
-    private List<SubjectDocument> subjectDocuments;
+    private List<LocalDateTime> occursIn;
+
+    private List<String> subjectDocumentsIds;
 
 }

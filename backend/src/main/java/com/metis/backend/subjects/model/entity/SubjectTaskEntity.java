@@ -1,5 +1,6 @@
 package com.metis.backend.subjects.model.entity;
 
+import com.metis.backend.subjects.model.enums.SubjectTaskTypeEnum;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,7 +23,9 @@ public class SubjectTaskEntity {
 
     private String subjectId;
 
-    private List<StudentTaskScore> studentsScore;
+    private List<StudentTaskSubmission> studentsSubmissions;
+
+    private SubjectTaskTypeEnum type;
 
 
 }

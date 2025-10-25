@@ -6,16 +6,12 @@ import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
-public interface SubjectRepository extends MongoRepository<SubjectEntity, Integer> {
+public interface SubjectRepository extends MongoRepository<SubjectEntity, String> {
 
-    @Query("{'teacher.userAssociatedId' : ?0 }")
+    @Query("{'teacherUserId' : ?0 }")
     List<SubjectEntity> findByTeacher(String teacherUserId);
 
-    @Query("{ 'students' : { $elemMatch : { 'userAssociatedId' : ?0} } }")
+    @Query("{ 'studentsUserId' : ?0 }")
     List<SubjectEntity> findByStudent(String studentUserId);
-
-    @Query("{ 'id': ?0 }")
-    SubjectEntity findById(String subjectId);
-
 
 }
