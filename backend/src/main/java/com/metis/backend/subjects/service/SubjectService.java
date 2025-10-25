@@ -26,7 +26,8 @@ public class SubjectService {
 
     @Transactional(readOnly = true)
     public SubjectEntity findById(String subjectId) {
-        return subjectRepository.findById(subjectId);
+
+        return subjectRepository.findById(subjectId).orElse(null);
     }
 
     @Transactional

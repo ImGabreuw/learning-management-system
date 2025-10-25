@@ -11,11 +11,7 @@ public interface SubjectRepository extends MongoRepository<SubjectEntity, String
     @Query("{'teacherUserId' : ?0 }")
     List<SubjectEntity> findByTeacher(String teacherUserId);
 
-    @Query("{ 'studentsUserId' : { $elemMatch : ?0 } }")
+    @Query("{ 'studentsUserId' : ?0 }")
     List<SubjectEntity> findByStudent(String studentUserId);
-
-    @Query("{ 'id': ?0 }")
-    SubjectEntity findById(String subjectId);
-
 
 }

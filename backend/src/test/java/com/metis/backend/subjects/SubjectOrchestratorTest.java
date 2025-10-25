@@ -1,9 +1,8 @@
 package com.metis.backend.subjects;
 
 import com.metis.backend.auth.models.entities.UserEntity;
-import com.metis.backend.subjects.model.entity.StudentTaskScore;
+import com.metis.backend.subjects.model.entity.StudentTaskSubmission;
 import com.metis.backend.subjects.model.entity.SubjectEntity;
-import com.metis.backend.subjects.model.entity.SubjectStudent;
 import com.metis.backend.subjects.model.entity.SubjectTaskEntity;
 import com.metis.backend.subjects.model.request.SubjectAndTasksRequest;
 import com.metis.backend.subjects.model.response.SubjectsAndTasksResponse;
@@ -37,16 +36,13 @@ public class SubjectOrchestratorTest {
     public void shouldListByUser(){
 
         //Criando aluno
-        UserEntity user = new UserEntity();
-        user.setId("u1");
-
-        SubjectStudent student = new SubjectStudent();
-        student.setId("st1");
-        student.setUserAssociatedId(user.getId());
+        UserEntity student = new UserEntity();
+        student.setId("u1");
 
         //Criando disciplina
         SubjectEntity subject = new SubjectEntity();
         subject.setId("s1");
+        subject.setStudentsUserId(List.of(student.getId()));
 
         //Salvando
         subjectService.saveList(Collections.singletonList(subject));
@@ -68,28 +64,28 @@ public class SubjectOrchestratorTest {
 
         //2. Entidade de pontuações
         //Task1
-        List<StudentTaskScore> studentsScoreT1 = new ArrayList<>();
-        StudentTaskScore st1Score = new StudentTaskScore();
+        List<StudentTaskSubmission> studentsScoreT1 = new ArrayList<>();
+        StudentTaskSubmission st1Score = new StudentTaskSubmission();
         st1Score.setId("sts1");
-        st1Score.setStudent(student);
+        st1Score.setStudentUserId(student.getId());
         studentsScoreT1.add(st1Score);
-        task1.setStudentsScore(studentsScoreT1);
+        task1.setStudentsSubmissions(studentsScoreT1);
 
         //Task2
-        List<StudentTaskScore> studentsScoreT2 = new ArrayList<>();
-        StudentTaskScore st2Score = new StudentTaskScore();
+        List<StudentTaskSubmission> studentsScoreT2 = new ArrayList<>();
+        StudentTaskSubmission st2Score = new StudentTaskSubmission();
         st2Score.setId("sts2");
-        st2Score.setStudent(student);
+        st2Score.setStudentUserId(student.getId());
         studentsScoreT2.add(st2Score);
-        task2.setStudentsScore(studentsScoreT2);
+        task2.setStudentsSubmissions(studentsScoreT2);
 
         //Task3
-        List<StudentTaskScore> studentsScoreT3 = new ArrayList<>();
-        StudentTaskScore st3Score = new StudentTaskScore();
+        List<StudentTaskSubmission> studentsScoreT3 = new ArrayList<>();
+        StudentTaskSubmission st3Score = new StudentTaskSubmission();
         st3Score.setId("sts3");
-        st3Score.setStudent(student);
+        st3Score.setStudentUserId(student.getId());
         studentsScoreT3.add(st3Score);
-        task3.setStudentsScore(studentsScoreT3);
+        task3.setStudentsSubmissions(studentsScoreT3);
 
         List<SubjectTaskEntity> tasksToSave = List.of(task1, task2, task3);
 
@@ -99,7 +95,7 @@ public class SubjectOrchestratorTest {
         //Gerando request
         SubjectAndTasksRequest request = new SubjectAndTasksRequest();
         request.setSubjectId(subject.getId());
-        request.setUserId(user.getId());
+        request.setUserId(student.getId());
 
         SubjectsAndTasksResponse response = subjectOrchestrator.listSubjectsAndTasksByUser(request);
 
