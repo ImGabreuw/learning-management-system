@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,16 +23,6 @@ public class FileMetadata {
     @Builder.Default
     private List<String> tags = new ArrayList<>();
 
-    private LocalDateTime uploadedAt;
     private String uploadedBy;
-
-    public boolean hasTag(String tag) {
-        if (tags == null) {
-            return false;
-        }
-        return tags
-                .stream()
-                .anyMatch(t -> t.equalsIgnoreCase(tag));
-    }
 
 }

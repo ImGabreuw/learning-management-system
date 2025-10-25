@@ -22,6 +22,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
+import org.springframework.data.mongodb.gridfs.GridFsResource;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,94 +43,85 @@ public class FileStorageService {
     public FileUploadResponse uploadFile(MultipartFile file, FileUploadRequest request, String userId) {
         validateFile(file);
 
+        FileType fileType = FileType.fromMimeType(file.getContentType());
+
+        FileMetadata metadata = FileMetadata.builder()
+                .fileType(fileType)
+                .title(request.title())
+                .description(request.description())
+                .tags(request.tags() != null ? request.tags() : new ArrayList<>())
+                .uploadedBy(userId)
+                .build();
+
+        Document metaDoc = new Document()
+                .append("fileType", metadata.getFileType().name())
+                .append("title", metadata.getTitle())
+                .append("description", metadata.getDescription())
+                .append("tags", metadata.getTags())
+                .append("uploadedBy", metadata.getUploadedBy());
+
+        ObjectId fileId;
         try {
-            FileType fileType = FileType.fromMimeType(file.getContentType());
-
-            FileMetadata metadata = FileMetadata.builder()
-                    .fileType(fileType)
-                    .title(request.title())
-                    .description(request.description())
-                    .tags(request.tags() != null ? request.tags() : new ArrayList<>())
-                    .uploadedAt(LocalDateTime.now())
-                    .uploadedBy(userId)
-                    .build();
-
-            Document metaDoc = new Document()
-                    .append("fileType", metadata.getFileType().name())
-                    .append("title", metadata.getTitle())
-                    .append("description", metadata.getDescription())
-                    .append("tags", metadata.getTags())
-                    .append("uploadedAt", metadata.getUploadedAt())
-                    .append("uploadedBy", metadata.getUploadedBy());
-
-            ObjectId fileId = gridFsTemplate.store(
+            fileId = gridFsTemplate.store(
                     file.getInputStream(),
                     file.getOriginalFilename(),
                     file.getContentType(),
                     metaDoc
             );
-
-            log.info("File uploaded successfully with ID: {}", fileId);
-
-            return FileUploadResponse.builder()
-                    .id(fileId.toString())
-                    .filename(file.getOriginalFilename())
-                    .contentType(file.getContentType())
-                    .size(file.getSize())
-                    .message("Arquivo enviado com sucesso!")
-                    .build();
         } catch (IOException e) {
-            log.error("Error uploading file: {}", e.getMessage(), e);
-            throw new FileStorageException("Erro ao fazer upload do arquivo", e);
+            throw new FileStorageException("Erro ao armazenar o arquivo");
         }
+
+        return FileUploadResponse.builder()
+                .id(fileId.toString())
+                .filename(file.getOriginalFilename())
+                .contentType(file.getContentType())
+                .size(file.getSize())
+                .build();
     }
 
     public FileDownloadResponse downloadFile(String fileId, String userId) {
-        try {
-            ObjectId objectId = new ObjectId(fileId);
-            GridFSFile gridFSFile = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(objectId)));
+        ObjectId objectId = new ObjectId(fileId);
+        GridFSFile gridFSFile = gridFsTemplate.findOne(new Query(Criteria.where("_id").is(objectId)));
 
-            if (gridFSFile == null) {
-                log.warn("File not found with ID: {}", fileId);
-                throw new FileNotFoundException("Arquivo não encontrado");
-            }
-
-            // Verificar permissões
-            Document metadata = gridFSFile.getMetadata();
-            if (metadata != null) {
-                String uploadedBy = metadata.getString("uploadedBy");
-                if (!userId.equals(uploadedBy)) {
-                    log.warn("Unauthorized access attempt by user {} to file {}", userId, fileId);
-                    throw new UnauthorizedFileAccessException("Você não tem permissão para acessar este arquivo");
-                }
-            }
-
-            var resource = gridFsOperations.getResource(gridFSFile);
-
-            return FileDownloadResponse.builder()
-                    .resource(new InputStreamResource(resource.getInputStream()))
-                    .filename(gridFSFile.getFilename())
-                    .contentType(gridFSFile.getMetadata() != null ?
-                            gridFSFile.getMetadata().getString("_contentType") : "application/octet-stream")
-                    .contentLength(gridFSFile.getLength())
-                    .build();
-
-        } catch (IllegalArgumentException e) {
-            log.error("Invalid file ID format: {}", fileId);
-            throw new FileNotFoundException("ID de arquivo inválido");
-        } catch (IOException e) {
-            log.error("Error downloading file: {}", e.getMessage(), e);
-            throw new FileStorageException("Erro ao fazer download do arquivo", e);
+        if (gridFSFile == null) {
+            throw new FileNotFoundException("Arquivo não encontrado");
         }
+
+        Document metadata = gridFSFile.getMetadata();
+        if (metadata != null) {
+            String uploadedBy = metadata.getString("uploadedBy");
+            if (!userId.equals(uploadedBy)) {
+                throw new UnauthorizedFileAccessException("Você não tem permissão para acessar este arquivo");
+            }
+        }
+
+        GridFsResource resource = gridFsOperations.getResource(gridFSFile);
+
+        String contentType = gridFSFile.getMetadata() != null
+                ? gridFSFile.getMetadata().getString("_contentType")
+                : "application/octet-stream";
+
+        InputStreamResource isr;
+        try {
+            isr = new InputStreamResource(resource.getInputStream());
+        } catch (IOException e) {
+            throw new FileStorageException("Erro ao ler o arquivo");
+        }
+
+        return FileDownloadResponse.builder()
+                .resource(isr)
+                .filename(gridFSFile.getFilename())
+                .contentType(contentType)
+                .contentLength(gridFSFile.getLength())
+                .build();
     }
 
-    public Page<FileResponse> listFiles(FileFilterRequest filterRequest, Pageable pageable, String userId) {
+    public Page<FileResponse> findAllFiles(FileFilterRequest filterRequest, Pageable pageable, String userId) {
         Query query = new Query();
 
-        // Filtros de segurança - apenas arquivos do usuário
         query.addCriteria(Criteria.where("metadata.uploadedBy").is(userId));
 
-        // Aplicar filtros adicionais
         if (filterRequest != null) {
             if (filterRequest.title() != null && !filterRequest.title().isBlank()) {
                 query.addCriteria(Criteria.where("metadata.title").regex(filterRequest.title(), "i"));
@@ -143,7 +135,6 @@ public class FileStorageService {
         }
 
         long total = gridFsTemplate.find(query).into(new ArrayList<>()).size();
-
         query.with(pageable);
 
         List<GridFSFile> gridFSFiles = gridFsTemplate.find(query).into(new ArrayList<>());
@@ -207,7 +198,7 @@ public class FileStorageService {
                 .title(metadata != null ? metadata.getString("title") : null)
                 .description(metadata != null ? metadata.getString("description") : null)
                 .tags(metadata != null ? (List<String>) metadata.get("tags") : new ArrayList<>())
-                .uploadedAt(metadata != null ? (LocalDateTime) metadata.get("uploadedAt") : null)
+                .uploadedAt(gridFSFile.getUploadDate())
                 .uploadedBy(metadata != null ? metadata.getString("uploadedBy") : null)
                 .build();
     }

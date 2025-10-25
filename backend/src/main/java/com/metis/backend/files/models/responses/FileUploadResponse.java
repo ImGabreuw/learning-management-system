@@ -15,6 +15,5 @@ public class FileUploadResponse {
     private String filename;
     private String contentType;
     private Long size;
-    private String message;
 
 }

@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -28,7 +28,7 @@ public class FileResponse {
 
     private List<String> tags;
 
-    private LocalDateTime uploadedAt;
+    private Date uploadedAt;
     private String uploadedBy;
 
 }

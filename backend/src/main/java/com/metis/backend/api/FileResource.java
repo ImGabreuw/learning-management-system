@@ -16,7 +16,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -34,11 +33,9 @@ public class FileResource {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<FileUploadResponse> uploadFile(
             @RequestPart("file") MultipartFile file,
-            @RequestPart("metadata") @Valid FileUploadRequest request,
-            Authentication authentication
+            @RequestPart("metadata") @Valid FileUploadRequest request
     ) {
-        String userId = authentication.getName();
-        FileUploadResponse response = fileStorageService.uploadFile(file, request, userId);
+        FileUploadResponse response = fileStorageService.uploadFile(file, request, "system");
 
         URI location = UriComponentsBuilder
                 .fromPath("/api/files/{id}")
@@ -50,11 +47,9 @@ public class FileResource {
 
     @GetMapping("/{fileId}")
     public ResponseEntity<Resource> downloadFile(
-            @PathVariable String fileId,
-            Authentication authentication
+            @PathVariable String fileId
     ) {
-        String userId = authentication.getName();
-        FileDownloadResponse response = fileStorageService.downloadFile(fileId, userId);
+        FileDownloadResponse response = fileStorageService.downloadFile(fileId, "system");
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(response.getContentType()))
@@ -69,23 +64,20 @@ public class FileResource {
             @RequestParam(required = false) String title,
             @RequestParam(required = false) FileType fileType,
             @RequestParam(required = false) List<String> tags,
-            @PageableDefault(size = 20) Pageable pageable,
-            Authentication authentication
+            @PageableDefault(size = 20) Pageable pageable
     ) {
-        String userId = authentication.getName();
+        String userId = "system";
         FileFilterRequest filterRequest = new FileFilterRequest(title, fileType, tags, userId);
-        Page<FileResponse> files = fileStorageService.listFiles(filterRequest, pageable, userId);
+        Page<FileResponse> files = fileStorageService.findAllFiles(filterRequest, pageable, userId);
 
         return ResponseEntity.ok(files);
     }
 
     @DeleteMapping("/{fileId}")
     public ResponseEntity<Void> deleteFile(
-            @PathVariable String fileId,
-            Authentication authentication
+            @PathVariable String fileId
     ) {
-        String userId = authentication.getName();
-        fileStorageService.deleteFile(fileId, userId);
+        fileStorageService.deleteFile(fileId, "system");
 
         return ResponseEntity.noContent().build();
     }
