@@ -40,6 +40,7 @@ public class UserService implements UserDetailsService {
 
         String emailLower = email.toLowerCase();
         List<String> allowedEmailDomains = metisProperties.getAuth().getAllowedEmailDomains();
+        if (allowedEmailDomains == null || allowedEmailDomains.isEmpty()) return false;
         return allowedEmailDomains.stream()
                 .anyMatch(domain -> emailLower.endsWith("@" + domain));
     }
