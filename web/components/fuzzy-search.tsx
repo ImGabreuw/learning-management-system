@@ -232,7 +232,7 @@ export function FuzzySearch({ onSearch }: FuzzySearchProps) {
     return parts.map((part, index) => {
       if (terms.some((term) => part.toLowerCase().includes(term.toLowerCase()))) {
         return (
-          <mark key={index} className="bg-yellow-200 px-1 rounded">
+          <mark key={index} className="bg-yellow-200">
             {part}
           </mark>
         )
@@ -243,6 +243,14 @@ export function FuzzySearch({ onSearch }: FuzzySearchProps) {
 
   const availableCourses = [...new Set(mockContent.map((item) => item.course))]
   const availableTypes = [...new Set(mockContent.map((item) => item.type))]
+
+  const removeFilter = (filter: string, type: "course" | "type") => {
+    if (type === "course") {
+      setSelectedFilters((prev) => prev.filter((f) => f !== filter))
+    } else {
+      setTypeFilters((prev) => prev.filter((f) => f !== filter))
+    }
+  }
 
   return (
     <div className="space-y-4">
@@ -322,10 +330,17 @@ export function FuzzySearch({ onSearch }: FuzzySearchProps) {
           {selectedFilters.map((filter) => (
             <Badge key={filter} variant="secondary" className="flex items-center gap-1">
               {filter}
-              <X
-                className="h-3 w-3 cursor-pointer"
-                onClick={() => setSelectedFilters(selectedFilters.filter((f) => f !== filter))}
-              />
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  removeFilter(filter, "course")
+                }}
+                className="ml-1 hover:bg-gray-300 rounded-full p-0.5"
+              >
+                <X className="h-3 w-3" />
+              </button>
             </Badge>
           ))}
           {typeFilters.map((filter) => (
@@ -334,10 +349,17 @@ export function FuzzySearch({ onSearch }: FuzzySearchProps) {
               {filter === "video" && "Vídeo"}
               {filter === "slide" && "Slide"}
               {filter === "note" && "Anotação"}
-              <X
-                className="h-3 w-3 cursor-pointer"
-                onClick={() => setTypeFilters(typeFilters.filter((f) => f !== filter))}
-              />
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  removeFilter(filter, "type")
+                }}
+                className="ml-1 hover:bg-gray-300 rounded-full p-0.5"
+              >
+                <X className="h-3 w-3" />
+              </button>
             </Badge>
           ))}
         </div>
