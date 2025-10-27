@@ -36,4 +36,4 @@ logs/
 
 src/.idea
 src/main/main.iml
-pom.xml
+.env

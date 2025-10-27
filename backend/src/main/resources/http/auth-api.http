@@ -1,0 +1,104 @@
+### ===================================
+### METIS - Auth API Tests
+### ===================================
+### Pre-requisitos:
+### 1. MongoDB e Redis rodando (docker compose up -d mongo redis)
+### 2. Backend rodando em dev (./mvnw spring-boot:run -Dspring-boot.run.profiles=dev)
+### 3. Variáveis de ambiente configuradas (AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_TENANT_ID, JWT_SECRET)
+### ===================================
+
+@baseUrl = {{$dotenv host}}
+@accessToken = eyJhbGciOiJIUzI1NiJ9...  # SUBSTITUA com seu token real após login
+@refreshToken = eyJhbGciOiJIUzI1NiJ9... # SUBSTITUA com seu refresh token real após login
+
+### ===================================
+### 1. Health Check - Validar que o backend está rodando
+### ===================================
+GET {{baseUrl}}/actuator/health
+Accept: application/json
+
+### ===================================
+### 2. Obter URL de Login (OAuth2 Microsoft)
+### ===================================
+GET {{baseUrl}}/api/auth/login
+Accept: application/json
+
+### ===================================
+### 3. Iniciar Login OAuth2 (Microsoft)
+### ===================================
+### IMPORTANTE: Abra esta URL no navegador para fazer login
+### GET {{baseUrl}}/oauth2/authorization/microsoft
+###
+### Após o login bem-sucedido, você será redirecionado para:
+### {{baseUrl}}/api/auth/oauth2/success?accessToken=...&refreshToken=...&tokenType=Bearer
+###
+### COPIE o accessToken e refreshToken da URL e atualize as variáveis acima (@accessToken e @refreshToken)
+
+### ===================================
+### 4. Validar Token JWT
+### ===================================
+GET {{baseUrl}}/api/auth/validate
+Authorization: Bearer {{accessToken}}
+
+### ===================================
+### 5. Obter Informações do Usuário Atual
+### ===================================
+GET {{baseUrl}}/api/auth/me
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### ===================================
+### 6. Refresh Token - Obter novo Access Token
+### ===================================
+POST {{baseUrl}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshToken}}"
+}
+
+### ===================================
+### 7. Logout - Invalidar o token atual
+### ===================================
+POST {{baseUrl}}/api/auth/logout
+Authorization: Bearer {{accessToken}}
+
+### ===================================
+### 8. Endpoint Admin (somente para usuários admin)
+### ===================================
+GET {{baseUrl}}/api/auth/admin/test
+Authorization: Bearer {{accessToken}}
+Accept: application/json
+
+### ===================================
+### TESTES DE ERRO
+### ===================================
+
+### 9. Tentar acessar /me sem token (deve retornar 401 ou dados vazios dependendo do permitAll)
+GET {{baseUrl}}/api/auth/me
+
+### 10. Tentar validar com token inválido (deve retornar 401)
+GET {{baseUrl}}/api/auth/validate
+Authorization: Bearer token_invalido_12345
+
+### 11. Tentar refresh com token inválido (deve retornar erro)
+POST {{baseUrl}}/api/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "token_invalido_12345"
+}
+
+### ===================================
+### FLUXO COMPLETO SUGERIDO
+### ===================================
+### 1. Execute "Health Check" para confirmar que backend está rodando
+### 2. Execute "Obter URL de Login" para confirmar o endpoint
+### 3. Abra {{baseUrl}}/oauth2/authorization/microsoft no navegador
+### 4. Faça login com um e-mail @mackenzie.br ou @mackenzista.com.br
+### 5. Copie accessToken e refreshToken da URL de redirecionamento
+### 6. Atualize as variáveis @accessToken e @refreshToken no topo deste arquivo
+### 7. Execute "Obter Informações do Usuário Atual" para validar o token
+### 8. Execute "Refresh Token" para obter um novo access token
+### 9. Execute "Logout" para invalidar o token
+### ===================================

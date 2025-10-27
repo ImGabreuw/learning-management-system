@@ -43,7 +43,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private String buildRedirectUrl(OAuth2LoginResponse tokens) {
         return String.format(
-                "/api/v1/auth/oauth2/success?accessToken=%s&refreshToken=%s&tokenType=%s",
+                "/api/auth/oauth2/success?accessToken=%s&refreshToken=%s&tokenType=%s",
                 tokens.getAccessToken(),
                 tokens.getRefreshToken(),
                 tokens.getTokenType()
