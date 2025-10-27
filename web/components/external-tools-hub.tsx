@@ -54,9 +54,16 @@ interface ExternalToolsHubProps {
   onDisconnect?: (integrationId: string) => void
   onSync?: (integrationId: string) => void
   filter?: string // Added filter prop to support external filtering
+  compact?: boolean // Added compact mode prop
 }
 
-export function ExternalToolsHub({ onConnect, onDisconnect, onSync, filter = "todas" }: ExternalToolsHubProps) {
+export function ExternalToolsHub({
+  onConnect,
+  onDisconnect,
+  onSync,
+  filter = "todas",
+  compact = false,
+}: ExternalToolsHubProps) {
   const [selectedIntegration, setSelectedIntegration] = useState<Integration | null>(null)
   const [isConnecting, setIsConnecting] = useState<string | null>(null)
   const [integrationStatuses, setIntegrationStatuses] = useState<Record<string, Integration["status"]>>({})
@@ -249,6 +256,43 @@ export function ExternalToolsHub({ onConnect, onDisconnect, onSync, filter = "to
 
   const connectedCount = integrations.filter((int) => int.status === "connected").length
   const totalCount = integrations.length
+
+  if (compact) {
+    return (
+      <div className="space-y-3">
+        {filteredIntegrations.slice(0, 4).map((integration) => (
+          <div
+            key={integration.id}
+            className="flex items-center justify-between p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+          >
+            <div className="flex items-center space-x-3">
+              <div className="p-2 bg-gray-100 rounded-lg">
+                <integration.icon className="h-4 w-4 text-gray-700" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-900">{integration.name}</p>
+                <p className="text-xs text-gray-500">
+                  {integration.status === "connected" ? "Conectado" : "Desconectado"}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              {getStatusIcon(integration.status)}
+              {integration.status === "disconnected" && (
+                <Button size="sm" variant="outline" onClick={() => handleConnect(integration)}>
+                  Conectar
+                </Button>
+              )}
+            </div>
+          </div>
+        ))}
+        <Button variant="outline" size="sm" className="w-full bg-transparent">
+          <Plus className="h-3 w-3 mr-2" />
+          Ver Todas as Integrações
+        </Button>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">

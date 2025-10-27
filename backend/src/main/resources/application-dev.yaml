@@ -27,7 +27,8 @@ spring:
               - email
               - User.Read
             authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            #redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "https://www.google.com"
             client-name: Microsoft
         provider:
           microsoft:

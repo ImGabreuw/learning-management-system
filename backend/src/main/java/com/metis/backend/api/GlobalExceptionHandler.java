@@ -1,5 +1,8 @@
 package com.metis.backend.api;
 
+import com.metis.backend.files.exceptions.FileNotFoundException;
+import com.metis.backend.files.exceptions.FileStorageException;
+import com.metis.backend.files.exceptions.UnauthorizedFileAccessException;
 import com.metis.backend.shared.ApiErrorResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -71,6 +74,36 @@ public class GlobalExceptionHandler {
         ApiErrorResponse response = ApiErrorResponse.of(ex.getMessage());
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleFileNotFoundException(FileNotFoundException ex) {
+        log.warn("File not found: {}", ex.getMessage());
+
+        ApiErrorResponse response = ApiErrorResponse.of(ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
+    @ExceptionHandler(FileStorageException.class)
+    public ResponseEntity<ApiErrorResponse> handleFileStorageException(FileStorageException ex) {
+        log.error("File storage error: {}", ex.getMessage(), ex);
+
+        ApiErrorResponse response = ApiErrorResponse.of(ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(response);
+    }
+
+    @ExceptionHandler(UnauthorizedFileAccessException.class)
+    public ResponseEntity<ApiErrorResponse> handleUnauthorizedFileAccessException(UnauthorizedFileAccessException ex) {
+        log.warn("Unauthorized file access: {}", ex.getMessage());
+
+        ApiErrorResponse response = ApiErrorResponse.of(ex.getMessage());
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
                 .body(response);
     }
 
