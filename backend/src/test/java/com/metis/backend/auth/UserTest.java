@@ -14,6 +14,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.Assert;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import java.util.Optional;
 
 @TestPropertySource(properties = {
@@ -35,15 +38,26 @@ public class UserTest {
     private RoleRepository roleRepository;
 
     private static final String VALID_EMAIL = "user@mackenzie.br";
-    private static final String ADMIN_EMAIL = "admin@mackenzie.br";
     private static final String INVALID_EMAIL = "user@gmail.com";
     private static final String USER_NAME = "Test User";
     private static final String MICROSOFT_ID = "ms-12345";
+    private static final String TEST_TOKEN = "jwt-test-abc";
     private static final String IP_ADDRESS = "192.168.1.1";
+
 
     @BeforeEach
     void setup(){
         userRepository.deleteAll();
+        roleRepository.deleteAll();
+    }
+
+    private UserEntity createTestUser(String email, Set<String> invalidatedTokens) {
+        UserEntity userEntity = UserEntity.builder()
+                .email(email)
+                .name(USER_NAME)
+                .invalidatedTokens(invalidatedTokens)
+                .build();
+        return userRepository.save(userEntity);
     }
 
     @Test
@@ -103,17 +117,45 @@ public class UserTest {
     }
 
     @Test
-    void roleAssignment(){
+    void tokenInvalidationInvalidatedTokenTokenIsPersisted(){
+        createTestUser(VALID_EMAIL, new HashSet<>());
+        userService.invalidateToken(VALID_EMAIL, TEST_TOKEN);
+
+        UserEntity updatedUser = userRepository.findByEmail(VALID_EMAIL).orElse(null);
+        Assertions.assertNotNull(updatedUser, "User must be found after update");
+
+        Assert.isTrue(updatedUser.getInvalidatedTokens().contains(TEST_TOKEN), "The token must be saved as invalidated in the database.");
 
     }
 
     @Test
-    void tokenInvalidation(){
+    void tokenInvalidationIsTokenInvalidatedReturnsTrue(){
+        createTestUser(VALID_EMAIL, Set.of(TEST_TOKEN));
 
+        boolean result = userService.isTokenInvalidated(VALID_EMAIL, TEST_TOKEN);
+
+        Assert.isTrue(result, "Token invalidated");
+    }
+
+    @Test
+    void tokenInvalidationIsTokenInvalidatedReturnsFalseForValidToken(){
+        createTestUser(VALID_EMAIL, Set.of("other-token"));
+
+        boolean result = userService.isTokenInvalidated(VALID_EMAIL, TEST_TOKEN);
+
+        Assert.isTrue(!result, "Token invalidated should be invalidated");
     }
 
     @Test
     void loginInfoUpdate(){
+        createTestUser(VALID_EMAIL, new HashSet<>());
+
+        userService.updateLastLoginIp(VALID_EMAIL, IP_ADDRESS);
+
+        UserEntity updatedUser = userRepository.findByEmail(VALID_EMAIL).orElse(null);
+        Assert.notNull(updatedUser, "User must be found after update");
+
+        Assertions.assertEquals(IP_ADDRESS, updatedUser.getLastLoginIp(), "The last login Ip must be updated");
 
     }
 
