@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 "/api/auth/oauth2/**",
                                 "/login/oauth2/**",
                                 "/oauth2/**",
-                                "/actuator/health"
+                                "/actuator/health",
+                                "/api/dev/**"  // ⚠️ Endpoints de desenvolvimento (apenas perfil dev)
                         ).permitAll()
 
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
