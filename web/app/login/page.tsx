@@ -36,7 +36,7 @@ export default function LoginPage() {
     // Redirect to Microsoft OAuth
     // window.location.href = "/api/auth/microsoft"
     setTimeout(() => {
-      window.location.href = "/"
+      window.location.href = "http://localhost:8080/oauth2/authorization/microsoft"
     }, 1000)
   }
 
