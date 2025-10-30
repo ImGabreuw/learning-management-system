@@ -407,3 +407,69 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
 ```
+
+## Capítulo 7: Desenvolvimento
+
+O desenvolvimento do sistema proposto foi conduzido de forma iterativa, adotando princípios ágeis inspirados no **Scrum**, com foco em entregas incrementais e validação contínua das funcionalidades. Cada iteração contemplou a implementação de módulos específicos, revisão de código, testes e integração das partes desenvolvidas.
+
+### Processo de construção do sistema proposto
+
+O Processo de construção foi dividido em cinco etapas principais:
+
+1. **Modelagem e Arquitetura:**  
+   Estruturação da arquitetura do sistema, definição das entidades e dos fluxos principais de comunicação entre os módulos de frontend, backend e banco de dados.
+
+2. **Implementação do Backend:**  
+   O backend foi desenvolvido em **Java 21** utilizando o framework **Spring Boot**, responsável por fornecer as APIs REST para comunicação com o frontend.  
+   As principais etapas envolveram:
+   - Criação dos módulos de **usuários**, **autenticação**, **disciplinas**, **arquivos** e **oportunidades**;
+   - Implementação do gerenciamento de arquivos com **MongoDB GridFS**;
+   - Criação de endpoints RESTful seguindo boas práticas de design e versionamento;
+   - Escrita de testes unitários para validação das principais rotas e regras de negócio.
+
+3. **Desenvolvimento do Frontend:**  
+   O frontend foi construído com **Next.js 15** e **TailwindCSS**, visando proporcionar uma interface moderna, responsiva e intuitiva.  
+   Foram implementadas páginas de login, dashboard, gerenciamento de disciplinas, upload de arquivos e oportunidades, alem do feed de recomendações.  
+   O design seguiu princípios de usabilidade e consistência visual, com componentes reutilizáveis e integração direta com as APIs do backend.
+
+4. **Integração e Deploy:**  [TO BE ADDED]
+
+5. **Testes e Ajustes Finais:** [TO BE ADDED ] 
+
+### Tecnologias Utilizadas
+
+O projeto utilizou tecnologias modernas e consolidadas no mercado, conforme a seguir:
+
+- **Backend:** Java 21, Spring Boot, Spring Security, MongoDB, GridFS, JUnit;
+- **Frontend:** Next.js 15, React, TailwindCSS, Axios;
+- **Infraestrutura:** [TO BE ADDED] Docker, GitHub Actions;
+- **Banco de Dados:** MongoDB Atlas;
+- **Versionamento:** Git e GitHub.
+
+A escolha dessas tecnologias se baseou em fatores como escalabilidade, facilidade de integração e maturidade das ferramentas, permitindo o desenvolvimento de uma aplicação robusta e sustentável a longo prazo.
+
+### Modularização do Sistema
+
+A modularização foi um ponto central na construção do projeto, visando facilitar manutenção e extensibilidade. A estrutura modular foi dividida da seguinte forma:
+
+- **Backend:**  
+  - `auth` – autenticação e autorização;  
+  - `users` – gerenciamento de usuários e perfis;  [check for implementation]
+  - `subjects` – controle de disciplinas;  
+  - `files` – upload e download de arquivos;  
+  - `opportunities` – cadastro e listagem de oportunidades.
+
+- **Frontend:**  [checar quando conseguir subir a aplicacao]
+  - Componentes reutilizáveis (botões, formulários, cards, modais);  
+  - Páginas de navegação (login, dashboard, disciplinas, oportunidades);  
+  - Serviços de API integrados ao backend.
+
+Essa estrutura facilita o isolamento de responsabilidades e futuras expansões sem comprometer a integridade do sistema.
+
+### Documentação e Evolução Futura
+
+A documentação técnica do projeto foi mantida diretamente no repositório GitHub, incluindo instruções de configuração, deploy e integração com os módulos existentes.  
+Entre as partes passíveis de modificação estão:
+
+- A camada de recomendação, que poderá evoluir com a aplicação de algoritmos de **Machine Learning**;
+- A modelagem do banco de dados, para suportar novas entidades e relacionamentos;
