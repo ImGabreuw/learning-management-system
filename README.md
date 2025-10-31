@@ -407,3 +407,34 @@ jobs:
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
 ```
+
+## Capítulo 7: Desenvolvimento
+
+### Processo de Construção
+
+#### Etapa 1: Modularização e separação de responsabilidades
+
+Como módulos principais do projeto, resolvemos separá-lo em 5 principais: 
+- Autenticação e Autorização: Responsável pelo controle de acesso dos usuários e pelo controle de permissões, os quais foram dividos entre Aluno, Professor e Administrador. Este módulo ficou sob a responsabilidade de Lucas Fernandes.
+- Usuários: Responsável pelas operações básicas do CRUD _(Create, Read, Update, Delete)_ com a entidade de usuários. Este módulo ficou sob a responsabilidade de Enzo.
+- Arquivos: Responsável pelas operações básicas do CRUD com a entidade de arquivos, além dos serviços de hospedagem e acesso a eles em ambiente de nuvem. Este módulo ficou sob a responsabilidade de Jéssica.
+- Disciplinas: Responsável pelas operações básicas do CRUD com as entidades de disciplinas e tarefas. Este módulo ficou sob a responsabilidade de Lucas Sarai. 
+- Oportunidades: Responsável pelas operações básicas do CRUD com entidades associadas ao sistema de recomendação de oportunidades, além de trabalhar no próprio motor de recomendação. Este módulo ficou sob a responsabilidade de Gabriel.
+
+Para desenvolvê-los, cada um desses integrantes trabalharia no lado do _back-end_ da aplicação. Em paralelo, Vitor trabalharia no _front-end_ de todos os módulos.
+
+#### Etapa 2: Escolha de tecnologias
+
+Para implementar o projeto, as seguintes tecnologias foram utilizadas: 
+
+- **Frontend:** Next.js 15, por permitir separar as telas em componentes, o que garante melhor manutenibilidade e maior facilidade para integrar com o _back-end_, uma vez que os componentes poderiam ser associados aos módulos (ex: um componente para exibir os detalhes de uma tarefa pode ser associado aos dados extraídos de uma entidade tarefa). O Tailwind foi utilizado para auxiliar no design, por permitir aplicar estilos CSS apenas atribuindo classes de estilo nos objetos. Por fim, o TypeScript foi aplicado para garantir a atribuição de tipo aos dados, o que facilita o tratamento de erros.
+- **Backend:** Java 21 com Spring: O Java pode ser executado em qualquer arquitetura de máquina caso essa possua uma JVM instalada, permitindo executar a aplicação em ambientes diversos. O Java de forma geral, mas principalmente em sua versão 21 e com o framework Spring são muito utilizadas no mercado e já de conhecimento dos integrantes, o que facilitou sua escolha.
+- **Banco de Dados:** MongoDB e MongoDB GridFS são banco de dados não relacionais que garantem maior escalabilidade horizontal e performance em relação aos banco de dados relacionais, além de maior flexibilidade de armazenamento dos dados, dado que não precisam ter uma estrutura fixa. Foram aplicados no projeto, pois várias informações poderiam ser associadas às entidades e removidas com maior facilidade conforme o projeto ia se desenvolvendo. Maior performance acaba sendo necessário no motor recomendação, uma vez que o algoritmo não pode demorar para exibir as oportunidades ao aluno, seguindo os requsitos não funcionais especificados.
+- **Cloud:** 
+- **CI/CD:** GitHub Actions
+
+## Capítulo 9: 
+
+### Trabalhos futuros
+- Uso de MongoDB baseado em grafos para auxiliar no motor de recomendação.   
+
