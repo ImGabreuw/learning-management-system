@@ -31,7 +31,7 @@ export default function AuthCallbackPage() {
     } else {
       // 5. Tokens não encontrados na URL.
       console.error("Tokens não encontrados nos parâmetros da URL.");
-      //router.push("/login");
+      router.push("/login");
     }
   }, [searchParams, login, router]);
 

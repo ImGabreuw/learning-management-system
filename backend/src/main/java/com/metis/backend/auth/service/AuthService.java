@@ -18,18 +18,35 @@ public class AuthService {
     private final JwtService jwtService;
 
     public OAuth2LoginResponse processOAuth2Login(OAuth2User oAuth2User, HttpServletRequest request) {
-        String email = oAuth2User.getAttribute("userPrincipalName");
-        String name = oAuth2User.getAttribute("displayName");
-        String microsoftId = oAuth2User.getAttribute("id");
+        // --- INÍCIO DA CORREÇÃO ---
+        // Tenta buscar o e-mail por ordem de prioridade
+        String email = oAuth2User.getAttribute("email"); // 1. Contas pessoais (@outlook.com)
+        
+        if (email == null || email.isBlank()) {
+            email = oAuth2User.getAttribute("userPrincipalName"); // 2. Contas organizacionais (@mackenzie.br)
+        }
 
         if (email == null || email.isBlank()) {
-            email = oAuth2User.getAttribute("mail");
+            email = oAuth2User.getAttribute("mail"); // 3. Fallback
         }
+        
+        String name = oAuth2User.getAttribute("displayName");
+        String microsoftId = oAuth2User.getAttribute("id");
+        // --- FIM DA CORREÇÃO ---
 
         log.info("Processing OAuth2 login for: {}", email);
 
+        if (email == null || email.isBlank()) {
+             throw new IllegalArgumentException("Não foi possível extrair um e-mail válido da resposta do OAuth2.");
+        }
+
         if (!userService.isValidMackenzieEmail(email)) {
-            throw new IllegalArgumentException("E-mail não pertence a um domínio permitido do Mackenzie.");
+            // Esta verificação agora vai bloquear contas pessoais se "outlook.com" não estiver na lista.
+            // Se você quiser permitir contas pessoais, adicione "outlook.com" na lista
+            // 'allowed-email-domains' no seu 'application-dev.yaml'.
+            // Pelo seu log, sua conta é pessoal, então certifique-se de que está lá.
+            log.warn("Tentativa de login com e-mail não permitido: {}", email);
+            throw new IllegalArgumentException("E-mail não pertence a um domínio permitido.");
         }
 
         UserEntity userEntity = userService.createOrUpdateUser(email, name, microsoftId);
