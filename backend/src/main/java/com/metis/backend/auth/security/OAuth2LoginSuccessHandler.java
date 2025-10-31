@@ -42,8 +42,10 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     }
 
     private String buildRedirectUrl(OAuth2LoginResponse tokens) {
+        String frontendUrl = "http://localhost:3000/auth/callback";
         return String.format(
-                "/api/auth/oauth2/success?accessToken=%s&refreshToken=%s&tokenType=%s",
+                "%s?accessToken=%s&refreshToken=%s&tokenType=%s",
+                frontendUrl,
                 tokens.getAccessToken(),
                 tokens.getRefreshToken(),
                 tokens.getTokenType()

@@ -27,7 +27,9 @@ spring:
               - email
               - User.Read
             authorization-grant-type: authorization_code
-            redirect-uri: "http://localhost:3000"
+            redirect-uri: "http://localhost:3000/auth/callback"
+            
+
             #redirect-uri: "https://www.google.com"
             client-name: Microsoft
         provider:
@@ -48,6 +50,7 @@ metis:
     allowed-email-domains:
       - mackenzie.br
       - mackenzista.com.br
+      - outlook.com
 
     # Roles padrão
     default-roles:

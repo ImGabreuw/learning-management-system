@@ -12,6 +12,7 @@ import Navigation from "@/components/navigation"
 import { TaskDetailPanel } from "@/components/task-detail-panel"
 import { FuzzySearch } from "@/components/fuzzy-search"
 import { ProjectDetailPanel } from "@/components/project-detail-panel"
+import { useAuth } from "@/context/AuthContext" // Corrigido o import
 
 export default function LMSDashboard() {
   const [selectedTask, setSelectedTask] = useState<any>(null)
@@ -21,7 +22,9 @@ export default function LMSDashboard() {
   const [showFilterMenu, setShowFilterMenu] = useState(false)
   const filterMenuRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const { user, isAuthenticated, isLoading} = useAuth();
 
+ 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node
@@ -51,7 +54,9 @@ export default function LMSDashboard() {
     }
   }, [selectedTask, selectedProject])
 
-  const assignments = [
+
+
+const assignments = [
     {
       id: 1,
       title: "Atividade de Laboratório 01",
@@ -339,15 +344,32 @@ export default function LMSDashboard() {
   const updateTaskStatus = (taskId: number, newStatus: string) => {
     setTaskStatuses((prev) => ({ ...prev, [taskId]: newStatus }))
   }
+     if (isLoading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <div className="text-xl font-medium">Carregando sessão...</div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 pt-16">
       <Navigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Welcome Section */}
+
+        <div className="bg-yellow-100 p-4 rounded-lg border border-yellow-300 mb-6 text-yellow-900">
+          <h2 className="font-bold text-lg">DEBUG: ESTADO DA AUTENTICAÇÃO</h2>
+          <p>Autenticado: <strong>{isAuthenticated ? 'SIM' : 'NÃO'}</strong></p>
+          <p>Usuário: <strong>{user ? user.name : 'Ninguém logado'}</strong></p>
+          <p>Email: <strong>{user ? user.email : 'N/A'}</strong></p>
+        </div>
+      
+      {/* Welcome Section (modificada) */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Olá, João Silva</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">
+            Olá, {user ? user.name : 'Visitante'}
+          </h1>
           <p className="text-slate-600">Você tem uma Prova Integrada marcada para o dia 30 de Setembro.</p>
         </div>
 

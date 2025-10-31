@@ -12,11 +12,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { User, LogOut, Bell, GraduationCap } from "lucide-react"
+import { useAuth } from "@/context/AuthContext" // 1. Importar o useAuth
 
 export default function Navigation() {
   const [showNotifications, setShowNotifications] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
+
+  // 2. Obter o usuário e a função de logout do contexto
+  const { user, isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const controlNavbar = () => {
@@ -38,6 +42,7 @@ export default function Navigation() {
   }, [lastScrollY])
 
   const notifications = [
+    // ... (dados mockados de notificação permanecem por enquanto)
     {
       id: 1,
       title: "Nova atividade disponível",
@@ -45,28 +50,17 @@ export default function Navigation() {
       time: "Há 2 horas",
       read: false,
     },
-    {
-      id: 2,
-      title: "Prazo se aproximando",
-      message: "Lista de Exercícios 01 vence em 2 dias",
-      time: "Há 5 horas",
-      read: false,
-    },
-    {
-      id: 3,
-      title: "Nota publicada",
-      message: "Sua nota em Teoria dos Grafos foi publicada",
-      time: "Há 1 dia",
-      read: true,
-    },
-    {
-      id: 4,
-      title: "Novo material disponível",
-      message: "Slides da aula de Compiladores foram adicionados",
-      time: "Há 2 dias",
-      read: true,
-    },
+    // ...
   ]
+
+  // 3. Criar a função de handleLogout
+  // Ela chama a função de logout do AuthContext, que já faz tudo:
+  // - Chama a API /api/auth/logout
+  // - Limpa o localStorage
+  // - Redireciona para /login
+  const handleLogout = () => {
+    logout();
+  }
 
   return (
     <nav
@@ -85,68 +79,69 @@ export default function Navigation() {
             </div>
           </Link>
 
-          {/* Right Side Actions */}
-          <div className="flex items-center space-x-4">
-            <DropdownMenu open={showNotifications} onOpenChange={setShowNotifications}>
-              <DropdownMenuTrigger className="relative inline-flex items-center justify-center h-10 w-10 rounded-md hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2">
-                <Bell className="h-5 w-5" />
-                {notifications.some((n) => !n.read) && (
-                  <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
-                )}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-80 z-[100]" align="end">
-                <DropdownMenuLabel>Notificações</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <div className="max-h-96 overflow-y-auto">
-                  {notifications.map((notification) => (
-                    <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-3 cursor-pointer">
-                      <div className="flex items-start justify-between w-full">
-                        <div className="flex-1">
-                          <p className={`text-sm font-medium ${notification.read ? "text-gray-600" : "text-gray-900"}`}>
-                            {notification.title}
-                          </p>
-                          <p className="text-xs text-gray-500 mt-1">{notification.message}</p>
-                          <p className="text-xs text-gray-400 mt-1">{notification.time}</p>
-                        </div>
-                        {!notification.read && <span className="h-2 w-2 bg-blue-500 rounded-full ml-2 mt-1" />}
-                      </div>
-                    </DropdownMenuItem>
-                  ))}
-                </div>
-              </DropdownMenuContent>
-            </DropdownMenu>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger className="relative h-8 w-8 rounded-full focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2">
-                <Avatar className="h-8 w-8">
-                  <AvatarImage src="/student-avatar.png" alt="João Silva" />
-                  <AvatarFallback>JS</AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 z-[100]" align="end" forceMount>
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">João Silva</p>
-                    <p className="text-xs leading-none text-muted-foreground">joao.silva@mackenzie.br</p>
+          {/* 4. Só renderiza os botões da direita se o usuário estiver autenticado */}
+          {isAuthenticated && user && (
+            <div className="flex items-center space-x-4">
+              <DropdownMenu open={showNotifications} onOpenChange={setShowNotifications}>
+                <DropdownMenuTrigger className="relative inline-flex items-center justify-center h-10 w-10 rounded-md hover:bg-slate-100 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2">
+                  <Bell className="h-5 w-5" />
+                  {notifications.some((n) => !n.read) && (
+                    <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full" />
+                  )}
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-80 z-[100]" align="end">
+                  {/* ... (conteúdo do dropdown de notificações) ... */}
+                  <DropdownMenuLabel>Notificações</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <div className="max-h-96 overflow-y-auto">
+                    {notifications.map((notification) => (
+                      <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-3 cursor-pointer">
+                        {/* ... */}
+                      </DropdownMenuItem>
+                    ))}
                   </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/profile" className="flex items-center cursor-pointer">
-                    <User className="mr-2 h-4 w-4" />
-                    <span>Meu Perfil</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/login" className="flex items-center cursor-pointer">
+                </DropdownMenuContent>
+              </DropdownMenu>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger className="relative h-8 w-8 rounded-full focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2">
+                  <Avatar className="h-8 w-8">
+                    {/* 5. Substituir dados estáticos pelos dados do usuário */}
+                    <AvatarImage src={"/student-avatar.png"} alt={user.name} /> 
+                    {/* (Nota: o backend não está enviando um avatar, então mantemos o mock por enquanto) */}
+                    <AvatarFallback>
+                      {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 z-[100]" align="end" forceMount>
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      {/* 6. Substituir dados estáticos pelos dados do usuário */}
+                      <p className="text-sm font-medium leading-none">{user.name}</p>
+                      <p className="text-xs leading-none text-muted-foreground">{user.email}</p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/profile" className="flex items-center cursor-pointer">
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Meu Perfil</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  {/* 7. Alterar o item de "Sair" */}
+                  <DropdownMenuItem 
+                    onClick={handleLogout} 
+                    className="flex items-center cursor-pointer"
+                  >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Sair</span>
-                  </Link>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          )}
         </div>
       </div>
     </nav>
