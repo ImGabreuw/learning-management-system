@@ -432,9 +432,11 @@ O Processo de construção foi dividido em cinco etapas principais:
    Foram implementadas páginas de login, dashboard, gerenciamento de disciplinas, upload de arquivos e oportunidades, alem do feed de recomendações.  
    O design seguiu princípios de usabilidade e consistência visual, com componentes reutilizáveis e integração direta com as APIs do backend.
 
-4. **Integração e Deploy:**  [TO BE ADDED]
+4. **Integração e Deploy:**  
+   O processo de integração e entrega contínua (**CI/CD**) foi automatizado com **GitHub Actions**, realizando build, testes e deploy automático 
 
-5. **Testes e Ajustes Finais:** [TO BE ADDED ] 
+5. **Testes e Ajustes Finais:**    Após a integração completa, foram realizados testes de interface e integração entre os componentes
+
 
 ### Tecnologias Utilizadas
 
@@ -459,7 +461,7 @@ A modularização foi um ponto central na construção do projeto, visando facil
   - `files` – upload e download de arquivos;  
   - `opportunities` – cadastro e listagem de oportunidades.
 
-- **Frontend:**  [checar quando conseguir subir a aplicacao]
+- **Frontend:** 
   - Componentes reutilizáveis (botões, formulários, cards, modais);  
   - Páginas de navegação (login, dashboard, disciplinas, oportunidades);  
   - Serviços de API integrados ao backend.
@@ -469,7 +471,21 @@ Essa estrutura facilita o isolamento de responsabilidades e futuras expansões s
 ### Documentação e Evolução Futura
 
 A documentação técnica do projeto foi mantida diretamente no repositório GitHub, incluindo instruções de configuração, deploy e integração com os módulos existentes.  
-Entre as partes passíveis de modificação estão:
+Entre as partes passíveis de modificação esta:
 
-- A camada de recomendação, que poderá evoluir com a aplicação de algoritmos de **Machine Learning**;
 - A modelagem do banco de dados, para suportar novas entidades e relacionamentos;
+
+## 8. Resultados
+
+O sistema desenvolvido atingiu o objetivo proposto de oferecer uma plataforma centralizada para gerenciamento de disciplinas, materiais e oportunidades, integrando alunos e professores em um ambiente dinâmico e acessível.
+
+### Funcionalidades Implementadas
+
+O **MVP (Minimum Viable Product)** contempla as seguintes funcionalidades:
+
+- **Autenticação e controle de acesso** com e-mail institucional (AUTH-RF1);  
+- **Cadastro e gerenciamento de disciplinas**;  
+- **Upload e download de arquivos** por meio do módulo de armazenamento (GridFS, FILE-RF1);  
+- **Cadastro e listagem de oportunidades** acadêmicas e extracurriculares (OPP-RF1);  
+- **Feed de recomendações básicas** baseado nas disciplinas associadas (OPP-RF4);  
+- **Interface responsiva e intuitiva**, acessível via desktop e dispositivos móveis.
