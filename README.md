@@ -430,11 +430,23 @@ Para implementar o projeto, as seguintes tecnologias foram utilizadas:
 - **Frontend:** Next.js 15, por permitir separar as telas em componentes, o que garante melhor manutenibilidade e maior facilidade para integrar com o _back-end_, uma vez que os componentes poderiam ser associados aos módulos (ex: um componente para exibir os detalhes de uma tarefa pode ser associado aos dados extraídos de uma entidade tarefa). O Tailwind foi utilizado para auxiliar no design, por permitir aplicar estilos CSS apenas atribuindo classes de estilo nos objetos. Por fim, o TypeScript foi aplicado para garantir a atribuição de tipo aos dados, o que facilita o tratamento de erros.
 - **Backend:** Java 21 com Spring: O Java pode ser executado em qualquer arquitetura de máquina caso essa possua uma JVM instalada, permitindo executar a aplicação em ambientes diversos. O Java de forma geral, mas principalmente em sua versão 21 e com o framework Spring são muito utilizadas no mercado e já de conhecimento dos integrantes, o que facilitou sua escolha.
 - **Banco de Dados:** MongoDB e MongoDB GridFS são banco de dados não relacionais que garantem maior escalabilidade horizontal e performance em relação aos banco de dados relacionais, além de maior flexibilidade de armazenamento dos dados, dado que não precisam ter uma estrutura fixa. Foram aplicados no projeto, pois várias informações poderiam ser associadas às entidades e removidas com maior facilidade conforme o projeto ia se desenvolvendo. Maior performance acaba sendo necessário no motor recomendação, uma vez que o algoritmo não pode demorar para exibir as oportunidades ao aluno, seguindo os requsitos não funcionais especificados.
-- **Cloud:** 
-- **CI/CD:** GitHub Actions
+- **Cloud:**  Para hospedar e disponibilizar a aplicação ao público, pretendemos utilizar a Azure, por ser gratuita e não conseguirmos acesso à AWS, como inicialmente especificado. Para conteinerizar a aplicação e facilitar a sua gestão nesse ambiente de nuvem e no de desenvolvimento, foi utilizado o Docker.
+- **CI/CD:** Por fim, pipelines para seguir com os princípios de CI/CD foram implementadas pelo _GitHub Actions_. Para subir as alterações na master, devem ser criadas pull requests e, nesse processo, as pipelines executam testes tanto no _back-end_ como no _front-end_, de forma a manter uma integração contínua e um _deploy_ constante e seguro.
+
+  #### Etapa 3: Início da implementação e revisão da documentação
+  A primeira tecnologia aplicada foi a criação de arquivos '_docker compose_', os quais permitem gerenciar as imagens usadas no projeto (java, node e mongo DB), além de conter as configurações e credenciais para subir a aplicação na _Azure_. <br>
+  Em seguida, foram criadas as pipelines. <br>
+  Após, as implementações foram iniciadas no _back-end_ e, em paralelo, também iniciou-se a montagem das telas. Conforme a implementação ia avançando, a documentação era revisada e, em especial, os diagramas, buscando adequá-los às melhorias e ajustes feitos durante o desenvolvimento.<br>
+
+  #### Etapa 4: O trabalho até aqui
+  Todos os módulos já possuem uma implementação base, com entidades, serviços e testes de integração. Além disso, os protótipos de telas já foram montados e disponibilizados para visualização. <br>
+  Sendo assim, falta realizar a integração de ambos para que o sistema passe a ser funcional. Além disso, precisa-se disponibilizar a aplicação completa na Azure.<br>
+
+## Capítulo 8: Resultados (Parcial)
+- Prints das funcionalidades
+- Análise crítica
 
 ## Capítulo 9: 
 
 ### Trabalhos futuros
 - Uso de MongoDB baseado em grafos para auxiliar no motor de recomendação.   
-
