@@ -444,7 +444,7 @@ O projeto utilizou tecnologias modernas e consolidadas no mercado, conforme a se
 
 - **Backend:** Java 21, Spring Boot, Spring Security, MongoDB, GridFS, JUnit;
 - **Frontend:** Next.js 15, React, TailwindCSS, Axios;
-- **Infraestrutura:** [TO BE ADDED] Docker, GitHub Actions;
+- **Infraestrutura:** Docker, GitHub Actions;
 - **Banco de Dados:** MongoDB Atlas;
 - **Versionamento:** Git e GitHub.
 
