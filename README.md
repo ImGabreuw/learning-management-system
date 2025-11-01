@@ -443,9 +443,74 @@ Para implementar o projeto, as seguintes tecnologias foram utilizadas:
   Sendo assim, falta realizar a integração de ambos para que o sistema passe a ser funcional. Além disso, precisa-se disponibilizar a aplicação completa na Azure.<br>
 
 ## Capítulo 8: Resultados (Parcial)
-- Prints das funcionalidades
-- Análise crítica
 
+O objetivo deste capítulo é demonstrar como a interface implementa a proposta de valor do projeto, focando na **Usabilidade Superior** e no conceito de **Hub da Vida Acadêmica**. O uso de tecnologias modernas no *frontend* (Next.js e Tailwind CSS) e um *Design System* padronizado garantem a consistência e a responsividade da aplicação.
+
+##### Página Inicial
+![Página Inicial do LMS](https://raw.githubusercontent.com/ImGabreuw/learning-management-system/master/Imangens_MD/pagINicial.png)
+
+### 8.1. Visão Geral da Arquitetura Frontend
+
+A arquitetura de *frontend* foi construída para superar as limitações de usabilidade e responsividade dos sistemas legados.
+
+* **Tecnologia:** A interface foi desenvolvida utilizando **Next.js 15** e **Tailwind CSS**.
+* **Design System:** Foi adotado um padrão de componentes reutilizáveis (**Shadcn UI**) para garantir uma interface moderna, intuitiva e padronizada. Isso resolve o problema de **"Design Defasado e Inconsistente"** dos sistemas legados.
+* **Responsividade:** O uso de componentes e a filosofia de design **mobile-first** garante que a plataforma seja totalmente funcional em dispositivos móveis, cumprindo o requisito não funcional de alta prioridade (`USAB-NF1`).
+
+
+### 8.2. Funcionalidade Principal 1: Dashboard e Hub Acadêmico
+
+O *Dashboard* demonstra a centralização das informações, transformando o LMS em um **"Hub da Vida Acadêmica"**.
+
+#### 8.2.1. Centralização de Tarefas e Projetos
+
+As guias **Tarefas** e **Projetos** oferecem uma visão rápida e acionável das pendências do aluno.
+
+| Característica/Funcionalidade | Imagem de Referência | Racional/Diferencial |
+| :--- | :--- | :--- |
+| **Gerenciamento de Tarefas** | **`tarefas.png`** | Permite ao usuário visualizar os próximos prazos, o progresso e o *status* (`Em Progresso`, `A Fazer`) diretamente na tela principal, promovendo eficiência e controle sobre as atividades. |
+| **Visão de Projetos** | **`projetos.png`** | A guia **Projetos** exibe os trabalhos em andamento em um formato visual de cartões, indicando o progresso percentual e as tecnologias (`tags`), o que facilita a localização e o acompanhamento do status. |
+| **Visualização de Cursos** | **`cursos.png`** | A seção "Meus Cursos" exibe o progresso visual de cada disciplina e a próxima aula agendada em cartões claros, contrastando com interfaces legadas. |
+
+#### 8.2.2. Busca Avançada (Fuzzy Search)
+
+Este recurso implementa a **Busca Difusa**, abordando a dor de "perder tempo procurando materiais" ao buscar dentro do conteúdo.
+
+| Característica/Funcionalidade | Imagem de Referência | Racional/Diferencial |
+| :--- | :--- | :--- |
+| **Busca por Conteúdo** | **`busca avançada.png`** | O sistema busca dentro do conteúdo dos documentos, slides e vídeos (simulação de *fuzzy matching*), retornando resultados ranqueados por **Relevância** e destacando os termos encontrados para dar contexto imediato. |
+| **Filtros Contextuais** | **`busca avançada.png`** | Permite filtrar por **Cursos** e **Tipo** de material (Documento, Slide, Vídeo), refinando a busca de forma intuitiva. |
+
+### 8.3. Funcionalidade Principal 2: Sistema de Recomendação de Oportunidades (Inovação)
+
+Este é o principal diferencial do projeto, cumprindo o requisito de ter um **Motor de Recomendações** (`OPP-RF4`).
+
+| Característica/Funcionalidade | Imagem de Referência | Racional/Diferencial |
+| :--- | :--- | :--- |
+| **Match Personalizado** | **`oprotunidades.png`**, **`oportunidades2.png`** | Exibe a porcentagem de **Match** para cada oportunidade (círculo de progresso). A seção **"Por que recomendamos:"** lista os fatores de correspondência (habilidades, interesses, nível de dificuldade), dando transparência ao algoritmo. |
+| **Tipos e Detalhes** | **`oprotunidades.png`**, **`oportunidades2.png`** | Oportunidades são categorizadas de forma clara (`Estágio`, `Hackathon`, `Bolsa`) e fornecem detalhes essenciais (Localização, Prazo, Salário/Prêmio). |
+| **Ações e Métricas** | **`oprotunidades.png`** | O painel de resumo exibe métricas importantes (Total de Oportunidades, *Match* Médio e Salvos), e os cartões oferecem ações diretas de **"Salvar"** e **"Candidatar-se"**. |
+
+### 8.4. Funcionalidade Principal 3: Gestão de Perfil (Input da IA)
+
+A tela de perfil serve como o painel de controle do aluno e a fonte de dados primária para o motor de recomendação.
+
+| Característica/Funcionalidade | Imagem de Referência | Racional/Diferencial |
+| :--- | :--- | :--- |
+| **Entrada de Tags** | **`Perfil_interesses.png`** | O usuário insere e gerencia suas **Áreas de Interesse**, **Habilidades Técnicas** e **Objetivos de Carreira** por meio de *tags*. Essas entradas são a base do sistema de recomendação por *Content-Based Filtering*. |
+| **Desempenho Consolidado** | **`Desempenho.png`** | A seção "Desempenho Acadêmico" lista as notas e créditos por disciplina em um formato visualmente organizado, e a seção **Estatísticas** (em `Perfil.png`) resume o CRA, Disciplinas e Conquistas. |
+| **Conquistas e Certificações** | **`Desempenho.png`** | A área de **Conquistas** permite registrar prêmios e certificações (ex: `Hackathon`, `Certificação AWS`), enriquecendo o perfil do aluno e melhorando a precisão do *match*. |
+| **Configurações Essenciais** | **`Perfil.png`** | A seção **Configurações** permite ao aluno gerenciar informações pessoais e, crucialmente, definir as preferências de **Notificações**, incluindo alertas sobre **Novas Oportunidades**. |
+
+### 8.5. Funcionalidade Principal 4: Detalhes da Disciplina
+
+A tela detalhada do curso garante a organização padronizada e a centralização de todo o conteúdo e agenda do professor.
+
+| Característica/Funcionalidade | Imagem de Referência | Racional/Diferencial |
+| :--- | :--- | :--- |
+| **Organização Estruturada** | **`cursos_dentro.png`** | O conteúdo é dividido em blocos claros ("Sobre o Curso", "Cronograma de Aulas", "Tarefas"), resolvendo o problema de "inconsistência na organização de conteúdo". |
+| **Cronograma Visual** | **`cursos_dentro.png`** | O **Cronograma de Aulas** exibe a ordem, status de conclusão e duração de cada aula, com fácil acesso ao material. O **Calendário de Entregas** centraliza os prazos de provas e tarefas na lateral/page.tsx]. |
+| **Informações do Professor** | **`cursos_dentro.png`** | Centraliza informações de contato, biografia e horários de atendimento do professor em um painel dedicado, melhorando a comunicação/page.tsx]. |
 ## Capítulo 9: 
 
 ### Trabalhos futuros
