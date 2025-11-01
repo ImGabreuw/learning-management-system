@@ -458,7 +458,7 @@ A arquitetura de *frontend* foi construída para superar as limitações de usab
 * **Responsividade:** O uso de componentes e a filosofia de design **mobile-first** garante que a plataforma seja totalmente funcional em dispositivos móveis, cumprindo o requisito não funcional de alta prioridade (`USAB-NF1`).
 
 
-### 8.2. Funcionalidade Principal 1: Dashboard e Hub Acadêmico
+### 8.2. Dashboard e Hub Acadêmico
 
 O *Dashboard* demonstra a centralização das informações, transformando o LMS em um **"Hub da Vida Acadêmica"**.
 
@@ -495,7 +495,7 @@ Busca Avançada
 ![Busca Avançada Pagina Inicial](https://github.com/ImGabreuw/learning-management-system/blob/master/Imangens_MD/busca%20avan%C3%A7ada.png)
 
 
-### 8.3. Funcionalidade Principal 2: Sistema de Recomendação de Oportunidades (Inovação)
+### 8.3. Sistema de Recomendação de Oportunidades (Inovação)
 
 Este é o principal diferencial do projeto, cumprindo o requisito de ter um **Motor de Recomendações** (`OPP-RF4`).
 
@@ -511,7 +511,7 @@ Oportunidades
 Oportunidades 2
 ![Complitude das Oportunidades](https://github.com/ImGabreuw/learning-management-system/blob/master/Imangens_MD/oportunidades2.png)
 
-### 8.4. Funcionalidade Principal 3: Gestão de Perfil (Input da IA)
+### 8.4. Gestão de Perfil
 
 A tela de perfil serve como o painel de controle do aluno e a fonte de dados primária para o motor de recomendação.
 
@@ -523,15 +523,17 @@ A tela de perfil serve como o painel de controle do aluno e a fonte de dados pri
 | **Configurações Essenciais** | **`Perfil.png`** | A seção **Configurações** permite ao aluno gerenciar informações pessoais e, crucialmente, definir as preferências de **Notificações**, incluindo alertas sobre **Novas Oportunidades**. |
 
 Perfil de Interesse
+
 ![Seçao de Interesses dentro do Perfil](https://github.com/ImGabreuw/learning-management-system/blob/master/Imangens_MD/Perfil_interesses.png)
 
 Desempenho
+
 ![Desempenho do Usuário](https://github.com/ImGabreuw/learning-management-system/blob/master/Imangens_MD/Desempenho.png)
 
 Perfil
 ![Perfil do Usuário](https://github.com/ImGabreuw/learning-management-system/blob/master/Imangens_MD/Perfil.png)
 
-### 8.5. Funcionalidade Principal 4: Detalhes da Disciplina
+### 8.5. Detalhes da Disciplina
 
 A tela detalhada do curso garante a organização padronizada e a centralização de todo o conteúdo e agenda do professor.
 
@@ -545,16 +547,22 @@ Página do Curso
 ![Página Curso Específica](https://github.com/ImGabreuw/learning-management-system/blob/master/Imangens_MD/cursos_dentro.png)
 
 
-###### Extra: Página para Login e Login Microsoft
+###### Extra:
 
-Pagina para Login no Metis
+Pagina para Login no Metis 
+
 ![Login Metis](https://github.com/ImGabreuw/learning-management-system/blob/master/Imangens_MD/login.png)
 
 Login Ecossistema Microsoft
-![Login]()
 
-![]()
+![Login](https://github.com/ImGabreuw/learning-management-system/blob/master/Imangens_MD/Microsoft.png)
 
+Validação dos Login
+
+![Val_Metis](https://github.com/ImGabreuw/learning-management-system/blob/master/Imangens_MD/Autenticando.jpg)
+
+
+###### Todas as imagens podem ser achadas aqui: (https://github.com/ImGabreuw/learning-management-system/tree/master/Imangens_MD)
 
 ## Capítulo 9: 
 
