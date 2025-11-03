@@ -50,10 +50,14 @@ services:
       - "8080:8080"
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATA_MONGODB_URI=mongodb://mongo:27017/metis
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
       - JWT_SECRET=${JWT_SECRET:-defaultSecretKey2024!@#}
       - AZURE_CLIENT_ID=${AZURE_CLIENT_ID}
       - AZURE_CLIENT_SECRET=${AZURE_CLIENT_SECRET}
       - AZURE_TENANT_ID=${AZURE_TENANT_ID}
+      - FRONTEND_CALLBACK_URL=${FRONTEND_CALLBACK_URL:-http://localhost:3000/auth/callback}
     restart: unless-stopped
 
   web:
@@ -65,5 +69,7 @@ services:
       - backend
     ports:
       - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:8080}
     restart: unless-stopped
 

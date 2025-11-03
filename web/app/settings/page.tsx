@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import Navigation from "@/components/navigation" // Fixed import to use default import instead of named import
+import ProtectedRoute from "@/components/ProtectedRoute"
 import {
   User,
   Bell,
@@ -29,7 +30,7 @@ import {
   Target,
 } from "lucide-react"
 
-export default function SettingsPage() {
+function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile")
   const [isLoading, setIsLoading] = useState(false)
 
@@ -652,5 +653,13 @@ export default function SettingsPage() {
         </Tabs>
       </div>
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <ProtectedRoute>
+      <SettingsPage />
+    </ProtectedRoute>
   )
 }

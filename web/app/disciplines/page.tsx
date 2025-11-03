@@ -30,6 +30,7 @@ import {
   MapPin,
 } from "lucide-react"
 import Navigation from "@/components/navigation"
+import ProtectedRoute from "@/components/ProtectedRoute"
 
 interface Assignment {
   id: string
@@ -63,7 +64,7 @@ interface Discipline {
   rating: number
 }
 
-export default function DisciplinesPage() {
+function DisciplinesPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("all")
   const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>(null)
@@ -793,5 +794,13 @@ export default function DisciplinesPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <ProtectedRoute>
+      <DisciplinesPage />
+    </ProtectedRoute>
   )
 }

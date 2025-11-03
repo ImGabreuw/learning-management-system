@@ -12,7 +12,7 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (accessToken: string, refreshToken: string) => Promise<void>;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -35,17 +35,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setRefreshToken(refToken);
         try {
           // Valida o token buscando os dados do usuário
-          // O `apiFetch` já anexa o token automaticamente
-          const userData: User = await api.get("/api/auth/me"); //
+          const userData: User = await api.get("/api/auth/me");
           
-          // O backend retorna um CurrentUserResponse, precisamos mapeá-lo para nossa interface User
-          // O email será o ID principal no frontend
+          // O backend retorna um CurrentUserResponse, mapeamos para User
           const userWithId = { ...userData, id: userData.email }; 
           setUser(userWithId);
         } catch (error) {
           console.error("Falha ao validar sessão, limpando tokens:", error);
-          // Se /api/auth/me falhar (ex: 401), o interceptor em api.ts (ou o catch aqui)
-          // deve limpar os tokens. A lógica no api.ts já faz isso.
           removeAuthTokens();
           setAccessToken(null);
           setRefreshToken(null);
@@ -78,6 +74,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setAccessToken(null);
       setRefreshToken(null);
       setUser(null);
+      throw error;
     } finally {
       setIsLoading(false);
     }
@@ -85,9 +82,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = async () => {
     try {
-      // 1. (Opcional, mas recomendado) Informa o backend sobre o logout
-      // A apiFetch anexará o token de autenticação
-      await api.post("/api/auth/logout", {}); //
+      // 1. Informa o backend sobre o logout
+      await api.post("/api/auth/logout", {});
     } catch (error) {
       console.error("Erro ao notificar backend sobre logout:", error);
       // Continua o logout no frontend independentemente do erro

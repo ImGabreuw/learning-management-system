@@ -1,10 +1,9 @@
 package com.metis.backend.auth.service;
 
-import com.metis.backend.config.MetisProperties;
-import com.metis.backend.auth.models.entities.RoleEntity;
 import com.metis.backend.auth.models.entities.UserEntity;
-import com.metis.backend.auth.repository.RoleRepository;
-import com.metis.backend.auth.repository.UserRepository;
+import com.metis.backend.auth.models.enums.Role;
+import com.metis.backend.auth.repositories.UserRepository;
+import com.metis.backend.config.MetisProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,102 +22,101 @@ import java.util.Set;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final MetisProperties metisProperties;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository
-                .findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
-    }
-
-    public boolean isValidMackenzieEmail(String email) {
-        if (email == null || email.isBlank()) {
-            return false;
-        }
-
-        String emailLower = email.toLowerCase();
-        List<String> allowedEmailDomains = metisProperties.getAuth().getAllowedEmailDomains();
-        if (allowedEmailDomains == null || allowedEmailDomains.isEmpty()) return false;
-        return allowedEmailDomains.stream()
-                .anyMatch(domain -> emailLower.endsWith("@" + domain));
-    }
-
-    public UserEntity createOrUpdateUser(String email, String name, String microsoftId) {
-        if (!isValidMackenzieEmail(email)) {
-            throw new IllegalArgumentException("Email does not belong to allowed Mackenzie domains");
-        }
-
-        UserEntity userEntity = userRepository.findByEmail(email)
-                .orElseGet(() -> {
-                    log.info("Creating new user: {}", email);
-                    return UserEntity.builder()
-                            .email(email)
-                            .createdAt(LocalDateTime.now())
-                            .accountNonExpired(true)
-                            .accountNonLocked(true)
-                            .credentialsNonExpired(true)
-                            .enabled(true)
-                            .invalidatedTokens(new HashSet<>())
-                            .build();
-                });
-
-        userEntity.setName(name);
-        userEntity.setMicrosoftId(microsoftId);
-        userEntity.setLastLoginAt(LocalDateTime.now());
-
-        if (userEntity.getRoleEntities() == null || userEntity.getRoleEntities().isEmpty()) {
-            Set<RoleEntity> roleEntities = assignRoles(email);
-            userEntity.setRoleEntities(roleEntities);
-        }
-
-        return userRepository.save(userEntity);
-    }
-
-    private Set<RoleEntity> assignRoles(String email) {
-        Set<RoleEntity> roleEntities = new HashSet<>();
-
-        List<String> defaultRoles = metisProperties.getAuth().getDefaultRoles();
-        for (String roleName : defaultRoles) {
-            RoleEntity roleEntity = roleRepository.findByName(roleName)
-                    .orElseGet(() -> roleRepository.save(new RoleEntity(roleName)));
-            roleEntities.add(roleEntity);
-        }
-
-        List<String> adminEmails = metisProperties.getAuth().getAdminEmails();
-        if (adminEmails.contains(email.toLowerCase())) {
-            RoleEntity adminRoleEntity = roleRepository.findByName("ROLE_ADMIN")
-                    .orElseGet(() -> {
-                        RoleEntity newRoleEntity = new RoleEntity();
-                        newRoleEntity.setName("ROLE_ADMIN");
-                        newRoleEntity.setDescription("System administrator");
-                        return roleRepository.save(newRoleEntity);
-                    });
-            roleEntities.add(adminRoleEntity);
-        }
-
-        return roleEntities;
-    }
-
-    public void invalidateToken(String email, String token) {
-        userRepository.findByEmail(email).ifPresent(user -> {
-            user.invalidateToken(token);
-            userRepository.save(user);
-            log.info("Token invalidated for user: {}", email);
-        });
-    }
-
-    public boolean isTokenInvalidated(String email, String token) {
         return userRepository.findByEmail(email)
-                .map(user -> user.isTokenInvalidated(token))
-                .orElse(false);
+                .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com email: " + email));
     }
 
-    public void updateLastLoginIp(String email, String ipAddress) {
+    /**
+     * Cria ou atualiza um usuário baseado nos dados do OAuth2
+     */
+    public UserEntity createOrUpdateUser(String email, String name, String microsoftId) {
+        return userRepository.findByEmail(email)
+                .map(existingUser -> updateExistingUser(existingUser, name, microsoftId))
+                .orElseGet(() -> createNewUser(email, name, microsoftId));
+    }
+
+    /**
+     * Atualiza dados de um usuário existente
+     */
+    private UserEntity updateExistingUser(UserEntity user, String name, String microsoftId) {
+        user.setName(name);
+        user.setMicrosoftId(microsoftId);
+        user.setLastLoginAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+        
+        UserEntity saved = userRepository.save(user);
+        log.info("Usuário atualizado: {}", saved.getEmail());
+        return saved;
+    }
+
+    /**
+     * Cria um novo usuário
+     */
+    private UserEntity createNewUser(String email, String name, String microsoftId) {
+        validateEmailDomain(email);
+        
+        Set<Role> roles = new HashSet<>();
+        roles.add(Role.ROLE_USER);
+        
+        // Determina se é estudante ou não baseado no domínio
+        if (email.endsWith("@mackenzista.com.br")) {
+            roles.add(Role.ROLE_STUDENT);
+        }
+        
+        // Verifica se é admin
+        List<String> adminEmails = metisProperties.getAuth().getAdminEmails();
+        if (adminEmails != null && adminEmails.contains(email)) {
+            roles.add(Role.ROLE_ADMIN);
+        }
+        
+        UserEntity newUser = UserEntity.builder()
+                .email(email)
+                .name(name)
+                .microsoftId(microsoftId)
+                .roles(roles)
+                .enabled(true)
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .lastLoginAt(LocalDateTime.now())
+                .build();
+        
+        UserEntity saved = userRepository.save(newUser);
+        log.info("Novo usuário criado: {} com roles: {}", saved.getEmail(), saved.getRoles());
+        return saved;
+    }
+
+    /**
+     * Valida se o domínio do email é permitido
+     */
+    private void validateEmailDomain(String email) {
+        List<String> allowedDomains = metisProperties.getAuth().getAllowedEmailDomains();
+        
+        boolean isAllowed = allowedDomains.stream()
+                .anyMatch(domain -> email.endsWith("@" + domain));
+        
+        if (!isAllowed) {
+            String message = String.format(
+                    "Email %s não está em um domínio permitido. Domínios permitidos: %s",
+                    email,
+                    String.join(", ", allowedDomains)
+            );
+            log.warn(message);
+            throw new IllegalArgumentException(message);
+        }
+    }
+
+    /**
+     * Atualiza o último login do usuário
+     */
+    public void updateLastLogin(String email) {
         userRepository.findByEmail(email).ifPresent(user -> {
-            user.setLastLoginIp(ipAddress);
+            user.setLastLoginAt(LocalDateTime.now());
             userRepository.save(user);
+            log.debug("Último login atualizado para: {}", email);
         });
     }
 }

@@ -1,8 +1,7 @@
 package com.metis.backend.auth;
 
 import com.metis.backend.auth.models.entities.UserEntity;
-import com.metis.backend.auth.repository.RoleRepository;
-import com.metis.backend.auth.repository.UserRepository;
+import com.metis.backend.auth.repositories.UserRepository;
 import com.metis.backend.auth.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

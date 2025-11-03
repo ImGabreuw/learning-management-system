@@ -1,26 +1,24 @@
 package com.metis.backend.auth.models.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.metis.backend.auth.models.enums.Role;
+import lombok.*;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-@Document(collection = "users")
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-@Data
+@Document(collection = "users")
 public class UserEntity implements UserDetails {
 
     @Id
@@ -31,38 +29,39 @@ public class UserEntity implements UserDetails {
 
     private String name;
 
-    private String microsoftId;
+    private String microsoftId; // ID único do Microsoft Graph
 
-    @DBRef
     @Builder.Default
-    private Set<RoleEntity> roleEntities = new HashSet<>();
+    private Set<Role> roles = Set.of(Role.ROLE_USER);
 
-    private boolean accountNonExpired;
+    @Builder.Default
+    private boolean enabled = true;
 
-    private boolean accountNonLocked;
+    @Builder.Default
+    private boolean accountNonExpired = true;
 
-    private boolean credentialsNonExpired;
+    @Builder.Default
+    private boolean accountNonLocked = true;
 
-    private boolean enabled;
+    @Builder.Default
+    private boolean credentialsNonExpired = true;
 
     private LocalDateTime createdAt;
 
+    private LocalDateTime updatedAt;
+
     private LocalDateTime lastLoginAt;
-
-    private String lastLoginIp;
-
-    // Tokens para invalidação de logout
-    @Builder.Default
-    private Set<String> invalidatedTokens = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roleEntities;
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .collect(Collectors.toList());
     }
 
     @Override
     public String getPassword() {
-        // OAuth2 não usa senha, retorna null
+        // OAuth2 não usa senha
         return null;
     }
 
@@ -90,13 +89,4 @@ public class UserEntity implements UserDetails {
     public boolean isEnabled() {
         return enabled;
     }
-
-    public void invalidateToken(String token) {
-        this.invalidatedTokens.add(token);
-    }
-
-    public boolean isTokenInvalidated(String token) {
-        return this.invalidatedTokens.contains(token);
-    }
-
 }

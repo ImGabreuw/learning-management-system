@@ -1,4 +1,4 @@
-package com.metis.backend.auth.repository;
+package com.metis.backend.auth.repositories;
 
 import com.metis.backend.auth.models.entities.UserEntity;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -8,13 +8,10 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends MongoRepository<UserEntity, String> {
-    
-    Optional<UserEntity> findByEmail(String email);
-    
-    Optional<UserEntity> findByMicrosoftId(String microsoftId);
-    
-    boolean existsByEmail(String email);
-    
-    boolean existsByMicrosoftId(String microsoftId);
 
+    Optional<UserEntity> findByEmail(String email);
+
+    Optional<UserEntity> findByMicrosoftId(String microsoftId);
+
+    boolean existsByEmail(String email);
 }

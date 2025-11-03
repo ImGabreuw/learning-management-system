@@ -1,7 +1,8 @@
-# learning-management-system
+# Metis - Learning Management System
 
-Repositório: [learning-management-system](https://github.com/ImGabreuw/learning-management-system/tree/master)
+Sistema de gerenciamento de aprendizado desenvolvido para a Universidade Presbiteriana Mackenzie.
 
+**Equipe:**
 | Nome                         | RA       |
 | ---------------------------- | -------- |
 | Enzo Benedetto Proença       | 10418579 |
@@ -10,6 +11,86 @@ Repositório: [learning-management-system](https://github.com/ImGabreuw/learning
 | Lucas Fernandes              | 10419400 |
 | Lucas P. C. Sarai            | 10418013 |
 | Vitor Alves Pereira          | 10410862 |
+
+---
+
+## 🚀 Quick Start
+
+### Pré-requisitos
+
+- Docker & Docker Compose
+- Java 21+ (opcional, para desenvolvimento local)
+- Node.js 18+ e pnpm (opcional, para desenvolvimento local)
+
+### Iniciar o Sistema
+
+```bash
+# 1. Configurar variáveis de ambiente
+cp .env.example .env
+# Edite .env com suas credenciais do Azure AD
+
+# 2. Opção A: Apenas infraestrutura (Recomendado para desenvolvimento)
+docker-compose up -d mongo redis
+
+# Backend (em outro terminal)
+cd backend
+./mvnw spring-boot:run
+
+# Frontend (em outro terminal)
+cd web
+pnpm install
+pnpm dev
+
+# 2. Opção B: Todos os serviços com Docker
+docker-compose up -d
+```
+
+### Acessar a Aplicação
+
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8080
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **Mongo Express** (debug): http://localhost:8081
+
+## 🔐 Sistema de Autenticação
+
+**Status**: ✅ Implementado e funcional
+
+Sistema completo de autenticação via **Microsoft OAuth2 + JWT**.
+
+### Funcionalidades
+
+- ✅ **AUTH-RF1**: Login com Microsoft (OAuth2) com validação de domínios
+- ✅ **AUTH-RF2**: Logout com invalidação de token (blacklist)
+- ✅ **AUTH-RF3**: Controle de acesso baseado em roles
+- ✅ Refresh token automático
+- ✅ Proteção de rotas no frontend e backend
+- ✅ Gerenciamento automático de usuários
+
+### Domínios Permitidos
+
+- @mackenzie.br
+- @mackenzista.com.br
+- @outlook.com
+
+### Roles Automáticas
+
+- `ROLE_USER` - Todos os usuários autenticados
+- `ROLE_STUDENT` - Emails @mackenzista.com.br
+- `ROLE_ADMIN` - Configurável via application.yaml
+- `ROLE_PROFESSOR` - Atribuição manual
+
+### Documentação de Autenticação
+
+- 📖 **[SETUP_AUTENTICACAO.md](SETUP_AUTENTICACAO.md)** - Guia completo de configuração
+- 📖 **[DOCKER.md](DOCKER.md)** - Guia Docker com troubleshooting
+- 📖 **[EXEMPLOS_USO.md](EXEMPLOS_USO.md)** - Exemplos práticos de código
+- 📖 **[backend/AUTHENTICATION.md](backend/AUTHENTICATION.md)** - Documentação do backend
+- 📖 **[web/README_AUTH.md](web/README_AUTH.md)** - Documentação do frontend
+
+---
+
+## 📖 Sobre o Projeto
 
 ## Capítulo 1: Introdução
 

@@ -7,21 +7,18 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-/**
- * DTO para resposta de autenticação
- */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthResponse {
-    
+
     private String accessToken;
     private String refreshToken;
     private String tokenType;
-    private Long expiresIn;
+    private Long expiresIn; // em segundos
     private UserInfo userInfo;
-    
+
     @Data
     @Builder
     @NoArgsConstructor

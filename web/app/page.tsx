@@ -12,9 +12,10 @@ import Navigation from "@/components/navigation"
 import { TaskDetailPanel } from "@/components/task-detail-panel"
 import { FuzzySearch } from "@/components/fuzzy-search"
 import { ProjectDetailPanel } from "@/components/project-detail-panel"
-import { useAuth } from "@/context/AuthContext" // Corrigido o import
+import { useAuth } from "@/context/AuthContext"
+import ProtectedRoute from "@/components/ProtectedRoute"
 
-export default function LMSDashboard() {
+function LMSDashboard() {
   const [selectedTask, setSelectedTask] = useState<any>(null)
   const [selectedProject, setSelectedProject] = useState<any>(null)
   const [activeTab, setActiveTab] = useState("tarefas")
@@ -911,5 +912,14 @@ const assignments = [
         </div>
       )}
     </div>
+  )
+}
+
+// Exporta o componente envolvido pelo ProtectedRoute
+export default function Page() {
+  return (
+    <ProtectedRoute>
+      <LMSDashboard />
+    </ProtectedRoute>
   )
 }

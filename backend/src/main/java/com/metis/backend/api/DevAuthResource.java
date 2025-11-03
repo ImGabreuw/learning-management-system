@@ -2,7 +2,7 @@ package com.metis.backend.api;
 
 import com.metis.backend.auth.models.entities.UserEntity;
 import com.metis.backend.auth.models.response.AuthResponse;
-import com.metis.backend.auth.service.JwtService;
+import com.metis.backend.auth.service.AuthService;
 import com.metis.backend.auth.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +29,7 @@ import java.util.List;
 public class DevAuthResource {
 
     private final UserService userService;
-    private final JwtService jwtService;
+    private final AuthService authService;
 
     /**
      * Gera tokens para um email específico (para testes)
@@ -40,42 +40,39 @@ public class DevAuthResource {
     public ResponseEntity<AuthResponse> generateToken(@RequestParam String email) {
         log.warn("⚠️ DEV ONLY: Generating token for email: {}", email);
 
-        // Valida domínio
-        if (!userService.isValidMackenzieEmail(email)) {
-            return ResponseEntity.badRequest()
-                    .body(AuthResponse.builder()
-                            .build());
+        try {
+            // Cria ou busca usuário (validateEmailDomain é chamado internamente)
+            UserEntity user = userService.createOrUpdateUser(
+                    email,
+                    "Dev User - " + email.split("@")[0],
+                    "dev-microsoft-id-" + System.currentTimeMillis()
+            );
+
+            // Gera tokens usando AuthService
+            AuthService.TokenPair tokens = authService.generateTokensForUser(user);
+
+            List<String> roles = user.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList();
+
+            AuthResponse response = AuthResponse.builder()
+                    .accessToken(tokens.accessToken())
+                    .refreshToken(tokens.refreshToken())
+                    .tokenType("Bearer")
+                    .expiresIn(86400L)
+                    .userInfo(AuthResponse.UserInfo.builder()
+                            .email(user.getEmail())
+                            .name(user.getName())
+                            .roles(roles)
+                            .build())
+                    .build();
+
+            log.info("✅ Token generated successfully for: {}", email);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            log.error("❌ Invalid email domain: {}", email);
+            return ResponseEntity.badRequest().build();
         }
-
-        // Cria ou busca usuário
-        UserEntity user = userService.createOrUpdateUser(
-                email,
-                "Dev User - " + email.split("@")[0],
-                "dev-microsoft-id-" + System.currentTimeMillis()
-        );
-
-        // Gera tokens
-        String accessToken = jwtService.generateToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
-
-        List<String> roles = user.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-
-        AuthResponse response = AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .tokenType("Bearer")
-                .expiresIn(86400L)
-                .userInfo(AuthResponse.UserInfo.builder()
-                        .email(user.getEmail())
-                        .name(user.getName())
-                        .roles(roles)
-                        .build())
-                .build();
-
-        log.info("✅ Token generated successfully for: {}", email);
-        return ResponseEntity.ok(response);
     }
 
     /**

@@ -21,25 +21,24 @@ spring:
           microsoft:
             client-id: ${AZURE_CLIENT_ID}
             client-secret: ${AZURE_CLIENT_SECRET}
-            scope:
-              - openid
-              - profile
-              - email
-              - User.Read
+            scope: openid, profile, email, User.Read
+            redirect-uri: "{baseUrl}/login/oauth2/code/microsoft"
             authorization-grant-type: authorization_code
-            redirect-uri: "http://localhost:8080/login/oauth2/code/microsoft"
-            #redirect-uri: "http://localhost:3000/auth/callback"
-
-
-            #redirect-uri: "https://www.google.com"
             client-name: Microsoft
         provider:
           microsoft:
-            authorization-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/authorize
-            token-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/oauth2/v2.0/token
-            user-info-uri: https://graph.microsoft.com/v1.0/me
-            user-name-attribute: id
-            jwk-set-uri: https://login.microsoftonline.com/${AZURE_TENANT_ID}/discovery/v2.0/keys
+            authorization-uri: https://login.microsoftonline.com/common/oauth2/v2.0/authorize
+            token-uri: https://login.microsoftonline.com/common/oauth2/v2.0/token
+            user-info-uri: https://graph.microsoft.com/oidc/userinfo
+            jwk-set-uri: https://login.microsoftonline.com/common/discovery/v2.0/keys
+            user-name-attribute: sub
+
+# Configuração customizada para redirecionamento após OAuth2 sucesso
+  # O redirect-uri acima é para o Spring Security processar o callback do Microsoft
+  # A URL abaixo é para onde o usuário será redirecionado após autenticação bem-sucedida
+custom:
+  oauth2:
+    frontend-callback-url: ${FRONTEND_CALLBACK_URL:http://localhost:3000/auth/callback}
 
 metis:
   jwt:
@@ -64,6 +63,8 @@ logging:
   level:
     com.metis.backend: DEBUG
     org.springframework.security.oauth2: TRACE
+    org.springframework.web.client.RestTemplate: DEBUG
+    org.springframework.security.oauth2.client.endpoint: TRACE
   pattern:
     file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
   file:

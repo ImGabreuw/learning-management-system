@@ -12,6 +12,4 @@ import lombok.NoArgsConstructor;
 public class LoginUrlResponse {
 
     private String loginUrl;
-
 }
-

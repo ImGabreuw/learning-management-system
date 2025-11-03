@@ -2,8 +2,9 @@
 
 import Navigation from "@/components/navigation"
 import { ProfileManagement } from "@/components/profile-management"
+import ProtectedRoute from "@/components/ProtectedRoute"
 
-export default function ProfilePage() {
+function ProfilePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Navigation />
@@ -11,5 +12,13 @@ export default function ProfilePage() {
         <ProfileManagement />
       </div>
     </div>
+  )
+}
+
+export default function Page() {
+  return (
+    <ProtectedRoute>
+      <ProfilePage />
+    </ProtectedRoute>
   )
 }
