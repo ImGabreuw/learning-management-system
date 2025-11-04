@@ -42,6 +42,9 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+      args:
+        - GITHUB_USERNAME=${GITHUB_USERNAME}
+        - GITHUB_TOKEN=${GITHUB_TOKEN}
     container_name: metis-backend
     depends_on:
       - mongo
