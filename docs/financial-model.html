@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Metis - Modelo Financeiro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F3F4F6;
+            color: #051923;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-blue-900 text-white p-6 shadow-lg">
+      <div class="container mx-auto text-center">
+        <h1 class="text-4xl font-bold">Modelo Financeiro</h1>
+        <p class="text-xl mt-2">Metis - Learning Management System (LMS)</p>
+      </div>
+
+      <nav class="mt-4">
+        <ul class="flex justify-center space-x-6">
+          <li>
+            <a href="index.html" class="text-white hover:underline"
+              >Análise de Tendências</a
+            >
+          </li>
+          <li>
+            <a href="market.html" class="text-white hover:underline"
+              >Segmento de Mercado</a
+            >
+          </li>
+          <li>
+            <a
+              href="business-model-canvas.html"
+              class="text-white hover:underline"
+              >Business Model Canvas</a
+            >
+          </li>
+          <li>
+            <a
+              href="finacial-model.html"
+              class="text-white hover:underline"
+              >Modelo Financeiro</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <main class="container mx-auto max-w-6xl p-4 md:p-8">
+
+        <section id="intro" class="mb-8">
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-[#003554] mb-3">Visão Geral do Modelo</h2>
+                <p class="text-gray-700 leading-relaxed">
+                    Este modelo financeiro básico projeta o faturamento, o investimento necessário e o retorno esperado para a Metis. As estimativas são baseadas nos custos operacionais fornecidos (R$ 31.4k/mês) e em benchmarks de crescimento (CAGR) e margem para o setor de EdTech.
+                </p>
+            </div>
+        </section>
+
+        <section id="investment" class="mb-8">
+            <h2 class="text-3xl font-bold text-[#003554] mb-4">1. Investimento Inicial (12 Meses)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <div class="md:col-span-1 bg-white rounded-lg shadow-md p-6 flex flex-col justify-center text-center">
+                    <span class="text-lg text-gray-600 block">Investimento Total (12 Meses)</span>
+                    <span class="text-5xl font-bold text-[#006494] my-4">R$ 376.800</span>
+                    <p class="text-gray-700">
+                        Capital inicial para cobrir 12 meses de custos operacionais (Burn Rate de R$ 31.400/mês).
+                    </p>
+                </div>
+
+                <div class="md:col-span-2 bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold text-[#003554] mb-2">Alocação do Custo Mensal (R$ 31.4k)</h3>
+                    <p class="text-gray-700 mb-4">
+                        A estrutura de custos é dominada pela equipe de desenvolvimento ("Pessoas") e pelo marketing para aquisição de alunos, conforme os dados fornecidos.
+                    </p>
+                    <div class="chart-container">
+                        <canvas id="investimentoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="growth" class="mb-8">
+            <h2 class="text-3xl font-bold text-[#003554] mb-4">2. Projeção de Faturamento (3 Anos)</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold text-[#003554] mb-2">Fontes de Receita</h3>
+                    <p class="text-gray-700 mb-4">
+                        O faturamento será dividido entre mensalidades de uso da plataforma (70%) e comissões sobre divulgação de cursos (30%).
+                    </p>
+                    <div class="chart-container" style="height: 300px; max-height: 350px;">
+                        <canvas id="receitaChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <h3 class="text-xl font-bold text-[#003554] mb-2">Metodologia da Projeção</h3>
+                    <ul class="text-gray-700 space-y-2 list-disc list-inside">
+                        <li>
+                            <span class="font-semibold">Receita Ano 1: R$ 471.000</span>
+                            <span class="block text-sm pl-4">(Custos de R$ 377k / (1 - 20% de Margem Líquida Alvo))</span>
+                        </li>
+                        <li>
+                            <span class="font-semibold">CAGR (Crescimento): 25%</span>
+                            <span class="block text-sm pl-4">(Taxa de crescimento anual aplicada nos Anos 2 e 3, com base na média do setor EdTech)</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold text-[#003554] mb-2">Crescimento de Receita Composto (Y1-Y3)</h3>
+                <p class="text-gray-700 mb-4">
+                    A projeção resulta em R$ 471k no Ano 1, R$ 589k no Ano 2 e R$ 736k no Ano 3, mantendo a divisão de 70% (Mensalidade) e 30% (Comissões).
+                </p>
+                <div class="chart-container" style="max-width: 900px; height: 400px;">
+                    <canvas id="crescimentoComposicaoChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section id="return" class="mb-8">
+            <h2 class="text-3xl font-bold text-[#003554] mb-4">3. Retorno Esperado e KPIs</h2>
+            <p class="text-gray-700 mb-6 leading-relaxed">
+                Com base no investimento inicial de R$ 376.800 e nas projeções de receita (crescendo 25% a.a.) e custos (crescendo 10% a.a.), o modelo revisado aponta para um lucro acumulado de R$ 548.4k em 3 anos, alcançando o ponto de equilíbrio em menos de 30 meses.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <span class="text-base text-gray-600 block">ROI (3 Anos)</span>
+                    <span class="text-4xl font-bold text-[#00A6FB] my-2 block">146%</span>
+                    <span class="text-sm text-gray-700">(R$ 548k Lucro Acum. / R$ 377k Invest.)</span>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 text-center">
+                    <span class="text-base text-gray-600 block">Payback (Ponto de Equilíbrio)</span>
+                    <span class="text-4xl font-bold text-[#00A6FB] my-2 block">~29 Meses</span>
+                    <span class="text-sm text-gray-700">(Tempo de Retorno do Invest.)</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="flow" class="mb-8">
+            <h2 class="text-3xl font-bold text-[#003554] mb-4">4. Fluxo de Geração de Valor</h2>
+             <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-xl font-bold text-[#003554] mb-2">Do Investimento ao Retorno</h3>
+                <p class="text-gray-700 mb-6">
+                    Este fluxo demonstra como o capital inicial é transformado em retorno financeiro, seguindo a lógica do Business Model Canvas.
+                </p>
+                <div class="flex flex-col md:flex-row flex-wrap items-stretch md:items-center justify-center gap-2 md:gap-0 text-center">
+                    
+                    <div class="flex-shrink-0 bg-[#051923] text-white p-4 rounded-lg shadow-lg">
+                        <span class="font-bold">Investimento</span>
+                        <span class="block text-sm">R$ 377k</span>
+                    </div>
+
+                    <span class="text-2xl text-[#003554] p-2 self-center rotate-90 md:rotate-0">→</span>
+
+                    <div class="flex-shrink-0 bg-gray-100 border border-[#003554] p-4 rounded-lg">
+                        <span class="font-bold text-[#003554]">Alocação</span>
+                        <span class="block text-sm text-gray-700">Pessoas, Mkt, Infra</span>
+                    </div>
+
+                    <span class="text-2xl text-[#003554] p-2 self-center rotate-90 md:rotate-0">→</span>
+                    
+                    <div class="flex-shrink-0 bg-gray-100 border border-[#003554] p-4 rounded-lg">
+                        <span class="font-bold text-[#003554]">Atividades</span>
+                        <span class="block text-sm text-gray-700">Dev., Suporte</span>
+                    </div>
+
+                    <span class="text-2xl text-[#003554] p-2 self-center rotate-90 md:rotate-0">→</span>
+
+                    <div class="flex-shrink-0 bg-[#00A6FB] text-white p-4 rounded-lg shadow-lg">
+                        <span class="font-bold">Valor</span>
+                        <span class="block text-sm">Hub Acadêmico</span>
+                    </div>
+
+                    <span class="text-2xl text-[#003554] p-2 self-center rotate-90 md:rotate-0">→</span>
+
+                    <div class="flex-shrink-0 bg-[#0582CA] text-white p-4 rounded-lg">
+                        <span class="font-bold">Receitas</span>
+                        <span class="block text-sm">Mensalidade (70%) / Comissões (30%)</span>
+                    </div>
+
+                    <span class="text-2xl text-[#003554] p-2 self-center rotate-90 md:rotate-0">→</span>
+                    
+                    <div class="flex-shrink-0 bg-[#006494] text-white p-4 rounded-lg shadow-lg">
+                        <span class="font-bold">Retorno</span>
+                        <span class="block text-sm">Payback: ~29 Meses</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#051923] text-gray-300 p-6 text-center mt-12">
+        <p>&copy; 2025 Metis AI EdTech. Estas são projeções financeiras e não garantem resultados futuros.</p>
+    </footer>
+
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            
+            const tooltipCallback = {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        } else {
+                            return label;
+                        }
+                    }
+                }
+            };
+            
+            const brilliantBlues = ['#006494', '#0582CA', '#00A6FB', '#003554', '#051923'];
+
+            const investimentoCtx = document.getElementById('investimentoChart')?.getContext('2d');
+            if (investimentoCtx) {
+                new Chart(investimentoCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Pessoas (Equipe)', 'Marketing/Vendas', 'Ferramentas (Devs)', 'Infraestrutura (SaaS)'],
+                        datasets: [{
+                            label: 'Custo Mensal',
+                            data: [21000, 8500, 1200, 700],
+                            backgroundColor: brilliantBlues,
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: tooltipCallback,
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { family: "'Inter', sans-serif" },
+                                    color: '#051923'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const receitaCtx = document.getElementById('receitaChart')?.getContext('2d');
+            if (receitaCtx) {
+                new Chart(receitaCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: [
+                            ['Mensalidade de Uso', '(70%)'], 
+                            ['Divulgação de Cursos', '(Comissões 30%)']
+                        ],
+                        datasets: [{
+                            data: [70, 30],
+                            backgroundColor: [brilliantBlues[0], brilliantBlues[1]],
+                            borderColor: '#ffffff',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: tooltipCallback,
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { family: "'Inter', sans-serif" },
+                                    color: '#051923'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            const crescimentoCtx = document.getElementById('crescimentoComposicaoChart')?.getContext('2d');
+            if (crescimentoCtx) {
+                new Chart(crescimentoCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Ano 1 (R$ 471k)', 'Ano 2 (R$ 589k)', 'Ano 3 (R$ 736k)'],
+                        datasets: [
+                            {
+                                label: 'Mensalidade de Uso (70%)',
+                                data: [329700, 412100, 515100],
+                                backgroundColor: brilliantBlues[0]
+                            },
+                            {
+                                label: 'Divulgação de Cursos (30%)',
+                                data: [141300, 176700, 220800],
+                                backgroundColor: brilliantBlues[1]
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                ...tooltipCallback,
+                                mode: 'index',
+                                intersect: false
+                            },
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { family: "'Inter', sans-serif" },
+                                    color: '#051923'
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                stacked: true,
+                                grid: { display: false },
+                                ticks: { color: '#1F2937' }
+                            },
+                            y: {
+                                stacked: true,
+                                beginAtZero: true,
+                                grid: {
+                                    drawBorder: false,
+                                    color: '#E5E7EB'
+                                },
+                                ticks: {
+                                    color: '#374151',
+                                    callback: function(value) {
+                                        if (value >= 1000000) {
+                                            return 'R$ ' + (value / 1000000) + 'M';
+                                        }
+                                        if (value >= 1000) {
+                                            return 'R$ ' + (value / 1000) + 'k';
+                                        }
+                                        return 'R$ ' + value;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
