@@ -1,5 +1,14 @@
 package com.metis.backend.opportunities.services;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
+
 import com.metis.backend.opportunities.mapper.NodeMapper;
 import com.metis.backend.opportunities.models.entities.EdgeEntity;
 import com.metis.backend.opportunities.models.entities.NodeEntity;
@@ -9,14 +18,9 @@ import com.metis.opportunity_recommendation_algorithm.api.Recommender;
 import com.metis.opportunity_recommendation_algorithm.api.RecommenderFactory;
 import com.metis.opportunity_recommendation_algorithm.api.response.OpportunityResponse;
 import com.metis.opportunity_recommendation_algorithm.internal.models.KnowledgeGraph;
-import jakarta.annotation.PostConstruct;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @Scope("prototype")

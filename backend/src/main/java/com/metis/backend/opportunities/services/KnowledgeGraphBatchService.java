@@ -1,15 +1,17 @@
 package com.metis.backend.opportunities.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.metis.backend.opportunities.models.requests.OpportunityRequest;
 import com.metis.backend.opportunities.models.requests.UserProfileRequest;
 import com.metis.backend.opportunities.models.response.OpportunityCreatedResponse;
 import com.metis.backend.opportunities.models.response.UserProfileCreatedResponse;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor

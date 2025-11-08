@@ -1,13 +1,15 @@
 package com.metis.backend.opportunities.models.entities;
 
-import com.metis.opportunity_recommendation_algorithm.internal.models.enums.NodeType;
-import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.metis.opportunity_recommendation_algorithm.internal.models.enums.NodeType;
+
+import lombok.Data;
 
 @Document(collection = "nodes")
 @Data

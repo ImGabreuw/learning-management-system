@@ -1,12 +1,13 @@
 package com.metis.backend.opportunities.repositories;
 
-import com.metis.backend.opportunities.models.entities.EdgeEntity;
-import com.metis.backend.opportunities.models.entities.EdgeId;
+import java.util.List;
+import java.util.Set;
+
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 
-import java.util.List;
-import java.util.Set;
+import com.metis.backend.opportunities.models.entities.EdgeEntity;
+import com.metis.backend.opportunities.models.entities.EdgeId;
 
 public interface EdgeRepository extends MongoRepository<EdgeEntity, EdgeId> {
 

@@ -2,6 +2,7 @@ package com.metis.backend.opportunities.mapper;
 
 import com.metis.backend.opportunities.models.entities.NodeEntity;
 import com.metis.opportunity_recommendation_algorithm.internal.models.Node;
+
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -11,8 +12,7 @@ public class NodeMapper {
     public static Node toLibrary(NodeEntity entity) {
         return new Node(
                 entity.getId(),
-                entity.getType()
-        );
+                entity.getType());
     }
 
     public static NodeEntity toEntity(Node node) {

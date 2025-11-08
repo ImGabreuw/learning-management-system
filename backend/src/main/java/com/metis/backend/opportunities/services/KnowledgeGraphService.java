@@ -1,5 +1,13 @@
 package com.metis.backend.opportunities.services;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.metis.backend.opportunities.models.entities.EdgeEntity;
 import com.metis.backend.opportunities.models.entities.EdgeId;
 import com.metis.backend.opportunities.models.entities.NodeEntity;
@@ -12,14 +20,8 @@ import com.metis.backend.opportunities.repositories.NodeRepository;
 import com.metis.backend.shared.Utility;
 import com.metis.opportunity_recommendation_algorithm.internal.models.enums.NodeType;
 import com.metis.opportunity_recommendation_algorithm.internal.models.enums.RelationType;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
