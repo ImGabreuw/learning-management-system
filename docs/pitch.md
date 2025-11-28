@@ -1,10 +1,6 @@
 Roteiro de Pitch - Metis
 
-Abaixo estão os dois componentes solicitados no arquivo "Etapa 6 - Prompt.pdf".
-
-1. ROTEIRO NARRADO
-
-(Total de palavras: 677, sem contar títulos e marcações de tempo. Tempo de fala estimado: 4min 45s - 5min)
+(Total de palavras: 677, sem contar títulos e marcações de tempo. Tempo de fala estimado: 4min 30s - 4min 45s)
 
 (0:00 - 0:15) Abertura e Conexão<br>
 Olá a todos. Vocês já tiveram problemas em encontrar materiais e oportunidades e precisam de ferramentas externas para organizar seus estudos? Bom, a solução é a Metis.
@@ -27,7 +23,7 @@ O mercado, como vimos, é vasto. E sim, existem gigantes nesse espaço. Mas falh
 
 E não só isso, ainda oferecemos um diferencial: Um sistema integrado de recomendação de oportunidades.
 
-(1:20 - 2:00) Solução e Validação<br>
+(1:20 - 2:50) Solução e Validação<br>
 É por isso que criamos a Metis.
 
 Nossa proposta de valor é simples: "Somos a plataforma de aprendizagem que combina um design radicalmente simples com ferramentas poderosas que transformam a obrigação de usar em vontade de aprender."
@@ -40,7 +36,9 @@ Foco na Experiência de Usuário: Uma interface limpa, rápida e intuitiva, que 
 
 Aqui podemos ver o protótipo, com uma interface simples, intuitiva e padronizada, com a integração do sistema de oportunidades que faz sugestões alinhadas com seu perfil, com um bônus de justificar tais escolhas.
 
-(2:00 - 4:00) Viabilidade Financeira<br>
+Como resultados do teste de satisfação do protótipo, no modelo SUS, o sistema foi pontuado em 85 pontos, em média, o que supera o mínimo de 68 pontos esperado do modelo.
+
+(2:50 - 4:00) Viabilidade Financeira<br>
 
 Nosso modelo de negócio é duplo: 70% da receita vem de mensalidades de uso (SaaS) pagas pelas instituições, e 30% vêm de comissões sobre a divulgação de cursos e eventos parceiros.
 
