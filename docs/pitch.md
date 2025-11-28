@@ -6,10 +6,10 @@ Abaixo estão os dois componentes solicitados no arquivo "Etapa 6 - Prompt.pdf".
 
 (Total de palavras: 677, sem contar títulos e marcações de tempo. Tempo de fala estimado: 4min 45s - 5min)
 
-(0:00 - 0:15) Abertura e Conexão
+(0:00 - 0:15) Abertura e Conexão<br>
 Olá a todos. Vocês já tiveram problemas em encontrar materiais e oportunidades e precisam de ferramentas externas para organizar seus estudos? Bom, a solução é a Metis.
 
-(0:15 - 0:50) Problema e Oportunidade
+(0:15 - 0:50) Problema e Oportunidade<br>
 Hoje a estimativa é de que 99% das universidades já utilizam Learning Management Systems, mas apenas 56% afirmam utilizá-los na maioria ou em todos os cursos.
 
 Isso não é um inconveniente. É resultado de plataformas com graves problemas de usabilidade tanto para aqueles que precisam consultar conteúdos como para os que precisam publicá-los.
@@ -20,14 +20,14 @@ E isso acontece em um mercado que não para de crescer. O setor de LMS educacion
 
 A oportunidade é clara: existe uma lacuna gigantesca para uma plataforma que, finalmente, coloque o aluno no centro da experiência.
 
-(0:50 - 1:20) Cliente, Mercado e Concorrência
+(0:50 - 1:20) Cliente, Mercado e Concorrência<br>
 Nosso público-alvo são dois: a Juliana, a estudante que precisa de um "hub" que centralize tudo—aulas, notas, eventos e carreira. E o Dr. Marcos, o professor de 45 anos que acha o processo de organizar conteúdo repetitivo e demorado.
 
 O mercado, como vimos, é vasto. E sim, existem gigantes nesse espaço.  Mas falham no essencial: a usabilidade.
 
 E não só isso, ainda oferecemos um diferencial: Um sistema integrado de recomendação de oportunidades.
 
-(1:20 - 2:00) Solução e Validação
+(1:20 - 2:00) Solução e Validação<br>
 É por isso que criamos a Metis.
 
 Nossa proposta de valor é simples: "Somos a plataforma de aprendizagem que combina um design radicalmente simples com ferramentas poderosas que transformam a obrigação de usar em vontade de aprender."
@@ -42,7 +42,7 @@ Comunidade e Bem-Estar: Ferramentas que promovem um ambiente seguro e positivo, 
 
 Aqui podemos ver o protótipo, com uma interface simples, intuitiva e padronizada, com a integração do sistema de oportunidades que faz sugestões alinhadas com seu perfil, com um bônus de justificar tais escolhas.
 
-(2:00 - 4:00) Viabilidade Financeira
+(2:00 - 4:00) Viabilidade Financeira<br>
 
 Nosso modelo de negócio é duplo: 70% da receita vem de mensalidades de uso (SaaS) pagas pelas instituições, e 30% vêm de comissões sobre a divulgação de cursos e eventos parceiros.
 
@@ -57,7 +57,7 @@ Projetamos uma receita de R$ 471 mil no Ano 1, crescendo para R$ 736 mil no Ano 
 
 Isso nos leva a um Retorno sobre o Investimento (ROI) de 146% ao final de 3 anos, com um ponto de equilíbrio (Payback) em aproximadamente 29 meses. O modelo é viável e o retorno é claro.
 
-(4:00 - 5:00) Encerramento e Equipe
+(4:00 - 5:00) Encerramento e Equipe<br>
 Nosso time une as competências exatas para resolver esse problema. O líder é o Gabriel, focado na estratégia de negócios. Vitor é nosso especialista em UX/Design, obcecado em entender a jornada da Juliana. E Lucas lidera a tecnologia, garantindo que a plataforma seja rápida e escalável, enquanto Enzo, Bruna e Anna são os desenvolvedores responsáveis por fazer acontecer.
 
 Nós vivemos o problema que estamos resolvendo.
