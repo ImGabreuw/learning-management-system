@@ -1,0 +1,90 @@
+### Notifications API - Testes
+
+### 1. Criar notificação de tarefa atribuída
+POST http://localhost:8080/api/notifications
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "Nova atividade disponível",
+  "message": "Atividade de Laboratório 02 foi publicada em Computação Distribuída",
+  "type": "TASK_ASSIGNED",
+  "relatedEntityId": "subject-123",
+  "relatedEntityType": "task"
+}
+
+### 2. Criar notificação de prazo próximo
+POST http://localhost:8080/api/notifications
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "Prazo se aproximando",
+  "message": "A entrega da Lista de Exercícios 01 vence em 2 dias",
+  "type": "TASK_DUE_SOON",
+  "relatedEntityId": "task-456",
+  "relatedEntityType": "task"
+}
+
+### 3. Criar notificação de nota publicada
+POST http://localhost:8080/api/notifications
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "Nota publicada",
+  "message": "A nota da Prova P1 de Compiladores foi publicada: 8.5",
+  "type": "GRADE_PUBLISHED",
+  "relatedEntityId": "grade-789",
+  "relatedEntityType": "grade"
+}
+
+### 4. Criar várias notificações de teste
+POST http://localhost:8080/api/notifications
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "Novo material disponível",
+  "message": "Slides da aula de Análise Léxica foram adicionados em Compiladores",
+  "type": "NEW_MATERIAL"
+}
+
+###
+POST http://localhost:8080/api/notifications
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "title": "Oportunidade compatível encontrada",
+  "message": "Uma nova vaga de estágio em React foi encontrada para você!",
+  "type": "OPPORTUNITY_MATCH"
+}
+
+### 5. Listar todas as notificações
+GET http://localhost:8080/api/notifications
+Authorization: Bearer {{accessToken}}
+
+### 6. Listar apenas não lidas
+GET http://localhost:8080/api/notifications/unread
+Authorization: Bearer {{accessToken}}
+
+### 7. Contar não lidas
+GET http://localhost:8080/api/notifications/count
+Authorization: Bearer {{accessToken}}
+
+### 8. Marcar notificação como lida (substitua {id} pelo ID real)
+PUT http://localhost:8080/api/notifications/{id}/read
+Authorization: Bearer {{accessToken}}
+
+### 9. Marcar todas como lidas
+PUT http://localhost:8080/api/notifications/read-all
+Authorization: Bearer {{accessToken}}
+
+### 10. Deletar uma notificação (substitua {id} pelo ID real)
+DELETE http://localhost:8080/api/notifications/{id}
+Authorization: Bearer {{accessToken}}
+
+### 11. Deletar todas as notificações
+DELETE http://localhost:8080/api/notifications
+Authorization: Bearer {{accessToken}}

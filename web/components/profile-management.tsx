@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import {
   Edit3,
   Save,
@@ -26,6 +26,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Progress } from "@/components/ui/progress"
 import { Switch } from "@/components/ui/switch"
+import { useAuth } from "@/context/AuthContext"
+import { getUserProfile, updateUserProfile, saveUserProfile } from "@/lib/api"
 
 interface UserProfile {
   id: string
@@ -71,6 +73,11 @@ interface ProfileManagementProps {
 }
 
 export function ProfileManagement({ initialProfile, onSave }: ProfileManagementProps) {
+  const { user } = useAuth()
+  const [loading, setLoading] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  
   const [profile, setProfile] = useState<UserProfile>(
     initialProfile || {
       id: "1",
@@ -131,10 +138,67 @@ export function ProfileManagement({ initialProfile, onSave }: ProfileManagementP
   const [newSkill, setNewSkill] = useState("")
   const [newGoal, setNewGoal] = useState("")
 
-  const handleSave = (section: string) => {
-    setEditingSection(null)
-    onSave?.(profile)
-    console.log("[v0] Profile section saved:", section)
+  // Carregar perfil do usuário ao montar o componente
+  useEffect(() => {
+    const loadUserProfile = async () => {
+      if (!user || initialProfile) return
+
+      try {
+        setLoading(true)
+        setError(null)
+        const userData = await getUserProfile(user.email)
+        
+        // Atualizar perfil com dados do backend, mantendo mock para campos não presentes
+        setProfile(prev => ({
+          ...prev,
+          id: userData.id || user.email,
+          name: userData.name,
+          email: userData.email,
+        }))
+      } catch (err) {
+        console.error('Erro ao carregar perfil:', err)
+        setError('Não foi possível carregar o perfil. Usando dados locais.')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadUserProfile()
+  }, [user, initialProfile])
+
+  const handleSave = async (section: string) => {
+    if (!user) return
+
+    try {
+      setSaving(true)
+      setError(null)
+
+      // Atualizar informações básicas do usuário
+      if (section === "info") {
+        await updateUserProfile(user.email, {
+          name: profile.name,
+        })
+      }
+
+      // Salvar perfil de interesses para recomendações
+      if (section === "interests" || section === "skills" || section === "goals") {
+        await saveUserProfile({
+          userId: user.email,
+          interests: profile.interests,
+          technicalSkills: profile.skills,
+          careerGoals: profile.careerGoals,
+        })
+      }
+
+      setEditingSection(null)
+      onSave?.(profile)
+      console.log("[Profile] Seção salva:", section)
+    } catch (err) {
+      console.error('Erro ao salvar perfil:', err)
+      setError('Não foi possível salvar as alterações.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   const handleCancel = () => {
@@ -222,8 +286,27 @@ export function ProfileManagement({ initialProfile, onSave }: ProfileManagementP
     }
   }
 
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600 mb-4"></div>
+        <p className="text-slate-600">Carregando perfil...</p>
+      </div>
+    )
+  }
+
   return (
     <div className="max-w-7xl mx-auto">
+      {error && (
+        <div className="mb-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <p className="text-yellow-800 text-sm">⚠️ {error}</p>
+        </div>
+      )}
+      {saving && (
+        <div className="mb-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <p className="text-blue-800 text-sm">💾 Salvando alterações...</p>
+        </div>
+      )}
       {/* Main Content - 2 Column Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Main Content */}

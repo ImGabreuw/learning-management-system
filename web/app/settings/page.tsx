@@ -1,7 +1,11 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useAuth } from "@/context/AuthContext"
+import { getUserProfile, updateUserProfile } from "@/lib/api"
 import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Skeleton } from "@/components/ui/skeleton"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -31,21 +35,25 @@ import {
 } from "lucide-react"
 
 function SettingsPage() {
+  const { user } = useAuth()
   const [activeTab, setActiveTab] = useState("profile")
   const [isLoading, setIsLoading] = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState<string | null>(null)
 
   // Profile state
   const [profile, setProfile] = useState({
-    name: "João Silva",
-    email: "joao.silva@mackenzie.br",
-    phone: "+55 11 99999-9999",
-    bio: "Estudante de Ciência da Computação apaixonado por tecnologia e inovação.",
-    location: "São Paulo, SP",
-    birthDate: "1995-03-15",
-    course: "Ciência da Computação",
-    semester: "8º Semestre",
-    ra: "41234567",
-    avatar: "/student-avatar.png",
+    name: "",
+    email: "",
+    phone: "",
+    bio: "",
+    location: "",
+    birthDate: "",
+    course: "",
+    semester: "",
+    ra: "",
+    avatar: "",
   })
 
   // Notification settings
@@ -76,40 +84,132 @@ function SettingsPage() {
     compactMode: false,
   })
 
+  // Carregar dados do usuário ao montar componente
+  useEffect(() => {
+    const loadUserData = async () => {
+      if (!user?.email) return
+
+      try {
+        setIsLoading(true)
+        setError(null)
+        
+        const userData = await getUserProfile(user.email)
+        
+        setProfile({
+          name: userData.name || "",
+          email: userData.email || "",
+          phone: userData.phone || "",
+          bio: userData.bio || "",
+          location: userData.location || "",
+          birthDate: userData.birthDate ? userData.birthDate.split('T')[0] : "",
+          course: "",
+          semester: "",
+          ra: "",
+          avatar: "",
+        })
+      } catch (err) {
+        console.error('Erro ao carregar perfil:', err)
+        setError('Não foi possível carregar seus dados. Usando dados padrão.')
+        
+        // Fallback para dados do contexto de autenticação
+        if (user) {
+          setProfile(prev => ({
+            ...prev,
+            name: user.name || "",
+            email: user.email || "",
+          }))
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadUserData()
+  }, [user])
+
   const handleSave = async () => {
-    setIsLoading(true)
-    // Simulate save process
-    setTimeout(() => {
-      setIsLoading(false)
-    }, 1500)
+    if (!user?.email) {
+      setError('Você precisa estar logado para salvar alterações.')
+      return
+    }
+
+    try {
+      setIsSaving(true)
+      setError(null)
+      setSuccess(null)
+
+      // Atualizar perfil do usuário
+      await updateUserProfile(user.email, {
+        name: profile.name,
+        email: profile.email,
+        phone: profile.phone,
+        bio: profile.bio,
+        location: profile.location,
+        birthDate: profile.birthDate,
+      })
+
+      // TODO: Salvar preferências de notificação, privacidade e aparência
+      // quando o backend tiver endpoints específicos para isso
+
+      setSuccess('Configurações salvas com sucesso!')
+      
+      // Limpar mensagem de sucesso após 3 segundos
+      setTimeout(() => setSuccess(null), 3000)
+    } catch (err) {
+      console.error('Erro ao salvar configurações:', err)
+      setError('Erro ao salvar configurações. Tente novamente.')
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       <Navigation />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Configurações</h1>
           <p className="text-gray-600">Gerencie suas preferências e configurações da conta</p>
         </div>
 
-        <div className="flex justify-end mb-6">
-          <Button onClick={handleSave} disabled={isLoading} className="bg-blue-600 hover:bg-blue-700">
-            {isLoading ? (
-              <div className="flex items-center space-x-2">
-                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                <span>Salvando...</span>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-2">
-                <Save className="h-4 w-4" />
-                <span>Salvar Alterações</span>
-              </div>
-            )}
-          </Button>
-        </div>
+        {/* Mensagens de Erro e Sucesso */}
+        {error && (
+          <Alert variant="destructive" className="mb-6">
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
+        
+        {success && (
+          <Alert className="mb-6 bg-green-50 border-green-200">
+            <AlertDescription className="text-green-800">{success}</AlertDescription>
+          </Alert>
+        )}
+
+        {/* Loading State */}
+        {isLoading ? (
+          <div className="space-y-6">
+            <Skeleton className="h-12 w-full" />
+            <Skeleton className="h-96 w-full" />
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-end mb-6">
+              <Button onClick={handleSave} disabled={isSaving} className="bg-blue-600 hover:bg-blue-700">
+                {isSaving ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    <span>Salvando...</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <Save className="h-4 w-4" />
+                    <span>Salvar Alterações</span>
+                  </div>
+                )}
+              </Button>
+            </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-5 lg:w-fit lg:grid-cols-5">
@@ -651,6 +751,8 @@ function SettingsPage() {
             </Card>
           </TabsContent>
         </Tabs>
+          </>
+        )}
       </div>
     </div>
   )

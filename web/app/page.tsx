@@ -14,6 +14,10 @@ import { FuzzySearch } from "@/components/fuzzy-search"
 import { ProjectDetailPanel } from "@/components/project-detail-panel"
 import { useAuth } from "@/context/AuthContext"
 import ProtectedRoute from "@/components/ProtectedRoute"
+import { getRecommendations, OpportunityResponse, getDisciplines, getDisciplineTasks, SubjectTask } from "@/lib/api"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { AlertCircle } from "lucide-react"
 
 function LMSDashboard() {
   const [selectedTask, setSelectedTask] = useState<any>(null)
@@ -24,6 +28,133 @@ function LMSDashboard() {
   const filterMenuRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const { user, isAuthenticated, isLoading} = useAuth();
+  
+  // Estados para oportunidades
+  const [opportunities, setOpportunities] = useState<any[]>([])
+  const [loadingOpportunities, setLoadingOpportunities] = useState(false)
+  const [opportunitiesError, setOpportunitiesError] = useState<string | null>(null)
+
+  // Estados para tarefas
+  const [tasks, setTasks] = useState<any[]>([])
+  const [loadingTasks, setLoadingTasks] = useState(false)
+  const [tasksError, setTasksError] = useState<string | null>(null)
+
+  // Carregar oportunidades recomendadas
+  useEffect(() => {
+    const fetchOpportunities = async () => {
+      if (!user || activeTab !== "oportunidades") return
+      
+      try {
+        setLoadingOpportunities(true)
+        setOpportunitiesError(null)
+        const recommendations = await getRecommendations(user.email, 10)
+        
+        // Mapear respostas da API para o formato esperado pelo frontend
+        const mappedOpportunities = recommendations.map((opp: OpportunityResponse, index: number) => ({
+          id: index + 1,
+          type: opp.type || "Estágio",
+          typeColor: getTypeColor(opp.type || "Estágio"),
+          match: opp.match || Math.floor(Math.random() * 30) + 70,
+          title: opp.title,
+          company: opp.company || "Empresa",
+          description: opp.description,
+          requirements: opp.requirements || [],
+          skills: opp.skills || [],
+          location: opp.location || "Não especificado",
+          duration: opp.duration || "Não especificado",
+          salary: opp.salary || "A combinar",
+          difficulty: opp.difficulty || "Intermediário",
+          saved: false,
+        }))
+        
+        setOpportunities(mappedOpportunities)
+      } catch (err) {
+        console.error('Erro ao carregar oportunidades:', err)
+        setOpportunitiesError('Não foi possível carregar as oportunidades. Usando dados de exemplo.')
+        // Fallback para dados mock
+        setOpportunities(mockOpportunities)
+      } finally {
+        setLoadingOpportunities(false)
+      }
+    }
+
+    fetchOpportunities()
+  }, [user, activeTab])
+
+  // Carregar tarefas de todas as disciplinas
+  useEffect(() => {
+    const fetchTasks = async () => {
+      if (!user || activeTab !== "tarefas") return
+      
+      try {
+        setLoadingTasks(true)
+        setTasksError(null)
+        
+        // 1. Buscar todas as disciplinas do usuário
+        const disciplines = await getDisciplines('student')
+        
+        // 2. Buscar tarefas de cada disciplina
+        const allTasksPromises = disciplines.map(async (discipline) => {
+          try {
+            const disciplineTasks = await getDisciplineTasks(discipline.id!)
+            return disciplineTasks.map((task: SubjectTask) => ({
+              ...task,
+              disciplineName: discipline.name,
+              disciplineId: discipline.id
+            }))
+          } catch (err) {
+            console.error(`Erro ao carregar tarefas da disciplina ${discipline.name}:`, err)
+            return []
+          }
+        })
+        
+        const allTasksArrays = await Promise.all(allTasksPromises)
+        const allTasks = allTasksArrays.flat()
+        
+        // 3. Converter para formato do frontend
+        const mappedTasks = allTasks.map((task: any, index: number) => ({
+          id: index + 1,
+          title: task.title || task.description || 'Tarefa sem título',
+          discipline: task.disciplineName || 'Disciplina',
+          topics: task.tags || [],
+          status: task.status === 'COMPLETED' ? 'Concluído' : task.status === 'IN_PROGRESS' ? 'Em Progresso' : 'A Fazer',
+          dueDate: task.dueDate ? new Date(task.dueDate).toLocaleDateString('pt-BR', { 
+            weekday: 'long', 
+            day: 'numeric', 
+            month: 'long',
+            hour: '2-digit',
+            minute: '2-digit'
+          }) : 'Sem prazo',
+          progress: task.status === 'COMPLETED' ? 100 : task.status === 'IN_PROGRESS' ? 50 : 0,
+          subtasks: [],
+          attachments: [],
+          rawTask: task
+        }))
+        
+        setTasks(mappedTasks)
+      } catch (err) {
+        console.error('Erro ao carregar tarefas:', err)
+        setTasksError('Não foi possível carregar as tarefas. Usando dados de exemplo.')
+        setTasks(mockTasks)
+      } finally {
+        setLoadingTasks(false)
+      }
+    }
+
+    fetchTasks()
+  }, [user, activeTab])
+
+  // Função auxiliar para mapear tipo para cor
+  const getTypeColor = (type: string): string => {
+    const colorMap: { [key: string]: string } = {
+      "Estágio": "bg-blue-100 text-blue-700",
+      "Emprego": "bg-green-100 text-green-700",
+      "Curso": "bg-purple-100 text-purple-700",
+      "Hackathon": "bg-pink-100 text-pink-700",
+      "Bolsa": "bg-yellow-100 text-yellow-700",
+    }
+    return colorMap[type] || "bg-gray-100 text-gray-700"
+  }
 
  
   useEffect(() => {
@@ -57,7 +188,7 @@ function LMSDashboard() {
 
 
 
-const assignments = [
+const mockTasks = [
     {
       id: 1,
       title: "Atividade de Laboratório 01",
@@ -94,6 +225,9 @@ const assignments = [
     },
   ]
 
+  // Usar tarefas reais ou mock
+  const assignments = tasks.length > 0 ? tasks : mockTasks
+
   const courses = [
     { id: 1, name: "Compiladores", progress: 78, nextClass: "Análise Léxica", color: "from-blue-500 to-blue-600" },
     {
@@ -127,13 +261,12 @@ const assignments = [
     {
       id: 6,
       name: "Projetos Empreendedores",
-      progress: 89,
-      nextClass: "Pitch Final",
       color: "from-teal-500 to-teal-600",
     },
   ]
 
-  const opportunities = [
+  // Dados mock de oportunidades como fallback
+  const mockOpportunities = [
     {
       id: 1,
       type: "Estágio",
@@ -465,10 +598,30 @@ const assignments = [
         {/* Main Content - Tarefas Tab */}
         {activeTab === "tarefas" && (
           <div className="space-y-6">
-            <Card className="border-0 shadow-sm">
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  {assignments.map((assignment) => {
+            {/* Alert de erro/mock */}
+            {tasksError && (
+              <Alert className="bg-yellow-50 border-yellow-200">
+                <AlertCircle className="h-4 w-4 text-yellow-600" />
+                <AlertDescription className="text-yellow-800">
+                  {tasksError}
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {/* Loading State */}
+            {loadingTasks ? (
+              <Card className="border-0 shadow-sm">
+                <CardContent className="p-6 space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <Skeleton key={i} className="h-32 w-full" />
+                  ))}
+                </CardContent>
+              </Card>
+            ) : (
+              <Card className="border-0 shadow-sm">
+                <CardContent className="p-6">
+                  <div className="space-y-4">
+                    {assignments.map((assignment) => {
                     const disciplineColorMap: { [key: string]: string } = {
                       "Computação Distribuída": "text-green-600",
                       "Teoria dos Grafos": "text-orange-600",
@@ -505,7 +658,7 @@ const assignments = [
                         <div className="flex-1 min-h-[20px]" />
 
                         <div className="flex flex-wrap gap-2 mb-4">
-                          {assignment.topics.map((topic) => (
+                          {assignment.topics?.map((topic: string) => (
                             <Badge
                               key={topic}
                               variant="outline"
@@ -581,6 +734,7 @@ const assignments = [
                 </div>
               </CardContent>
             </Card>
+            )}
           </div>
         )}
 
@@ -679,22 +833,27 @@ const assignments = [
                   <p className="text-sm text-slate-600">
                     Sistema inteligente que cruza seu perfil acadêmico com oportunidades disponíveis
                   </p>
+                  {opportunitiesError && (
+                    <p className="text-sm text-yellow-600 mt-2">⚠️ {opportunitiesError}</p>
+                  )}
                 </div>
                 <div className="flex items-center space-x-2">
                   <div className="flex items-center space-x-2 px-3 py-2 rounded-md border border-slate-200 bg-white hover:bg-slate-50 transition-colors">
                     <Target className="h-4 w-4 text-blue-600" />
-                    <span className="text-sm font-semibold text-slate-900">{filteredOpportunities.length}</span>
+                    <span className="text-sm font-semibold text-slate-900">
+                      {loadingOpportunities ? "..." : filteredOpportunities.length}
+                    </span>
                   </div>
 
                   <div className="flex items-center space-x-2 px-3 py-2 rounded-md border border-slate-200 bg-white hover:bg-slate-50 transition-colors">
                     <Target className="h-4 w-4 text-green-600" />
                     <span className="text-sm font-semibold text-green-600">
-                      {filteredOpportunities.length > 0
+                      {loadingOpportunities ? "..." : (filteredOpportunities.length > 0
                         ? Math.round(
                             filteredOpportunities.reduce((acc, opp) => acc + opp.match, 0) /
                               filteredOpportunities.length,
                           )
-                        : 0}
+                        : 0)}
                       %
                     </span>
                   </div>
@@ -749,10 +908,16 @@ const assignments = [
                 </div>
               </div>
 
-              <div className="space-y-4">
-                {filteredOpportunities.sort((a, b) => b.match - a.match).map((opportunity) => (
-                  <Card key={opportunity.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
-                    <CardContent className="p-6">
+              {loadingOpportunities ? (
+                <div className="flex flex-col items-center justify-center py-12">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                  <p className="text-slate-600">Carregando oportunidades recomendadas...</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredOpportunities.sort((a, b) => b.match - a.match).map((opportunity) => (
+                    <Card key={opportunity.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
+                      <CardContent className="p-6">
                       <div className="flex items-start gap-6 mb-6">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center space-x-3 mb-3">
@@ -767,7 +932,7 @@ const assignments = [
                           <div className="mb-4">
                             <p className="text-sm font-medium text-slate-700 mb-2">Por que recomendamos:</p>
                             <ul className="space-y-1">
-                              {opportunity.requirements.map((req, index) => (
+                              {opportunity.requirements?.map((req: string, index: number) => (
                                 <li key={index} className="text-sm text-slate-600 flex items-start">
                                   <span className="mr-2">•</span>
                                   <span>{req}</span>
@@ -777,7 +942,7 @@ const assignments = [
                           </div>
 
                           <div className="flex flex-wrap gap-2">
-                            {opportunity.skills.map((skill) => (
+                            {opportunity.skills?.map((skill: string) => (
                               <Badge key={skill} variant="secondary" className="bg-slate-100 text-slate-700">
                                 {skill}
                               </Badge>
@@ -856,7 +1021,8 @@ const assignments = [
                     </CardContent>
                   </Card>
                 ))}
-              </div>
+                </div>
+              )}
             </Card>
           </div>
         )}

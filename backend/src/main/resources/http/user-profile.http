@@ -1,0 +1,51 @@
+### Testes de Perfil de Usuário
+### Substitua YOUR_EMAIL e YOUR_TOKEN pelos valores reais
+
+@email = seu-email@exemplo.com
+@token = seu-token-jwt
+
+### 1. Obter perfil do usuário
+GET http://localhost:8080/api/users/{{email}}
+Authorization: Bearer {{token}}
+
+### 2. Atualizar apenas o nome
+PUT http://localhost:8080/api/users/{{email}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Lucas Camargo"
+}
+
+### 3. Atualizar perfil completo
+PUT http://localhost:8080/api/users/{{email}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Lucas Camargo",
+  "phone": "+55 11 98765-4321",
+  "bio": "Estudante de Ciência da Computação apaixonado por tecnologia e inovação. Focado em desenvolvimento full-stack e inteligência artificial.",
+  "location": "São Paulo, SP",
+  "birthDate": "2000-05-15"
+}
+
+### 4. Atualizar apenas campos específicos
+PUT http://localhost:8080/api/users/{{email}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "bio": "Nova bio atualizada!",
+  "location": "Rio de Janeiro, RJ"
+}
+
+### 5. Limpar campos (definir como vazio)
+PUT http://localhost:8080/api/users/{{email}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "phone": "",
+  "bio": ""
+}

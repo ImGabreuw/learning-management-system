@@ -31,6 +31,14 @@ public class UserEntity implements UserDetails {
 
     private String microsoftId; // ID único do Microsoft Graph
 
+    // Campos de Perfil Estendido
+    // IMPORTANTE: Estes campos são preenchidos manualmente pelo usuário
+    // e NÃO são sobrescritos no login do Azure
+    private String phone;
+    private String bio;
+    private String location;
+    private LocalDateTime birthDate;
+
     @Builder.Default
     private Set<Role> roles = Set.of(Role.ROLE_USER);
 

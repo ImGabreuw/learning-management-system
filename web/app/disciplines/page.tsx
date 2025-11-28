@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -28,9 +28,14 @@ import {
   AlertCircle,
   PlayCircle,
   MapPin,
+  Loader2,
 } from "lucide-react"
 import Navigation from "@/components/navigation"
 import ProtectedRoute from "@/components/ProtectedRoute"
+import { getDisciplines, getDisciplineTasks, Subject, SubjectTask } from "@/lib/api"
+import { useAuth } from "@/context/AuthContext"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface Assignment {
   id: string
@@ -68,6 +73,38 @@ function DisciplinesPage() {
   const [searchTerm, setSearchTerm] = useState("")
   const [activeTab, setActiveTab] = useState("all")
   const [selectedDiscipline, setSelectedDiscipline] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [backendDisciplines, setBackendDisciplines] = useState<Subject[]>([])
+  const [usingMock, setUsingMock] = useState(false)
+  const { user } = useAuth()
+
+  // Carregar disciplinas do backend
+  useEffect(() => {
+    const loadDisciplines = async () => {
+      if (!user?.email) {
+        setLoading(false)
+        setUsingMock(true)
+        return
+      }
+
+      try {
+        setLoading(true)
+        setError(null)
+        const data = await getDisciplines('student')
+        setBackendDisciplines(data)
+        setUsingMock(false)
+      } catch (err) {
+        console.error('Erro ao carregar disciplinas:', err)
+        setError('Não foi possível carregar disciplinas do servidor')
+        setUsingMock(true)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadDisciplines()
+  }, [user])
 
   const disciplines: Discipline[] = [
     {
@@ -287,8 +324,49 @@ function DisciplinesPage() {
     },
   ]
 
+  // Converter disciplinas do backend para formato do componente
+  const convertBackendToFrontend = (subject: Subject): Discipline => {
+    return {
+      id: subject.id || '',
+      name: subject.name,
+      code: subject.name.substring(0, 5).toUpperCase(), // Gerar código temporário
+      professor: subject.teacherUserId || 'Professor não definido',
+      professorAvatar: '/wise-professor.png',
+      semester: '2024.2',
+      credits: 4,
+      schedule: subject.occursIn?.[0] ? new Date(subject.occursIn[0]).toLocaleString('pt-BR') : 'Horário não definido',
+      room: 'A definir',
+      description: subject.description || 'Sem descrição',
+      progress: 0,
+      grade: 0,
+      status: 'active',
+      color: 'blue',
+      materials: subject.subjectDocumentsIds?.length || 0,
+      videos: 0,
+      students: subject.studentsUserId?.length || 0,
+      rating: 0,
+      assignments: []
+    }
+  }
+
+  // Mesclar dados do backend com mock (se necessário)
+  const allDisciplines = useMemo(() => {
+    if (usingMock || backendDisciplines.length === 0) {
+      return disciplines // Usar apenas mock
+    }
+    
+    // Converter disciplinas do backend
+    const converted = backendDisciplines.map(convertBackendToFrontend)
+    
+    // Se quiser mesclar com mock para ter mais dados de exemplo:
+    // return [...converted, ...disciplines]
+    
+    // Ou usar apenas dados reais:
+    return converted
+  }, [backendDisciplines, usingMock])
+
   const filteredDisciplines = useMemo(() => {
-    let filtered = disciplines
+    let filtered = allDisciplines
 
     if (searchTerm) {
       filtered = filtered.filter(
@@ -336,55 +414,77 @@ function DisciplinesPage() {
     }
   }
 
-  const selectedDisciplineData = disciplines.find((d) => d.id === selectedDiscipline)
+  const selectedDisciplineData = allDisciplines.find((d) => d.id === selectedDiscipline)
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
       {/* Navigation Component */}
       <Navigation />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
         {/* Page Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Minhas Disciplinas</h1>
           <p className="text-gray-600">Gerencie suas disciplinas, acompanhe o progresso e acesse materiais</p>
         </div>
 
-        {/* Filters */}
-        <div className="flex justify-end mb-6">
-          <Button variant="outline" className="flex items-center space-x-2 bg-transparent">
-            <Filter className="h-4 w-4" />
-            <span>Filtros</span>
-          </Button>
-        </div>
+        {/* Alert de Mock/Erro */}
+        {usingMock && (
+          <Alert className="mb-6 bg-yellow-50 border-yellow-200">
+            <AlertCircle className="h-4 w-4 text-yellow-600" />
+            <AlertDescription className="text-yellow-800">
+              {error || 'Mostrando dados de exemplo. Faça login e popule o banco para ver dados reais.'}
+            </AlertDescription>
+          </Alert>
+        )}
 
-        {/* Search and Filters */}
-        <div className="mb-6 space-y-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Buscar disciplinas, códigos ou professores..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-12 bg-white/70 backdrop-blur-sm border-0 shadow-lg"
-            />
+        {/* Loading State */}
+        {loading ? (
+          <div className="space-y-4">
+            <Skeleton className="h-12 w-full" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <Skeleton key={i} className="h-64 w-full" />
+              ))}
+            </div>
           </div>
+        ) : (
+          <>
+            {/* Filters */}
+            <div className="flex justify-end mb-6">
+              <Button variant="outline" className="flex items-center space-x-2 bg-transparent">
+                <Filter className="h-4 w-4" />
+                <span>Filtros</span>
+              </Button>
+            </div>
 
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="grid w-full grid-cols-4 lg:w-fit lg:grid-cols-4">
-              <TabsTrigger value="all">Todas ({disciplines.length})</TabsTrigger>
-              <TabsTrigger value="active">
-                Ativas ({disciplines.filter((d) => d.status === "active").length})
-              </TabsTrigger>
-              <TabsTrigger value="completed">
-                Concluídas ({disciplines.filter((d) => d.status === "completed").length})
-              </TabsTrigger>
-              <TabsTrigger value="upcoming">
-                Próximas ({disciplines.filter((d) => d.status === "upcoming").length})
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
+            {/* Search and Filters */}
+            <div className="mb-6 space-y-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                <Input
+                  placeholder="Buscar disciplinas, códigos ou professores..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 h-12 bg-white/70 backdrop-blur-sm border-0 shadow-lg"
+                />
+              </div>
+
+              <Tabs value={activeTab} onValueChange={setActiveTab}>
+                <TabsList className="grid w-full grid-cols-4 lg:w-fit lg:grid-cols-4">
+                  <TabsTrigger value="all">Todas ({allDisciplines.length})</TabsTrigger>
+                  <TabsTrigger value="active">
+                    Ativas ({allDisciplines.filter((d) => d.status === "active").length})
+                  </TabsTrigger>
+                  <TabsTrigger value="completed">
+                    Concluídas ({allDisciplines.filter((d) => d.status === "completed").length})
+                  </TabsTrigger>
+                  <TabsTrigger value="upcoming">
+                    Próximas ({allDisciplines.filter((d) => d.status === "upcoming").length})
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -791,6 +891,8 @@ function DisciplinesPage() {
               </CardContent>
             </Card>
           </div>
+        )}
+          </>
         )}
       </div>
     </div>

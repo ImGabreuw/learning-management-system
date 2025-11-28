@@ -1,0 +1,241 @@
+### Seed Data - Oportunidades e Perfis de Usuário
+### Use este arquivo para popular o banco de dados com dados de teste
+
+### 1. Criar Perfil de Usuário (Seus interesses)
+POST http://localhost:8080/api/opportunities/user-profile
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+{
+  "userId": "seu-email@mackenzista.com.br",
+  "interests": [
+    "Desenvolvimento Web",
+    "Inteligência Artificial",
+    "Data Science",
+    "Mobile",
+    "DevOps",
+    "Cloud Computing"
+  ],
+  "technicalSkills": [
+    "React",
+    "Node.js",
+    "Python",
+    "TypeScript",
+    "PostgreSQL",
+    "Docker",
+    "Java",
+    "Spring Boot"
+  ],
+  "careerGoals": [
+    "Full-Stack Developer",
+    "Data Scientist",
+    "Tech Lead",
+    "Software Architect"
+  ]
+}
+
+### 2. Criar Oportunidades em Lote
+POST http://localhost:8080/api/opportunities/batch
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+[
+  {
+    "title": "Estágio em Desenvolvimento Full-Stack",
+    "description": "Oportunidade para trabalhar com React, Node.js e PostgreSQL em projetos inovadores de uma startup em crescimento.",
+    "company": "TechCorp Startup",
+    "location": "São Paulo, SP",
+    "duration": "6 meses",
+    "salary": "R$ 2.000 - R$ 3.000",
+    "difficulty": "Intermediário",
+    "type": "Estágio",
+    "skills": ["React", "Node.js", "TypeScript", "PostgreSQL", "Git"],
+    "requirements": [
+      "Conhecimento em JavaScript e React",
+      "Familiaridade com Node.js",
+      "Disponibilidade 20h/semana"
+    ]
+  },
+  {
+    "title": "Programa de Trainee - Data Science",
+    "description": "Programa completo de formação em Data Science com mentoria especializada e projetos reais.",
+    "company": "DataLab Analytics",
+    "location": "São Paulo, SP",
+    "duration": "12 meses",
+    "salary": "R$ 4.000 - R$ 6.000",
+    "difficulty": "Intermediário",
+    "type": "Emprego",
+    "skills": ["Python", "Machine Learning", "SQL", "Pandas", "Scikit-learn"],
+    "requirements": [
+      "Conhecimento em Python e SQL",
+      "Interesse em Data Science",
+      "Formação em Ciência da Computação ou áreas afins"
+    ]
+  },
+  {
+    "title": "Curso Avançado de DevOps",
+    "description": "Curso intensivo de DevOps com certificação internacional. Aprenda Docker, Kubernetes, CI/CD e muito mais.",
+    "company": "CloudAcademy",
+    "location": "Online",
+    "duration": "3 meses",
+    "salary": "Gratuito",
+    "difficulty": "Avançado",
+    "type": "Curso",
+    "skills": ["Docker", "Kubernetes", "CI/CD", "AWS", "Jenkins", "Terraform"],
+    "requirements": [
+      "Conhecimento básico em Linux",
+      "Familiaridade com Git",
+      "Inglês intermediário"
+    ]
+  },
+  {
+    "title": "Desenvolvedor Mobile React Native",
+    "description": "Desenvolva aplicativos mobile multiplataforma para milhões de usuários.",
+    "company": "MobileFirst Tech",
+    "location": "Remoto",
+    "duration": "Indeterminado",
+    "salary": "R$ 6.000 - R$ 8.000",
+    "difficulty": "Intermediário",
+    "type": "Emprego",
+    "skills": ["React Native", "JavaScript", "Redux", "iOS", "Android"],
+    "requirements": [
+      "Experiência com React ou React Native",
+      "Conhecimento em desenvolvimento mobile",
+      "Portfolio com apps publicados (diferencial)"
+    ]
+  },
+  {
+    "title": "Hackathon de IA - Prêmio R$ 10.000",
+    "description": "Maratona de 48h para desenvolver soluções inovadoras usando IA. Networking e prêmios!",
+    "company": "AI Innovation Lab",
+    "location": "Híbrido - São Paulo",
+    "duration": "48 horas",
+    "salary": "R$ 10.000 (prêmio)",
+    "difficulty": "Avançado",
+    "type": "Hackathon",
+    "skills": ["Python", "Deep Learning", "TensorFlow", "Computer Vision", "NLP"],
+    "requirements": [
+      "Conhecimento em Python e IA",
+      "Disponibilidade no fim de semana",
+      "Trabalho em equipe"
+    ]
+  },
+  {
+    "title": "Bolsa de Estudos - Mestrado em IA",
+    "description": "Bolsa integral para mestrado em Inteligência Artificial em universidade de ponta.",
+    "company": "Universidade Tech",
+    "location": "São Paulo, SP",
+    "duration": "24 meses",
+    "salary": "R$ 3.000/mês",
+    "difficulty": "Avançado",
+    "type": "Bolsa",
+    "skills": ["Machine Learning", "Deep Learning", "Pesquisa", "Python", "Matemática"],
+    "requirements": [
+      "Graduação completa em área relacionada",
+      "CRA mínimo de 8.0",
+      "Projeto de pesquisa em IA"
+    ]
+  },
+  {
+    "title": "Estágio em Cloud Computing - AWS",
+    "description": "Trabalhe com infraestrutura cloud na AWS, aprenda sobre escalabilidade e sistemas distribuídos.",
+    "company": "CloudSolutions Inc",
+    "location": "Remoto",
+    "duration": "12 meses",
+    "salary": "R$ 2.500 - R$ 3.500",
+    "difficulty": "Intermediário",
+    "type": "Estágio",
+    "skills": ["AWS", "Cloud Computing", "Linux", "Python", "Docker"],
+    "requirements": [
+      "Conhecimento básico em cloud",
+      "Linux intermediário",
+      "Inglês técnico"
+    ]
+  },
+  {
+    "title": "Desenvolvedor Backend Java/Spring",
+    "description": "Construa APIs robustas e escaláveis usando Java e Spring Boot em uma fintech líder.",
+    "company": "FinTech Brasil",
+    "location": "São Paulo, SP",
+    "duration": "Indeterminado",
+    "salary": "R$ 8.000 - R$ 12.000",
+    "difficulty": "Avançado",
+    "type": "Emprego",
+    "skills": ["Java", "Spring Boot", "Microservices", "PostgreSQL", "Kafka"],
+    "requirements": [
+      "3+ anos de experiência com Java",
+      "Conhecimento em Spring Boot",
+      "Experiência com microsserviços"
+    ]
+  },
+  {
+    "title": "Workshop Gratuito - Introdução a Machine Learning",
+    "description": "Workshop hands-on de 4 horas sobre fundamentos de ML com Python e Scikit-learn.",
+    "company": "Data Science Community",
+    "location": "Online",
+    "duration": "4 horas",
+    "salary": "Gratuito",
+    "difficulty": "Iniciante",
+    "type": "Curso",
+    "skills": ["Python", "Machine Learning", "Scikit-learn", "Pandas"],
+    "requirements": [
+      "Python básico",
+      "Interesse em Data Science"
+    ]
+  },
+  {
+    "title": "Competição de Programação - Code Challenge",
+    "description": "Competição de algoritmos e estruturas de dados. Teste suas habilidades!",
+    "company": "CodeMasters",
+    "location": "Online",
+    "duration": "3 horas",
+    "salary": "R$ 5.000 (prêmio)",
+    "difficulty": "Intermediário",
+    "type": "Hackathon",
+    "skills": ["Algoritmos", "Estruturas de Dados", "C++", "Python", "Java"],
+    "requirements": [
+      "Conhecimento em algoritmos",
+      "Proficiência em ao menos uma linguagem"
+    ]
+  }
+]
+
+### 3. Criar Disciplinas em Lote
+POST http://localhost:8080/api/subjects/batch
+Content-Type: application/json
+Authorization: Bearer {{accessToken}}
+
+[
+  {
+    "name": "Compiladores",
+    "description": "Estudo dos princípios e técnicas de construção de compiladores, incluindo análise léxica, sintática e semântica.",
+    "teacherUserId": "professor.maria@mackenzie.br",
+    "studentsUserId": ["seu-email@mackenzista.com.br"],
+    "occursIn": ["2024-11-28T19:00:00", "2024-12-02T19:00:00"],
+    "subjectDocumentsIds": []
+  },
+  {
+    "name": "Computação Distribuída",
+    "description": "Conceitos fundamentais de sistemas distribuídos, comunicação entre processos, sincronização e tolerância a falhas.",
+    "teacherUserId": "professor.joao@mackenzie.br",
+    "studentsUserId": ["seu-email@mackenzista.com.br"],
+    "occursIn": ["2024-11-26T21:00:00", "2024-11-28T21:00:00"],
+    "subjectDocumentsIds": []
+  },
+  {
+    "name": "Inteligência Artificial",
+    "description": "Fundamentos de IA, algoritmos de busca, aprendizado de máquina e redes neurais.",
+    "teacherUserId": "professor.ana@mackenzie.br",
+    "studentsUserId": ["seu-email@mackenzista.com.br"],
+    "occorsIn": ["2024-11-29T19:00:00"],
+    "subjectDocumentsIds": []
+  }
+]
+
+### 4. Verificar Oportunidades Criadas
+GET http://localhost:8080/api/opportunities/recommendations/seu-email@mackenzista.com.br?topN=10
+Authorization: Bearer {{accessToken}}
+
+### 5. Verificar Disciplinas Criadas
+GET http://localhost:8080/api/subjects
+Authorization: Bearer {{accessToken}}

@@ -12,15 +12,45 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { User, LogOut, Bell, GraduationCap } from "lucide-react"
-import { useAuth } from "@/context/AuthContext" // 1. Importar o useAuth
+import { useAuth } from "@/context/AuthContext"
+import { getUnreadNotifications, markNotificationAsRead, markAllNotificationsAsRead, Notification } from "@/lib/api"
+import { Button } from "@/components/ui/button"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 export default function Navigation() {
   const [showNotifications, setShowNotifications] = useState(false)
   const [isVisible, setIsVisible] = useState(true)
   const [lastScrollY, setLastScrollY] = useState(0)
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [loadingNotifications, setLoadingNotifications] = useState(false)
 
   // 2. Obter o usuário e a função de logout do contexto
   const { user, isAuthenticated, logout } = useAuth();
+
+  // Carregar notificações não lidas
+  useEffect(() => {
+    const loadNotifications = async () => {
+      if (!isAuthenticated) return
+      
+      try {
+        setLoadingNotifications(true)
+        const unread = await getUnreadNotifications()
+        setNotifications(unread)
+      } catch (err) {
+        console.error('Erro ao carregar notificações:', err)
+        // Fallback para mock se API falhar
+        setNotifications(mockNotifications)
+      } finally {
+        setLoadingNotifications(false)
+      }
+    }
+
+    loadNotifications()
+    
+    // Recarregar a cada 30 segundos
+    const interval = setInterval(loadNotifications, 30000)
+    return () => clearInterval(interval)
+  }, [isAuthenticated])
 
   useEffect(() => {
     const controlNavbar = () => {
@@ -41,23 +71,60 @@ export default function Navigation() {
     return () => window.removeEventListener("scroll", controlNavbar)
   }, [lastScrollY])
 
-  const notifications = [
-    // ... (dados mockados de notificação permanecem por enquanto)
+  // Dados mock de notificação como fallback
+  const mockNotifications: Notification[] = [
     {
-      id: 1,
+      id: "1",
+      userId: "user",
       title: "Nova atividade disponível",
       message: "Atividade de Laboratório 02 foi publicada em Computação Distribuída",
-      time: "Há 2 horas",
+      type: "TASK_ASSIGNED",
       read: false,
+      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
     },
-    // ...
+    {
+      id: "2",
+      userId: "user",
+      title: "Prazo se aproximando",
+      message: "A entrega da Lista de Exercícios 01 vence em 2 dias",
+      type: "TASK_DUE_SOON",
+      read: false,
+      createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+    },
   ]
 
+  const handleMarkAsRead = async (notificationId: string) => {
+    try {
+      await markNotificationAsRead(notificationId)
+      setNotifications(prev => prev.map(n => 
+        n.id === notificationId ? { ...n, read: true } : n
+      ))
+    } catch (err) {
+      console.error('Erro ao marcar como lida:', err)
+    }
+  }
+
+  const handleMarkAllAsRead = async () => {
+    try {
+      await markAllNotificationsAsRead()
+      setNotifications(prev => prev.map(n => ({ ...n, read: true })))
+    } catch (err) {
+      console.error('Erro ao marcar todas como lidas:', err)
+    }
+  }
+
+  const getTimeAgo = (dateString: string): string => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const seconds = Math.floor((now.getTime() - date.getTime()) / 1000)
+    
+    if (seconds < 60) return 'Agora'
+    if (seconds < 3600) return `Há ${Math.floor(seconds / 60)} min`
+    if (seconds < 86400) return `Há ${Math.floor(seconds / 3600)}h`
+    return `Há ${Math.floor(seconds / 86400)} dias`
+  }
+
   // 3. Criar a função de handleLogout
-  // Ela chama a função de logout do AuthContext, que já faz tudo:
-  // - Chama a API /api/auth/logout
-  // - Limpa o localStorage
-  // - Redireciona para /login
   const handleLogout = () => {
     logout();
   }
@@ -79,6 +146,30 @@ export default function Navigation() {
             </div>
           </Link>
 
+          {/* Links de navegação */}
+          {isAuthenticated && (
+            <div className="hidden md:flex items-center space-x-6">
+              <Link 
+                href="/" 
+                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Dashboard
+              </Link>
+              <Link 
+                href="/disciplines" 
+                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Disciplinas
+              </Link>
+              <Link 
+                href="/files" 
+                className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
+              >
+                Arquivos
+              </Link>
+            </div>
+          )}
+
           {/* 4. Só renderiza os botões da direita se o usuário estiver autenticado */}
           {isAuthenticated && user && (
             <div className="flex items-center space-x-4">
@@ -90,16 +181,54 @@ export default function Navigation() {
                   )}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-80 z-[100]" align="end">
-                  {/* ... (conteúdo do dropdown de notificações) ... */}
-                  <DropdownMenuLabel>Notificações</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <div className="max-h-96 overflow-y-auto">
-                    {notifications.map((notification) => (
-                      <DropdownMenuItem key={notification.id} className="flex flex-col items-start p-3 cursor-pointer">
-                        {/* ... */}
-                      </DropdownMenuItem>
-                    ))}
+                  <div className="flex items-center justify-between p-3 border-b">
+                    <DropdownMenuLabel className="p-0">Notificações</DropdownMenuLabel>
+                    {notifications.some(n => !n.read) && (
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-7 text-xs"
+                        onClick={handleMarkAllAsRead}
+                      >
+                        Marcar todas como lidas
+                      </Button>
+                    )}
                   </div>
+                  <DropdownMenuSeparator className="my-0" />
+                  <ScrollArea className="h-[400px]">
+                    {loadingNotifications ? (
+                      <div className="p-8 text-center text-sm text-muted-foreground">
+                        Carregando...
+                      </div>
+                    ) : notifications.length === 0 ? (
+                      <div className="p-8 text-center text-sm text-muted-foreground">
+                        Nenhuma notificação
+                      </div>
+                    ) : (
+                      notifications.map((notification) => (
+                        <DropdownMenuItem 
+                          key={notification.id} 
+                          className={`flex flex-col items-start p-3 cursor-pointer ${
+                            !notification.read ? 'bg-blue-50' : ''
+                          }`}
+                          onClick={() => handleMarkAsRead(notification.id)}
+                        >
+                          <div className="flex items-start justify-between w-full mb-1">
+                            <h4 className="font-medium text-sm">{notification.title}</h4>
+                            <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                              {getTimeAgo(notification.createdAt)}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {notification.message}
+                          </p>
+                          {!notification.read && (
+                            <div className="w-2 h-2 bg-blue-600 rounded-full mt-2" />
+                          )}
+                        </DropdownMenuItem>
+                      ))
+                    )}
+                  </ScrollArea>
                 </DropdownMenuContent>
               </DropdownMenu>
 

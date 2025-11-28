@@ -41,15 +41,24 @@ public class UserService implements UserDetailsService {
 
     /**
      * Atualiza dados de um usuário existente
+     * IMPORTANTE: Apenas atualiza campos vazios para não sobrescrever dados personalizados
      */
     private UserEntity updateExistingUser(UserEntity user, String name, String microsoftId) {
-        user.setName(name);
+        // Apenas atualiza o nome se estiver vazio (primeiro login)
+        if (user.getName() == null || user.getName().isEmpty()) {
+            user.setName(name);
+            log.info("Nome inicial definido do Azure: {}", name);
+        }
+        
+        // MicrosoftId sempre atualiza (é identificador do Azure)
         user.setMicrosoftId(microsoftId);
+        
+        // Sempre atualiza timestamp de último login
         user.setLastLoginAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         
         UserEntity saved = userRepository.save(user);
-        log.info("Usuário atualizado: {}", saved.getEmail());
+        log.info("Usuário atualizado no login: {}", saved.getEmail());
         return saved;
     }
 
@@ -118,5 +127,15 @@ public class UserService implements UserDetailsService {
             userRepository.save(user);
             log.debug("Último login atualizado para: {}", email);
         });
+    }
+
+    /**
+     * Salva ou atualiza um usuário
+     */
+    public UserEntity save(UserEntity user) {
+        user.setUpdatedAt(LocalDateTime.now());
+        UserEntity saved = userRepository.save(user);
+        log.info("Usuário salvo/atualizado: {}", saved.getEmail());
+        return saved;
     }
 }
