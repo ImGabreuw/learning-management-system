@@ -32,7 +32,7 @@ E não só isso, ainda oferecemos um diferencial: Um sistema integrado de recome
 
 Nossa proposta de valor é simples: "Somos a plataforma de aprendizagem que combina um design radicalmente simples com ferramentas poderosas que transformam a obrigação de usar em vontade de aprender."
 
-Nós fazemos isso por meio de três pilares:
+Nós fazemos isso por meio de dois pilares:
 
 Hub da Vida Acadêmica: Centralizamos não apenas as aulas, mas também estágios, eventos e grupos de pesquisa em um feed único e personalizado.
 
