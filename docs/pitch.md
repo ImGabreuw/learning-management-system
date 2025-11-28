@@ -10,7 +10,7 @@ Abaixo estão os dois componentes solicitados no arquivo "Etapa 6 - Prompt.pdf".
 Olá a todos. Vocês já tiveram problemas em encontrar materiais e oportunidades e precisam de ferramentas externas para organizar seus estudos? Bom, a solução é a Metis.
 
 (0:15 - 0:50) Problema e Oportunidade<br>
-Hoje a estimativa é de que 99% das universidades já utilizam Learning Management Systems, mas apenas 56% afirmam utilizá-los na maioria ou em todos os cursos.
+Hoje a estimativa é de que 99% das universidades já utilizam Learning Management Systems, mas apenas 56% dos alunos afirmam utilizá-los na maioria ou em todos os cursos.
 
 Isso não é um inconveniente. É resultado de plataformas com graves problemas de usabilidade tanto para aqueles que precisam consultar conteúdos como para os que precisam publicá-los.
 
@@ -32,13 +32,11 @@ E não só isso, ainda oferecemos um diferencial: Um sistema integrado de recome
 
 Nossa proposta de valor é simples: "Somos a plataforma de aprendizagem que combina um design radicalmente simples com ferramentas poderosas que transformam a obrigação de usar em vontade de aprender."
 
-Nós fazemos isso através de três pilares:
+Nós fazemos isso por meio de três pilares:
 
 Hub da Vida Acadêmica: Centralizamos não apenas as aulas, mas também estágios, eventos e grupos de pesquisa em um feed único e personalizado.
 
 Foco na Experiência de Usuário: Uma interface limpa, rápida e intuitiva, que elimina a frustração.
-
-Comunidade e Bem-Estar: Ferramentas que promovem um ambiente seguro e positivo, com moderação e canais de denúncia.
 
 Aqui podemos ver o protótipo, com uma interface simples, intuitiva e padronizada, com a integração do sistema de oportunidades que faz sugestões alinhadas com seu perfil, com um bônus de justificar tais escolhas.
 
