@@ -7,27 +7,25 @@ Abaixo estão os dois componentes solicitados no arquivo "Etapa 6 - Prompt.pdf".
 (Total de palavras: ~690. Tempo de fala estimado: 4min 45s - 5min)
 
 (0:00 - 0:15) Abertura e Conexão
-Olá a todos. Esta é a Juliana. Ela tem 21 anos e é estudante de engenharia. E como quase todos os 9.9 milhões de estudantes universitários no Brasil, ela começa o dia abrindo uma plataforma de estudos que é lenta, confusa e desorganizada.
+Olá a todos. Vocês já tiveram problemas em encontrar materiais e oportunidades e precisam de ferramentas externas para organizar seus estudos? Bom, a solução é a Metis.
 
 (0:15 - 0:50) Problema e Oportunidade
-A Juliana perde horas toda semana tentando encontrar materiais de aula, perde prazos porque as informações estão espalhadas e, o pior, perde oportunidades de estágio e pesquisa porque elas são divulgadas em murais aleatórios.
+Hoje a estimativa é de que 99% das universidades já utilizam Learning Management Systems, mas apenas 56% afirmam utilizá-los na maioria ou em todos os cursos.
 
-Isso não é um inconveniente. É uma frustração diária que gera ansiedade e prejudica o bem-estar digital de milhões de alunos.
+Isso não é um inconveniente. É resultado de plataformas com graves problemas de usabilidade tanto para aqueles que precisam consultar conteúdos como para os que precisam publicá-los.
 
-O problema é que as plataformas atuais, como Moodle ou Blackboard, foram desenhadas para gerenciar conteúdo, não para engajar pessoas. Elas são conhecidas no mercado por "graves problemas de usabilidade".
+O problema é que as plataformas atuais, como Moodle ou Canvas, foram desenhadas para gerenciar conteúdo, não para engajar pessoas. 
 
-E isso acontece em um mercado que não para de crescer. O setor de LMS educacional no Brasil, que movimentou 136 milhões de dólares em 2021, tem projeção de atingir 625 milhões de dólares até 2029.
+E isso acontece em um mercado que não para de crescer. O setor de LMS educacional movimenta hoje no SAM 150 milhões de reais no Brasil, dentro de um mercado total de softwares em educação de 1.2 bilhões de reais.
 
 A oportunidade é clara: existe uma lacuna gigantesca para uma plataforma que, finalmente, coloque o aluno no centro da experiência.
 
 (0:50 - 1:40) Cliente, Mercado e Concorrência
 Nosso público-alvo são dois: a Juliana, a estudante que precisa de um "hub" que centralize tudo—aulas, notas, eventos e carreira. E o Dr. Marcos, o professor de 45 anos que acha o processo de organizar conteúdo repetitivo e demorado.
 
-O mercado, como vimos, é vasto. Nosso SAM, o mercado de LMS para ensino superior no Brasil, é estimado em mais de 150 milhões de reais.
+O mercado, como vimos, é vasto. E sim, existem gigantes nesse espaço.  Mas falham no essencial: a usabilidade.
 
-E sim, existem gigantes nesse espaço. Mas eles têm um problema fundamental: O Moodle é gratuito, mas datado e complexo de manter. O Blackboard é robusto, mas caro e igualmente frustrante de usar.
-
-Nossos concorrentes competem em funcionalidades, mas falham no essencial: a usabilidade.
+E não só isso, ainda oferecemos um diferencial: Um sistema integrado de recomendação de oportunidades.
 
 (1:40 - 2:50) Solução e Validação
 É por isso que criamos a Metis.
