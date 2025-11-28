@@ -2,8 +2,7 @@ spring:
   data:
     mongodb:
       uri: ${MONGODB_URI}
-      # Exemplo: mongodb+srv://user:password@cluster.mongodb.net/metis?retryWrites=true&w=majority
-      # OU: mongodb://user:password@host:27017/metis?authSource=admin
+      # Para Azure Cosmos DB, AWS DocumentDB ou MongoDB Atlas
     redis:
       host: ${REDIS_HOST}
       port: ${REDIS_PORT:6379}
