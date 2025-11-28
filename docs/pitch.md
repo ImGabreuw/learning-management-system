@@ -4,7 +4,7 @@ Abaixo estão os dois componentes solicitados no arquivo "Etapa 6 - Prompt.pdf".
 
 1. ROTEIRO NARRADO
 
-(Total de palavras: ~677, sem contar títulos e marcações de tempo. Tempo de fala estimado: 4min 45s - 5min)
+(Total de palavras: 677, sem contar títulos e marcações de tempo. Tempo de fala estimado: 4min 45s - 5min)
 
 (0:00 - 0:15) Abertura e Conexão
 Olá a todos. Vocês já tiveram problemas em encontrar materiais e oportunidades e precisam de ferramentas externas para organizar seus estudos? Bom, a solução é a Metis.
