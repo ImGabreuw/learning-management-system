@@ -359,12 +359,12 @@ const assignments = [
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-        <div className="bg-yellow-100 p-4 rounded-lg border border-yellow-300 mb-6 text-yellow-900">
+        {/* <div className="bg-yellow-100 p-4 rounded-lg border border-yellow-300 mb-6 text-yellow-900">
           <h2 className="font-bold text-lg">DEBUG: ESTADO DA AUTENTICAÇÃO</h2>
           <p>Autenticado: <strong>{isAuthenticated ? 'SIM' : 'NÃO'}</strong></p>
           <p>Usuário: <strong>{user ? user.name : 'Ninguém logado'}</strong></p>
           <p>Email: <strong>{user ? user.email : 'N/A'}</strong></p>
-        </div>
+        </div> */}
       
       {/* Welcome Section (modificada) */}
         <div className="mb-8">
@@ -750,7 +750,7 @@ const assignments = [
               </div>
 
               <div className="space-y-4">
-                {filteredOpportunities.map((opportunity) => (
+                {filteredOpportunities.sort((a, b) => b.match - a.match).map((opportunity) => (
                   <Card key={opportunity.id} className="border-0 shadow-md hover:shadow-lg transition-shadow">
                     <CardContent className="p-6">
                       <div className="flex items-start gap-6 mb-6">

@@ -6,11 +6,11 @@ import { GeistMono } from "geist/font/mono"
 import { Analytics } from "@vercel/analytics/next"
 import { Suspense } from "react"
 import "./globals.css"
-import { AuthProvider } from "@/context/AuthContext" 
+import { AuthProvider } from "@/context/AuthContext"
+
 export const metadata: Metadata = {
-  title: "Mackenzie LMS",
-  description: "Sistema de Gestão de Aprendizagem da Universidade Presbiteriana Mackenzie",
-  generator: "v0.app",
+  title: "Metis",
+  description: "Plataforma de aprendizado online",
 }
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable}`}>
-        <AuthProvider> 
+        <AuthProvider>
           <Suspense fallback={null}>{children}</Suspense>
         </AuthProvider>
         <Analytics />
