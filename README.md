@@ -14,79 +14,9 @@ Sistema de gerenciamento de aprendizado desenvolvido para a Universidade Presbit
 
 ---
 
-## 🚀 Quick Start
+## 📘 Documentação Técnica
 
-### Pré-requisitos
-
-- Docker & Docker Compose
-- Java 21+ (opcional, para desenvolvimento local)
-- Node.js 18+ e pnpm (opcional, para desenvolvimento local)
-
-### Iniciar o Sistema
-
-```bash
-# 1. Configurar variáveis de ambiente
-cp .env.example .env
-# Edite .env com suas credenciais do Azure AD
-
-# 2. Opção A: Apenas infraestrutura (Recomendado para desenvolvimento)
-docker-compose up -d mongo redis
-
-# Backend (em outro terminal)
-cd backend
-./mvnw spring-boot:run
-
-# Frontend (em outro terminal)
-cd web
-pnpm install
-pnpm dev
-
-# 2. Opção B: Todos os serviços com Docker
-docker-compose up -d
-```
-
-### Acessar a Aplicação
-
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8080
-- **Swagger UI**: http://localhost:8080/swagger-ui.html
-- **Mongo Express** (debug): http://localhost:8081
-
-## 🔐 Sistema de Autenticação
-
-**Status**: ✅ Implementado e funcional
-
-Sistema completo de autenticação via **Microsoft OAuth2 + JWT**.
-
-### Funcionalidades
-
-- ✅ **AUTH-RF1**: Login com Microsoft (OAuth2) com validação de domínios
-- ✅ **AUTH-RF2**: Logout com invalidação de token (blacklist)
-- ✅ **AUTH-RF3**: Controle de acesso baseado em roles
-- ✅ Refresh token automático
-- ✅ Proteção de rotas no frontend e backend
-- ✅ Gerenciamento automático de usuários
-
-### Domínios Permitidos
-
-- @mackenzie.br
-- @mackenzista.com.br
-- @outlook.com
-
-### Roles Automáticas
-
-- `ROLE_USER` - Todos os usuários autenticados
-- `ROLE_STUDENT` - Emails @mackenzista.com.br
-- `ROLE_ADMIN` - Configurável via application.yaml
-- `ROLE_PROFESSOR` - Atribuição manual
-
-### Documentação de Autenticação
-
-- 📖 **[SETUP_AUTENTICACAO.md](SETUP_AUTENTICACAO.md)** - Guia completo de configuração
-- 📖 **[DOCKER.md](DOCKER.md)** - Guia Docker com troubleshooting
-- 📖 **[EXEMPLOS_USO.md](EXEMPLOS_USO.md)** - Exemplos práticos de código
-- 📖 **[backend/AUTHENTICATION.md](backend/AUTHENTICATION.md)** - Documentação do backend
-- 📖 **[web/README_AUTH.md](web/README_AUTH.md)** - Documentação do frontend
+Para instruções de instalação, configuração, autenticação e troubleshooting, consulte o **[Guia Técnico (TECHNICAL_GUIDE.md)](TECHNICAL_GUIDE.md)**.
 
 ---
 
@@ -524,18 +454,8 @@ Para implementar o projeto, as seguintes tecnologias foram utilizadas:
 - **Backend:** Java 21 com Spring: O Java pode ser executado em qualquer arquitetura de máquina caso essa possua uma JVM instalada, permitindo executar a aplicação em ambientes diversos. O Java de forma geral, mas principalmente em sua versão 21 e com o framework Spring são muito utilizadas no mercado e já de conhecimento dos integrantes, o que facilitou sua escolha.
 - **Banco de Dados:** MongoDB e MongoDB GridFS são banco de dados não relacionais que garantem maior escalabilidade horizontal e performance em relação aos banco de dados relacionais, além de maior flexibilidade de armazenamento dos dados, dado que não precisam ter uma estrutura fixa. Foram aplicados no projeto, pois várias informações poderiam ser associadas às entidades e removidas com maior facilidade conforme o projeto ia se desenvolvendo. Maior performance acaba sendo necessário no motor recomendação, uma vez que o algoritmo não pode demorar para exibir as oportunidades ao aluno, seguindo os requsitos não funcionais especificados.
 - **Cloud:** Para hospedar e disponibilizar a aplicação ao público, pretendemos utilizar a Azure, por ser gratuita e não conseguirmos acesso à AWS, como inicialmente especificado. Para conteinerizar a aplicação e facilitar a sua gestão nesse ambiente de nuvem e no de desenvolvimento, foi utilizado o Docker.
-- **CI/CD:** Por fim, pipelines para seguir com os princípios de CI/CD foram implementadas pelo _GitHub Actions_. Para subir as alterações na master, devem ser criadas pull requests e, nesse processo, as pipelines executam testes tanto no _back-end_ como no _front-end_, de forma a manter uma integração contínua e um _deploy_ constante e seguro.
 
-  #### Etapa 3: Início da implementação e revisão da documentação
 
-  A primeira tecnologia aplicada foi a criação de arquivos '_docker compose_', os quais permitem gerenciar as imagens usadas no projeto (java, node e mongo DB), além de conter as configurações e credenciais para subir a aplicação na _Azure_. <br>
-  Em seguida, foram criadas as pipelines. <br>
-  Após, as implementações foram iniciadas no _back-end_ e, em paralelo, também iniciou-se a montagem das telas. Conforme a implementação ia avançando, a documentação era revisada e, em especial, os diagramas, buscando adequá-los às melhorias e ajustes feitos durante o desenvolvimento.<br>
-
-  #### Etapa 4: O trabalho até aqui
-
-  Todos os módulos já possuem uma implementação base, com entidades, serviços e testes de integração. Além disso, os protótipos de telas já foram montados e disponibilizados para visualização. <br>
-  Sendo assim, falta realizar a integração de ambos para que o sistema passe a ser funcional. Além disso, precisa-se disponibilizar a aplicação completa na Azure.<br>
 
 ## Capítulo 8: Resultados (Parcial)
 
@@ -588,7 +508,7 @@ Este recurso implementa a **Busca Difusa**, abordando a dor de "perder tempo pro
 | **Filtros Contextuais**       | **`busca avançada.png`** | Permite filtrar por **Cursos** e **Tipo** de material (Documento, Slide, Vídeo), refinando a busca de forma intuitiva.                                                                                                 |
 
 Busca Avançada
-![Busca Avançada Pagina Inicial](./docs/assets/busca avançada.png)
+![Busca Avançada Pagina Inicial](./docs/assets/busca_avancada.png)
 
 ### 8.3. Sistema de Recomendação de Oportunidades (Inovação)
 
