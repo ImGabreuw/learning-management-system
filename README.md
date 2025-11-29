@@ -151,7 +151,7 @@ As seguintes funcionalidades, embora importantes, serão planejadas para fases f
 
 ## Capítulo 4: Protótipo da Interface
 
-![](./docs/assets/dashboard_preview.png)
+![](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/dashboard_preview.png)
 
 > Para acessar o protótipo [clique aqui](https://learning-management-system-flame-xi.vercel.app/).
 
@@ -196,11 +196,11 @@ Administrador:
 
 ### Visão Geral
 
-![](./docs/assets/architecture.png)
+![](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/architecture.png)
 
 **Legenda:**
 
-![](./docs/assets/architecture_caption.png)
+![](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/architecture_caption.png)
 
 ### Tecnologias
 
@@ -463,7 +463,7 @@ O objetivo deste capítulo é demonstrar como a interface implementa a proposta 
 
 ##### Página Inicial
 
-![Página Inicial do LMS](./docs/assets/pagINicial.png)
+![Página Inicial do LMS](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/pagINicial.png)
 
 ### 8.1. Visão Geral da Arquitetura Frontend
 
@@ -488,13 +488,13 @@ As guias **Tarefas** e **Projetos** oferecem uma visão rápida e acionável das
 | **Visualização de Cursos**    | **`cursos.png`**     | A seção "Meus Cursos" exibe o progresso visual de cada disciplina e a próxima aula agendada em cartões claros, contrastando com interfaces legadas.                                                         |
 
 Tarefas
-![Seção de Tarefas](./docs/assets/tarefas.png)
+![Seção de Tarefas](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/tarefas.png)
 
 Projetos
-![Seção de Projetos](./docs/assets/projetos.png)
+![Seção de Projetos](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/projetos.png)
 
 Cursos
-![Seçao de Cursos](./docs/assets/swappy-20251031-214104.png)
+![Seçao de Cursos](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/swappy-20251031-214104.png)
 
 ###### Caso use alguma extensão de fundo preto os cursos perdem as diferenciação de cores.
 
@@ -508,7 +508,7 @@ Este recurso implementa a **Busca Difusa**, abordando a dor de "perder tempo pro
 | **Filtros Contextuais**       | **`busca avançada.png`** | Permite filtrar por **Cursos** e **Tipo** de material (Documento, Slide, Vídeo), refinando a busca de forma intuitiva.                                                                                                 |
 
 Busca Avançada
-![Busca Avançada Pagina Inicial](./docs/assets/busca_avancada.png)
+![Busca Avançada Pagina Inicial](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/busca_avancada.png)
 
 ### 8.3. Sistema de Recomendação de Oportunidades (Inovação)
 
@@ -521,10 +521,10 @@ Este é o principal diferencial do projeto, cumprindo o requisito de ter um **Mo
 | **Ações e Métricas**          | **`oprotunidades.png`**                           | O painel de resumo exibe métricas importantes (Total de Oportunidades, _Match_ Médio e Salvos), e os cartões oferecem ações diretas de **"Salvar"** e **"Candidatar-se"**.                                                                 |
 
 Oportunidades
-![Seção de Oportunidades](./docs/assets/oprotunidades.png)
+![Seção de Oportunidades](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/oprotunidades.png)
 
 Oportunidades 2
-![Complitude das Oportunidades](./docs/assets/oportunidades2.png)
+![Complitude das Oportunidades](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/oportunidades2.png)
 
 ### 8.4. Gestão de Perfil
 
@@ -539,14 +539,14 @@ A tela de perfil serve como o painel de controle do aluno e a fonte de dados pri
 
 Perfil de Interesse
 
-![Seçao de Interesses dentro do Perfil](./docs/assets/Perfil_interesses.png)
+![Seçao de Interesses dentro do Perfil](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/Perfil_interesses.png)
 
 Desempenho
 
-![Desempenho do Usuário](./docs/assets/Desempenho.png)
+![Desempenho do Usuário](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/Desempenho.png)
 
 Perfil
-![Perfil do Usuário](./docs/assets/Perfil.png)
+![Perfil do Usuário](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/Perfil.png)
 
 ### 8.5. Detalhes da Disciplina
 
@@ -559,26 +559,27 @@ A tela detalhada do curso garante a organização padronizada e a centralizaçã
 | **Informações do Professor**  | **`cursos_dentro.png`** | Centraliza informações de contato, biografia e horários de atendimento do professor em um painel dedicado, melhorando a comunicação/page.tsx].                                                                 |
 
 Página do Curso
-![Página Curso Específica](./docs/assets/cursos_dentro.png)
+![Página Curso Específica](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/cursos_dentro.png)
 
 ###### Extra:
 
 Pagina para Login no Metis
 
-![Login Metis](./docs/assets/login.png)
+![Login Metis](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/login.png)
 
 Login Ecossistema Microsoft
 
-![Login](./docs/assets/Microsoft.png)
+![Login](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/Microsoft.png)
 
 Validação dos Login
 
-![Val_Metis](./docs/assets/Autenticando.jpg)
+![Val_Metis](https://github.com/ImGabreuw/learning-management-system/raw/master/docs/assets/Autenticando.jpg)
 
-> Todas as imagens podem ser encontradas aqui: `./docs/assets/`
+> Todas as imagens podem ser encontradas aqui: https://github.com/ImGabreuw/learning-management-system/tree/master/docs/assets/
 
 ## Capítulo 9:
 
 ### Trabalhos futuros
 
-- Uso de MongoDB baseado em grafos para auxiliar no motor de recomendação.
+- Utilização do Neo4j para auxiliar no motor de recomendação.
+- Implementação da interface para o professor.
